@@ -23,7 +23,7 @@ done
 if [[ -z "$URL" ]];
 then
     echo "Usage: $0 --url <URL> [--outdir <OUTDIR>]"
-    echo 'Like : ./403_bypass.sh -u http://127.0.0.1/ -o bypass-403-$VHOST-$(date +%Y-%m-%d-%T)'
+    echo 'Like : ./bypass.sh -u http://127.0.0.1/ -o bypass-$VHOST-$(date +%s%N)'
     exit 42
 fi
 
@@ -59,7 +59,7 @@ echo "PAT=$PAT"
 
 
 if [ -z "$OUTDIR" ]; then
-    OUTDIR="bypass-403-$VHOST-$(date '+%Y-%m-%d-%T')"
+    OUTDIR="bypass-$VHOST-$(date +%s%N)"
 fi
 
 mkdir -pv "$OUTDIR" && cd "$OUTDIR"
