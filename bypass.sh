@@ -2935,6 +2935,41 @@ FILENAME=$(date +%s%N).html
 echo curl --max-time 1 --path-as-is -skg -o "$FILENAME" -w "Status: %{http_code}, Length: %{size_download}\n" "$SCHEME://$VHOST//;$PAT/$PAT" -H "$user_agent"
 code=$(curl --max-time 1 --path-as-is -skg -o "$FILENAME" -w "Status: %{http_code}, Length: %{size_download}\n" "$SCHEME://$VHOST//;$PAT/$PAT" -H "$user_agent")
 print
+echo -n "Access-Control-Allow-Origin Payload:"
+FILENAME=$(date +%s%N).html
+echo curl --max-time 1 --path-as-is -skg -o "$FILENAME" -w "Status: %{http_code}, Length: %{size_download}\n" -H "Access-Control-Allow-Origin: 127.0.0.1" -X GET "$URL" -H "$user_agent"
+code=$(curl --max-time 1 --path-as-is -skg -o "$FILENAME" -w "Status: %{http_code}, Length: %{size_download}\n" -H "Access-Control-Allow-Origin: 127.0.0.1" -X GET "$URL" -H "$user_agent")
+print
+echo -n "Forwarded Payload:"
+FILENAME=$(date +%s%N).html
+echo curl --max-time 1 --path-as-is -skg -o "$FILENAME" -w "Status: %{http_code}, Length: %{size_download}\n" -H "Forwarded: 127.0.0.1" -X GET "$URL" -H "$user_agent"
+code=$(curl --max-time 1 --path-as-is -skg -o "$FILENAME" -w "Status: %{http_code}, Length: %{size_download}\n" -H "Forwarded: 127.0.0.1" -X GET "$URL" -H "$user_agent")
+print
+echo -n "Forwarded-For Payload:"
+FILENAME=$(date +%s%N).html
+echo curl --max-time 1 --path-as-is -skg -o "$FILENAME" -w "Status: %{http_code}, Length: %{size_download}\n" -H "Forwarded-For: 127.0.0.1" -X GET "$URL" -H "$user_agent"
+code=$(curl --max-time 1 --path-as-is -skg -o "$FILENAME" -w "Status: %{http_code}, Length: %{size_download}\n" -H "Forwarded-For: 127.0.0.1" -X GET "$URL" -H "$user_agent")
+print
+echo -n "Forwarded-For-IP Payload:"
+FILENAME=$(date +%s%N).html
+echo curl --max-time 1 --path-as-is -skg -o "$FILENAME" -w "Status: %{http_code}, Length: %{size_download}\n" -H "Forwarded-For-IP: 127.0.0.1" -X GET "$URL" -H "$user_agent"
+code=$(curl --max-time 1 --path-as-is -skg -o "$FILENAME" -w "Status: %{http_code}, Length: %{size_download}\n" -H "Forwarded-For-IP: 127.0.0.1" -X GET "$URL" -H "$user_agent")
+print
+echo -n "Origin Payload:"
+FILENAME=$(date +%s%N).html
+echo curl --max-time 1 --path-as-is -skg -o "$FILENAME" -w "Status: %{http_code}, Length: %{size_download}\n" -H "Origin: 127.0.0.1" -X GET "$URL" -H "$user_agent"
+code=$(curl --max-time 1 --path-as-is -skg -o "$FILENAME" -w "Status: %{http_code}, Length: %{size_download}\n" -H "Origin: 127.0.0.1" -X GET "$URL" -H "$user_agent")
+print
+echo -n "X-Custom-IP-Authorization Payload:"
+FILENAME=$(date +%s%N).html
+echo curl --max-time 1 --path-as-is -skg -o "$FILENAME" -w "Status: %{http_code}, Length: %{size_download}\n" -H "X-Custom-IP-Authorization: 127.0.0.1" -X GET "$URL" -H "$user_agent"
+code=$(curl --max-time 1 --path-as-is -skg -o "$FILENAME" -w "Status: %{http_code}, Length: %{size_download}\n" -H "X-Custom-IP-Authorization: 127.0.0.1" -X GET "$URL" -H "$user_agent")
+print
+echo -n "X-Forwarded Payload:"
+FILENAME=$(date +%s%N).html
+echo curl --max-time 1 --path-as-is -skg -o "$FILENAME" -w "Status: %{http_code}, Length: %{size_download}\n" -H "X-Forwarded: 127.0.0.1" -X GET "$URL" -H "$user_agent"
+code=$(curl --max-time 1 --path-as-is -skg -o "$FILENAME" -w "Status: %{http_code}, Length: %{size_download}\n" -H "X-Forwarded: 127.0.0.1" -X GET "$URL" -H "$user_agent")
+print
 
 echo -e ${green}"All done, scan results in $PWD"${end}
 echo -e ${green}"Now displaying unique results, inspect them manually (cat, bat, ...)"${end}
