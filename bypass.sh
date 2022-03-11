@@ -45,7 +45,7 @@ fi
 }
 
 if [[ ! "$URL" =~ ^https?://[^/]+/.*$ ]]; then
-	echo "Url is might be badly formated"
+	echo "Url might be badly formated (missing trailing slash?): $URL"
 	exit 42
 fi
 
