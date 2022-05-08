@@ -15,7 +15,7 @@ Options:
     --debug              Enable debugging output, to... Tou know... Debug.
 
 Example:
-    ./bypass-url-parser.py http://127.0.0.1/juicy_403_endpoint/
+    ./bypass-url-parser.py --url http://127.0.0.1/juicy_403_endpoint/
 """
 
 from docopt import docopt
@@ -48,16 +48,12 @@ class Bypasser:
         out += f"debug: {self.debug}"
         return out
 
-    def stage_1(self):
-        logger.warning("Stage: stage_1")
+    def generate_curls(self):
+        logger.warning("Stage: generate_curls")
         return
 
-    def stage_2(self):
-        logger.warning("Stage: stage_2")
-        return
-
-    def stage_3(self):
-        logger.warning("Stage: stage_3")
+    def run_curls(self):
+        logger.warning("Stage: run_curls")
         return
 
     def save_and_quit(self):
@@ -94,7 +90,7 @@ def main():
         logger.debug(f"arguments: {arguments}")
 
     try:
-        config["url"] = urllib.parse(arguments.get("--url"))
+        config["url"] = urllib.parse.urlparse(arguments.get("--url"))
     except Exception as e:
         logger.error(f"Couldn't parse url, found {arguments.get('--url')}")
         logger.error(e)
@@ -103,9 +99,7 @@ def main():
     # outdir
     try:
         if not arguments.get("--outdir"):
-            config["outdir"] = (
-                tempfile.TemporaryDirectory().name + "/bypass-url-parser"
-            )
+            config["outdir"] = (f"{tempfile.TemporaryDirectory().name}-bypass-url-parser")
         else:
             config["outdir"] = arguments.get("--outdir")
         Path(config["outdir"]).mkdir(parents=True, exist_ok=True)
@@ -119,9 +113,8 @@ def main():
         logger.info(f"{key}: {val}")
 
     exporter = Bypasser(config)
-    exporter.stage_1()
-    exporter.stage_2()
-    exporter.stage_3()
+    exporter.generate_curls()
+    exporter.run_curls()
     exporter.save_and_quit()
 
 

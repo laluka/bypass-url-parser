@@ -16,7 +16,6 @@ pip install -r requirements.txt
 ## Usage
 
 ```
-./bypass-url-parser.py -h
 Bypass Url Parser, made with love by @TheLaluka
 A tool that tests MANY url bypasses to reach a 40X protected page.
 
@@ -33,7 +32,7 @@ Options:
     --debug              Enable debugging output, to... Tou know... Debug.
 
 Example:
-    ./bypass-url-parser.py http://127.0.0.1/juicy_403_endpoint/
+    ./bypass-url-parser.py --url http://127.0.0.1/juicy_403_endpoint/
 ```
 
 
