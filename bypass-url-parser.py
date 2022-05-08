@@ -22,10 +22,8 @@ from docopt import docopt
 from pathlib import Path
 from rich import print
 import coloredlogs
-import json
 import logging
-import os
-import re
+import subprocess
 import sys
 import tempfile
 import urllib
@@ -54,6 +52,15 @@ class Bypasser:
 
     def run_curls(self):
         logger.warning("Stage: run_curls")
+        # import ipdb; ipdb.set_trace()
+        cmd = ["curl", "-sS", "-kg", "--path-as-is", "-o", "/tmp/out.log", "-w", "Status: %{http_code}, Length: %{size_download}", "-X", "GET", "-H", "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36", config["url"].geturl()]
+        try:
+            some_curl = subprocess.check_output(cmd, timeout=2).decode()
+        except subprocess.CalledProcessError as e:
+            logger.warn(f"command '{e.cmd}' returned on-zero error code {e.returncode}: {e.output}")
+        except subprocess.TimeoutExpired as e:
+            logger.warn(f"command '{e.cmd}' timed out: {e.output}")
+        logger.info(some_curl)
         return
 
     def save_and_quit(self):
