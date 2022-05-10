@@ -464,12 +464,7 @@ class Bypasser:
     def run_curl(self, curl):
         logger.info(f"Current: {curl}")
         try:
-            self.results[curl] = (
-                subprocess.check_output(
-                    ["sh", "-c", curl], timeout=config["timeout"]
-                ).decode()
-                + f"\n|{curl}"
-            )
+            self.results[curl] = f"{curl}\n" + subprocess.check_output(["sh", "-c", curl], timeout=config["timeout"]).decode()
         except subprocess.CalledProcessError as e:
             logger.warning(
                 f"command '{e.cmd}' returned on-zero error code {e.returncode}: {e.output}"
@@ -493,8 +488,9 @@ class Bypasser:
             filename = hashlib.md5(cmd.encode()).hexdigest() + ".html"
             with open(f"{config['outdir']}/{filename}", "w") as f:
                 f.write(output)
-            count_words = output.count(" ")
-            count_lines = output.count("\n")
+            output_request = output[output.find("\n")+1:]
+            count_words = output_request.count(" ")
+            count_lines = output_request.count("\n")
             key_for_unicity = f"{count_words:{padding}}:{count_lines:{padding}}"
             self.clean_output[key_for_unicity] = filename
 
