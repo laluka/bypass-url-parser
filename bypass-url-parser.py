@@ -3,7 +3,7 @@
 A tool that tests MANY url bypasses to reach a 40X protected page.
 
 Usage:
-    ./bypass-url-parser.py --url=<URL> [--outdir=<OUTDIR>] [--threads=<threads>] [(--header=<header>)...] [--debug]
+    ./bypass-url-parser.py --url=<URL> [--outdir=<OUTDIR>] [--threads=<threads>] [--timeout=<timeout>] [(--header=<header>)...] [--debug]
     ./bypass-url-parser.py (-h | --help)
     ./bypass-url-parser.py (-v | --version)
 
@@ -12,12 +12,14 @@ Options:
     -v --version         Show version info.
     --url=<URL>          URL (path is optional) to run bypasses against.
     --outdir=<outdir>    Output directory for results.
+    --timeout=<timeout>  Request times out after N seconfs [Default: 2].
     --threads=<threads>  Scan with N parallel threads [Default: 1].
     --header=<header>    Header(s) to use, format: "Cookie: can_i_haz=fire".
     --debug              Enable debugging output, to... Tou know... Debug.
 
 Example:
-    ./bypass-url-parser.py --url http://127.0.0.1/juicy_403_endpoint/
+    ./bypass-url-parser.py --url "http://127.0.0.1/juicy_403_endpoint/"
+    ./bypass-url-parser.py --url "http://127.0.0.1/juicy_403_endpoint/" --threads 30 --timeout 5 --header "Cookie: me_iz=damin" --header "Waf: bypass :)"
 """
 
 from docopt import docopt
@@ -25,6 +27,7 @@ from pathlib import Path
 from rich import print
 from urllib.parse import urlparse
 import coloredlogs
+import concurrent.futures
 import hashlib
 import logging
 import os
@@ -460,22 +463,29 @@ class Bypasser:
         # Not doing for now, already so many curls.. :)
         return
 
+    def run_curl(self, curl):
+        logger.info(f"Current: {curl}")
+        try:
+            self.results[curl] = (
+                subprocess.check_output(
+                    ["sh", "-c", curl], timeout=config["timeout"]
+                ).decode()
+                + f"\n|{curl}"
+            )
+        except subprocess.CalledProcessError as e:
+            logger.warning(
+                f"command '{e.cmd}' returned on-zero error code {e.returncode}: {e.output}"
+            )
+        except subprocess.TimeoutExpired as e:
+            logger.warning(f"command '{e.cmd}' timed out: {e.output}")
+
     def run_curls(self):
         logger.warning("Stage: run_curls")
-
-        for curl in self.curls:
-            logger.info(f"Current: {curl}")
-            try:
-                self.results[curl] = (
-                    subprocess.check_output(["sh", "-c", curl], timeout=2).decode()
-                    + f"\n|{curl}"
-                )
-            except subprocess.CalledProcessError as e:
-                logger.warning(
-                    f"command '{e.cmd}' returned on-zero error code {e.returncode}: {e.output}"
-                )
-            except subprocess.TimeoutExpired as e:
-                logger.warning(f"command '{e.cmd}' timed out: {e.output}")
+        with concurrent.futures.ThreadPoolExecutor(
+            max_workers=config["threads"]
+        ) as executor:
+            executor.map(self.run_curl, self.curls)
+            executor.shutdown(wait=True)
         return
 
     def save_and_quit(self):
@@ -551,12 +561,24 @@ def main():
     # threads
     try:
         config["threads"] = int(arguments.get("--threads"), 10)
+        if config["threads"] <= 0:
+            raise Exception("Thread number must be positive")
     except Exception as e:
         logger.error("Invalid number of threads")
         logger.error(e)
         exit(42)
 
-    # threads
+    # timeout
+    try:
+        config["timeout"] = int(arguments.get("--timeout"), 10)
+        if config["timeout"] <= 0:
+            raise Exception("Timeout value (sec) number must be positive")
+    except Exception as e:
+        logger.error("Invalid timeout value")
+        logger.error(e)
+        exit(42)
+
+    # headers
     config["headers"] = dict()
     try:
         for header in arguments.get("--header") or list():
