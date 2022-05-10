@@ -12,7 +12,7 @@ Options:
     -v --version         Show version info.
     --url=<URL>          URL (path is optional) to run bypasses against.
     --outdir=<outdir>    Output directory for results.
-    --timeout=<timeout>  Request times out after N seconfs [Default: 2].
+    --timeout=<timeout>  Request times out after N seconfs [Default: 3].
     --threads=<threads>  Scan with N parallel threads [Default: 1].
     --header=<header>    Header(s) to use, format: "Cookie: can_i_haz=fire".
     --debug              Enable debugging output, to... Tou know... Debug.
@@ -410,8 +410,7 @@ class Bypasser:
         logger.info(f"base_path: {base_path}")
 
         header_user_agent = "-H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36'"
-        option_status = "-w '\\nStatus: %{http_code}, Length: %{size_download}'"
-        base_curl = f"curl -sS -kgi --path-as-is {header_user_agent} {option_status}"
+        base_curl = f"curl -sS -kgi --path-as-is {header_user_agent}"
 
         for key, value in config["headers"].items():
             base_curl += f" -H '{key}: {value}'"
@@ -497,7 +496,7 @@ class Bypasser:
                 f.write(output)
             count_words = output.count(" ")
             count_lines = output.count("\n")
-            key_for_unicity = f"{count_lines:{padding}}:{count_words:{padding}}"
+            key_for_unicity = f"{count_words:{padding}}:{count_lines:{padding}}"
             self.clean_output[key_for_unicity] = filename
 
         self.clean_output = dict(sorted(self.clean_output.items()))
