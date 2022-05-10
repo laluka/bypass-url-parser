@@ -3,7 +3,7 @@
 A tool that tests MANY url bypasses to reach a 40X protected page.
 
 Usage:
-    ./bypass-url-parser.py --url=<URL> [--outdir=<OUTDIR>] [--debug]
+    ./bypass-url-parser.py --url=<URL> [--outdir=<OUTDIR>] [--threads=<threads>] [--header=<header>] [--debug]
     ./bypass-url-parser.py (-h | --help)
     ./bypass-url-parser.py (-v | --version)
 
@@ -12,6 +12,8 @@ Options:
     -v --version         Show version info.
     --url=<URL>          URL (path is optional) to run bypasses against.
     --outdir=<outdir>    Output directory for results.
+    --threads=<threads>  Scan with N parallel threads [Default: 1].
+    --header=<header>    Header(s) to use, format: "Cookie: can_i_haz=fire".
     --debug              Enable debugging output, to... Tou know... Debug.
 
 Example:
@@ -408,7 +410,10 @@ class Bypasser:
         option_status = "-w '\\nStatus: %{http_code}, Length: %{size_download}'"
         base_curl = f"curl -sS -kgi --path-as-is {header_user_agent} {option_status}"
 
-        # Original
+        for key, value in config["headers"].items():
+            base_curl += f" -H '{key}: {value}'"
+
+        # Original request
         self.curls.append(f"{base_curl} '{full_url}'")
 
         # Custom methods
@@ -543,6 +548,27 @@ def main():
     except Exception as e:
         logger.error("Error while creating output directory")
         logger.error(e)
+        exit(42)
+
+    # threads
+    try:
+        config["threads"] = int(arguments.get("--threads"), 10)
+    except Exception as e:
+        logger.error("Invalid number of threads")
+        logger.error(e)
+        exit(42)
+
+    # threads
+    config["headers"] = dict()
+    try:
+        for header in arguments.get("--header"):
+            key, value = header.split(":", 1)
+            if "'" in key or "'" in value:
+                raise Exception("Single quotes in args are currently unsupported")
+            config["headers"][key] = value.strip()
+    except Exception as e:
+        print("Error setting custom headers")
+        print(e)
         exit(42)
 
     logger.info("=== Config ===")
