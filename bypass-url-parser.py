@@ -464,7 +464,12 @@ class Bypasser:
     def run_curl(self, curl):
         logger.info(f"Current: {curl}")
         try:
-            self.results[curl] = f"{curl}\n" + subprocess.check_output(["sh", "-c", curl], timeout=config["timeout"]).decode()
+            self.results[curl] = (
+                f"{curl}\n"
+                + subprocess.check_output(
+                    ["sh", "-c", curl], timeout=config["timeout"]
+                ).decode()
+            )
         except subprocess.CalledProcessError as e:
             logger.warning(
                 f"command '{e.cmd}' returned on-zero error code {e.returncode}: {e.output}"
@@ -485,10 +490,10 @@ class Bypasser:
         logger.warning("Stage: save_and_quit")
         padding = len(str(max([_.count(" ") for _ in self.results.values()])))
         for cmd, output in self.results.items():
-            filename = hashlib.md5(cmd.encode()).hexdigest() + ".html"
+            filename = f"bypass-{hashlib.md5(cmd.encode()).hexdigest()}.html"
             with open(f"{config['outdir']}/{filename}", "w") as f:
                 f.write(output)
-            output_request = output[output.find("\n")+1:]
+            output_request = output[output.find("\n") + 1 :]
             count_words = output_request.count(" ")
             count_lines = output_request.count("\n")
             key_for_unicity = f"{count_words:{padding}}:{count_lines:{padding}}"
@@ -497,15 +502,14 @@ class Bypasser:
         self.clean_output = dict(sorted(self.clean_output.items()))
 
         clean_output = "\n".join(
-            [f"{stats} - {filename}" for stats, filename in self.clean_output.items()]
+            [f"{stats}: {filename}" for stats, filename in self.clean_output.items()]
         )
         logger.info(f"Saving html pages and short output in: {config['outdir']}")
-        logger.info(
-            f"Triaged results shows the following distinct pages:\n" + clean_output
-        )
-        logger.info(
-            f"Also, inspect them manually with batcat:\necho {config['outdir']}/{{{','.join(self.clean_output.values())}}} | xargs bat"
-        )
+        logger.info(f"Triaged results & distinct pages:\n" + clean_output)
+        inspect_cmd = f"echo {config['outdir']}/{{{','.join(self.clean_output.values())}}} | xargs bat"
+        logger.info(f"Also, inspect them manually with batcat:\n{inspect_cmd}")
+        with open(f"{config['outdir']}/triaged-bypass.log", "w") as f:
+            f.write(f"{clean_output}\n{inspect_cmd}")
         # import ipdb; ipdb.set_trace()
         return
 
