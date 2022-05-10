@@ -24,7 +24,6 @@ Example:
 
 from docopt import docopt
 from pathlib import Path
-from rich import print
 from urllib.parse import urlparse
 import coloredlogs
 import concurrent.futures
