@@ -3,7 +3,7 @@
 A tool that tests MANY url bypasses to reach a 40X protected page.
 
 Usage:
-    ./bypass-url-parser.py --url=<URL> [--outdir=<OUTDIR>] [--threads=<threads>] [--header=<header>] [--debug]
+    ./bypass-url-parser.py --url=<URL> [--outdir=<OUTDIR>] [--threads=<threads>] [(--header=<header>)...] [--debug]
     ./bypass-url-parser.py (-h | --help)
     ./bypass-url-parser.py (-v | --version)
 
@@ -456,8 +456,6 @@ class Bypasser:
                     f"{base_curl} '{base_url}/{base_path[:slash_index+1]}/{const_path}/{base_path[slash_index:]}'"
                 )
 
-        # IDEA Add valid prefix like /api/ to bypass revproxy rules
-
         # IDEA Generate moooooore with cross products?
         # Not doing for now, already so many curls.. :)
         return
@@ -561,7 +559,7 @@ def main():
     # threads
     config["headers"] = dict()
     try:
-        for header in arguments.get("--header"):
+        for header in arguments.get("--header") or list():
             key, value = header.split(":", 1)
             if "'" in key or "'" in value:
                 raise Exception("Single quotes in args are currently unsupported")
