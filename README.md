@@ -15,6 +15,9 @@ So, be like me, use `curl as a backend`, it's gonna be just fine.
 ## Setup for bypass.py
 
 ```bash
+# Deps
+sudo apt install -y bat curl virtualenv python3
+# Tool
 virtualenv -p python3 .py3
 source .py3/bin/activate
 pip install -r requirements.txt
@@ -46,7 +49,6 @@ Options:
 Example:
     ./bypass-url-parser.py --url "http://127.0.0.1/juicy_403_endpoint/"
     ./bypass-url-parser.py --url "http://127.0.0.1/juicy_403_endpoint/" --threads 30 --timeout 5 --header "Cookie: me_iz=damin" --header "Waf: bypass :)"
-
 ```
 
 
