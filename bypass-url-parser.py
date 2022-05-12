@@ -3,7 +3,7 @@
 A tool that tests MANY url bypasses to reach a 40X protected page.
 
 Usage:
-    ./bypass-url-parser.py --url=<URL> [--outdir=<OUTDIR>] [--threads=<threads>] [--timeout=<timeout>] [(--header=<header>)...] [--debug]
+    ./bypass-url-parser.py --url=<URL> [--outdir=<OUTDIR>] [--threads=<threads>] [--timeout=<timeout>] [(--header=<header>)...] [--spoofip=<ip>] [--debug]
     ./bypass-url-parser.py (-h | --help)
     ./bypass-url-parser.py (-v | --version)
 
@@ -12,9 +12,10 @@ Options:
     -v --version         Show version info.
     --url=<URL>          URL (path is optional) to run bypasses against.
     --outdir=<outdir>    Output directory for results.
-    --timeout=<timeout>  Request times out after N seconfs [Default: 3].
+    --timeout=<timeout>  Request times out after N seconds [Default: 3].
     --threads=<threads>  Scan with N parallel threads [Default: 1].
     --header=<header>    Header(s) to use, format: "Cookie: can_i_haz=fire".
+    --spoofip=<ip>       IP to inject in ip-specific headers.
     --debug              Enable debugging output, to... Tou know... Debug.
 
 Example:
@@ -456,6 +457,33 @@ class Bypasser:
                 self.curls.append(
                     f"{base_curl} '{base_url}/{base_path[:slash_index+1]}/{const_path}/{base_path[slash_index:]}'"
                 )
+                self.curls.append(
+                    f"{base_curl} '{base_url}/{base_path[:slash_index+1]}/{const_path.lstrip('/')}/{base_path[slash_index:]}'"
+                )
+
+        # Other bypasses
+        abc_indexes = [span.start() for span in re.finditer(r"[a-zA-Z]", base_path)]
+        for abc_indexe in abc_indexes:
+            # Case-Inversion
+            char_case = base_path[abc_indexe]
+            if char_case.islower():
+                char_case = char_case.upper()
+            else:
+                char_case = char_case.lower()
+            self.curls.append(
+                f"{base_curl} '{base_url}/{base_path[:abc_indexe]}{char_case}{base_path[abc_indexe+1:]}'"
+            )
+            # Url-Encoding
+            char_urlencoded = format(ord(base_path[abc_indexe]), "02x")
+            self.curls.append(
+                f"{base_curl} '{base_url}/{base_path[:abc_indexe]}{char_urlencoded}{base_path[abc_indexe+1:]}'"
+            )
+
+        # Sanitize and debug-print
+        self.curls = sorted(list(set(self.curls)))
+        logger.warning(f"Payloads to test: {len(self.curls)}")
+        for curl in self.curls:
+            logger.debug(curl.replace(base_curl, ""))
 
         # IDEA Generate moooooore with cross products?
         # Not doing for now, already so many curls.. :)
@@ -587,6 +615,18 @@ def main():
     except Exception as e:
         print("Error setting custom headers")
         print(e)
+        exit(42)
+
+    # spoofip
+    try:
+        if arguments.get("--spoofip"):
+            config["spoofip"] = arguments.get("--spoofip")
+            if "'" in config["spoofip"]:
+                raise Exception("Single quotes in args are currently unsupported")
+            const_internal_ips.append(config["spoofip"])
+    except Exception as e:
+        logger.error("Couldn't set spoofed ip value")
+        logger.error(e)
         exit(42)
 
     logger.info("=== Config ===")
