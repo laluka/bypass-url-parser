@@ -19,8 +19,8 @@ Options:
     --debug              Enable debugging output, to... Tou know... Debug.
 
 Example:
-    ./bypass-url-parser.py --url "http://127.0.0.1/juicy_403_endpoint/"
-    ./bypass-url-parser.py --url "http://127.0.0.1/juicy_403_endpoint/" --threads 30 --timeout 5 --header "Cookie: me_iz=damin" --header "Waf: bypass :)"
+    ./bypass-url-parser.py --url "http://127.0.0.1/juicy_403_endpoint/" --spoofip 8.8.8.8 --debug
+    ./bypass-url-parser.py --url "http://127.0.0.1/juicy_403_endpoint/" --threads 30 --timeout 5 --header "Cookie: me_iz=damin" --header "Waf: bypazzzzz"
 """
 
 from docopt import docopt

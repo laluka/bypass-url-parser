@@ -32,7 +32,7 @@ Bypass Url Parser, made with love by @TheLaluka
 A tool that tests MANY url bypasses to reach a 40X protected page.
 
 Usage:
-    ./bypass-url-parser.py --url=<URL> [--outdir=<OUTDIR>] [--threads=<threads>] [--timeout=<timeout>] [(--header=<header>)...] [--debug]
+    ./bypass-url-parser.py --url=<URL> [--outdir=<OUTDIR>] [--threads=<threads>] [--timeout=<timeout>] [(--header=<header>)...] [--spoofip=<ip>] [--debug]
     ./bypass-url-parser.py (-h | --help)
     ./bypass-url-parser.py (-v | --version)
 
@@ -41,14 +41,15 @@ Options:
     -v --version         Show version info.
     --url=<URL>          URL (path is optional) to run bypasses against.
     --outdir=<outdir>    Output directory for results.
-    --timeout=<timeout>  Request times out after N seconfs [Default: 2].
+    --timeout=<timeout>  Request times out after N seconds [Default: 3].
     --threads=<threads>  Scan with N parallel threads [Default: 1].
     --header=<header>    Header(s) to use, format: "Cookie: can_i_haz=fire".
+    --spoofip=<ip>       IP to inject in ip-specific headers.
     --debug              Enable debugging output, to... Tou know... Debug.
 
 Example:
-    ./bypass-url-parser.py --url "http://127.0.0.1/juicy_403_endpoint/"
-    ./bypass-url-parser.py --url "http://127.0.0.1/juicy_403_endpoint/" --threads 30 --timeout 5 --header "Cookie: me_iz=damin" --header "Waf: bypass :)"
+    ./bypass-url-parser.py --url "http://127.0.0.1/juicy_403_endpoint/" --spoofip 8.8.8.8 --debug
+    ./bypass-url-parser.py --url "http://127.0.0.1/juicy_403_endpoint/" --threads 30 --timeout 5 --header "Cookie: me_iz=damin" --header "Waf: bypazzzzz"
 ```
 
 
