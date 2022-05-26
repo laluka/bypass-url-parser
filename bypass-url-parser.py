@@ -43,6 +43,7 @@ config = dict()
 const_internal_ips = list()
 const_internal_ips.append("0.0.0.0")
 const_internal_ips.append("127.0.0.1")
+const_internal_ips.append("0177.1") # Thanks to @Agarri_FR
 const_internal_ips.append("localhost")
 const_internal_ips.append("norealhost")
 
