@@ -530,7 +530,7 @@ class Bypasser:
 
     def save_and_quit(self):
         logger.warning("Stage: save_and_quit")
-        padding = len(str(max([_.count(" ") for _ in self.results.values()])))
+        padding = len(str(max([_.count(" ") for _ in self.results.values()], default=0)))
         for cmd, output in self.results.items():
             filename = f"bypass-{hashlib.md5(cmd.encode()).hexdigest()}.html"
             with open(f"{config['outdir']}/{filename}", "w") as f:
