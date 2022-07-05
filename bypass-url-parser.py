@@ -43,9 +43,10 @@ config = dict()
 const_internal_ips = list()
 const_internal_ips.append("*")
 const_internal_ips.append("0.0.0.0")
-const_internal_ips.append("0177.1")  # Thanks to @Agarri_FR
+const_internal_ips.append("0177.1")  # Encoded IP - kudos to @Agarri_FR
 const_internal_ips.append("10.0.0.1")
-const_internal_ips.append("127.0.0.1")
+const_internal_ips.append("127.0.0.1")  # Default docker0 iface - kudos to @jtop_fap
+const_internal_ips.append("172.17.0.1")
 const_internal_ips.append("192.168.0.2")
 const_internal_ips.append("192.168.1.1")
 const_internal_ips.append("8.8.8.8")
