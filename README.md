@@ -8,7 +8,7 @@ If you wonder why this code is `nothing but a dirty curl wrapper`, here's why:
 - If I submit raw chars, I want raw chars to be sent.
 - If I send a weird path, I want it weird, not normalized.
 
-This is `surprisingly hard` to achieve in python without loosing all of the lib goodies like parsing, ssl/tls encapsulation and so on. \
+This is `surprisingly hard` to achieve in python without losing all of the lib goodies like parsing, ssl/tls encapsulation and so on. \
 So, be like me, use `curl as a backend`, it's gonna be just fine.
 
 
