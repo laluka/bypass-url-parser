@@ -56,6 +56,7 @@ import tempfile
 from docopt import docopt
 from enum import IntEnum
 from pathlib import Path
+from shutil import which
 from urllib.parse import urlparse, ParseResult
 
 VERSION = "0.1.0"
@@ -76,6 +77,7 @@ class Bypasser:
                     "unicode", "char_encode", "http_headers_method", "http_headers_scheme", "http_headers_ip",
                     "http_headers_port", "http_headers_url", "misc"]  # Not yet all implemented, coming soon
     default_bypass_mode = "all"
+    default_clean_inputs = True  # Under linux, calls shlex.quote() to clean user inputs
     default_log_filename = "triaged-bypass.log"
     default_save_level = SaveLevel.MINIMAL
     default_spoof_ip_replace = False
@@ -524,7 +526,7 @@ class Bypasser:
             self.quote = '"'
 
         # HTTP version & base options
-        binary_name = "curl"
+        binary_name = which("curl")  # Mandatory for subprocess.Popen()
         http_version = f"--http{self.http_version}" if self.http_version != "0" else None
         base_options = f"-sS -kgi --path-as-is {http_version}" if http_version else "-sS -kgi --path-as-is"
 
@@ -698,10 +700,6 @@ class Bypasser:
                                     debug=self.debug, ext_logger=self.logger)
                     if item not in self.curl_items:
                         self.curl_items.append(item)
-                    """for curl in self.curls:
-                        if "com.;/" in curl:
-                            import ipdb
-                            ipdb.set_trace()"""
 
         # Char substitution (character-by-character) bypasses
         abc_indexes = [span.start() for span in re.finditer(r"[a-zA-Z]", base_path)]
@@ -762,15 +760,18 @@ class Bypasser:
         if self.debug:
             self.logger.info(f"Current: {item.request_curl_cmd}")
         try:
-            # Exec curl command
+            # Exec curl command. Note: to resolve the path with Popen, the curl_cmd is built using shutil.which("curl")
             if Tools.is_windows:
-                result = subprocess.check_output(shlex.split(item.request_curl_cmd), timeout=self.timeout,
-                                                 shell=False).decode()
+                result = subprocess.Popen(item.request_curl_cmd, text=True, shell=False, stderr=subprocess.STDOUT,
+                                          stdout=subprocess.PIPE).communicate(timeout=self.timeout)[0]
             else:
-                result = subprocess.check_output(["sh", "-c", item.request_curl_cmd], timeout=self.timeout).decode()
+                result = subprocess.Popen(shlex.split(item.request_curl_cmd), text=True,
+                                          shell=False, stderr=subprocess.STDOUT,
+                                          stdout=subprocess.PIPE).communicate(timeout=self.timeout)[0]
 
             if result:
-                # Apply xxx2unix to result. Mandatory under Windows to save curl responses headers in html file
+                # Apply xxx2unix to result. Mandatory under Windows/macOS to save curl responses headers in html file
+                # Notes: subprocess.Popen with text=True => universal_newlines=True so maybe useless
                 result = result.replace(os.linesep, "\n")
 
                 # Store command result in CurlItem object
@@ -916,8 +917,6 @@ class Bypasser:
 
         return self.grouped_curl_items
 
-    # *** Public methods *** #
-
     def _retry_failed_commands(self):
         """ Retry/Resend curl commands against failed items. """
         if self.to_retry_items:
@@ -959,6 +958,8 @@ class Bypasser:
         # No failed requests
         else:
             self.logger.debug("Each request has reached its target. No need for retry")
+
+    # *** Public methods *** #
 
     def run(self, urls=None, silent_mode=False) -> defaultdict[ParseResult, defaultdict]:
         # Target URLs can be defined in object initialization or here
@@ -1065,7 +1066,8 @@ class Bypasser:
         self._current_bypass_modes.append(Bypasser.default_bypass_mode)
         if modes_lst:
             self._current_bypass_modes.clear()
-            for mode in Tools.get_list_from_generic_arg(modes_lst, arg_name="bypass_mode", ext_logger=self.logger,
+            for mode in Tools.get_list_from_generic_arg(modes_lst, arg_name="bypass_mode", stdin_support=True,
+                                                        clean_arg=Bypasser.default_clean_inputs, ext_logger=self.logger,
                                                         debug=self.debug_class):
                 if mode in Bypasser.bypass_modes:
                     if mode not in self._current_bypass_modes:
@@ -1093,7 +1095,8 @@ class Bypasser:
             self._headers = dict()
             if value:
                 for header in Tools.get_list_from_generic_arg(value, arg_name="header", ext_logger=self.logger,
-                                                              debug=self.debug_class):
+                                                              stdin_support=False, debug=self.debug_class,
+                                                              clean_arg=Bypasser.default_clean_inputs):
                     key, value = header.split(":", 1)
                     self._headers[key] = value.strip()
         except ValueError as e:
@@ -1200,8 +1203,9 @@ class Bypasser:
         try:
             self._spoof_ips = list()
             if value:
-                for ip in Tools.get_list_from_generic_arg(value, arg_name="spoofip", ext_logger=self.logger,
-                                                          debug=self.debug_class):
+                for ip in Tools.get_list_from_generic_arg(value, arg_name="spoofip", stdin_support=True,
+                                                          ext_logger=self.logger, debug=self.debug_class,
+                                                          clean_arg=Bypasser.default_clean_inputs):
                     if "'" in ip:
                         self.logger.warning(f"IP '{ip}' was ignored. Single quotes in ip/hostname are currently "
                                             f"unsupported")
@@ -1236,8 +1240,9 @@ class Bypasser:
         try:
             self._spoof_ports = list()
             if value:
-                for port in Tools.get_list_from_generic_arg(value, arg_name="spoofport", ext_logger=self.logger,
-                                                            debug=self.debug_class):
+                for port in Tools.get_list_from_generic_arg(value, arg_name="spoofport", stdin_support=True,
+                                                            ext_logger=self.logger, debug=self.debug_class,
+                                                            clean_arg=Bypasser.default_clean_inputs):
                     if int(port) not in self._spoof_ports:
                         self._spoof_ports.append(int(port))
             # Cancel the possible replace_mode that could block internal port list in [http_headers_port]
@@ -1305,8 +1310,9 @@ class Bypasser:
         try:
             self._urls = list()
             if value:
-                for url in Tools.get_list_from_generic_arg(value, arg_name="url", ext_logger=self.logger,
-                                                           debug=self.debug_class):
+                for url in Tools.get_list_from_generic_arg(value, arg_name="url", stdin_support=True,
+                                                           ext_logger=self.logger, debug=self.debug_class,
+                                                           clean_arg=Bypasser.default_clean_inputs):
                     if not Bypasser.regex_url.match(url):
                         error_msg = f"URL {url} was ignored. Must start with http:// or https:// and contain " \
                                     f"at least 3 slashes"
@@ -1412,9 +1418,6 @@ class Bypasser:
         out += f"Debug: {self.debug}\n"
         out += f"Debug_class: {self.debug_class}\n"
         out += f"Curl base: {self.base_curl}\n"
-        # out += f"curls: {len(self.curls)}\n"
-        # out += f"results: {len(self.results)}\n"
-        # out += f"clean_output: {len(self.clean_output)}\n"
         return out
 
 
@@ -1841,7 +1844,7 @@ class Tools:
 
     @staticmethod
     def get_list_from_generic_arg(argument, arg_name="generic", enc_format="ISO-8859-1", stdin_support=True,
-                                  ext_logger=None, debug=False) -> list[str]:
+                                  clean_arg=False, ext_logger=None, debug=False) -> list[str]:
         """ Return list from generic argument.
 
         Useful when the argument could be a string, a list or a filename
@@ -1850,6 +1853,7 @@ class Tools:
         :param str arg_name: Argument name just for debug message (Optional)
         :param str enc_format: Encoding format to read file if arg is filename. Default (FR) = ISO-8859-1 (Optional)
         :param bool stdin_support: Make this function compatible with stdin '-' standard (default: True) (Optional)
+        :param bool clean_arg: Under linux, calls shlex.quote() to clean user inputs (default: False) (Optional)
         :param logger ext_logger: Specify your own logger (default: None) (Optional)
         :param bool debug: Show method debug information (default:False, need ext_logger) (Optional)
         :return: List from generic argument
@@ -1858,28 +1862,44 @@ class Tools:
         if stdin_support and argument == "-":
             if ext_logger and debug:
                 ext_logger.debug(f"Read {arg_name} argument as a list from stdin")
-            return sys.stdin.read().splitlines()
+            if Tools.is_linux and clean_arg:
+                return [shlex.quote(line) for line in sys.stdin.read().splitlines()]
+            else:
+                return sys.stdin.read().splitlines()
         # Arg value is already a list, useful for library mode. Just return
         if isinstance(argument, list):
             if ext_logger and debug:
                 ext_logger.debug(f"The {arg_name} argument is already a list")
-            return argument
+            if Tools.is_linux and clean_arg:
+                return [shlex.quote(elt) for elt in argument]
+            else:
+                return argument
         # Arg value is a filename (/path/file)
         elif os.path.isfile(argument):
             if ext_logger and debug:
                 ext_logger.debug(f"The {arg_name} argument is a file")
-            return [line.rstrip() for line in Tools.load_file_into_memory_list(
-                argument, enc_format=enc_format, clean_filename=False, ext_logger=ext_logger, debug=debug)]
+            if Tools.is_linux and clean_arg:
+                return [shlex.quote(line.rstrip()) for line in Tools.load_file_into_memory_list(
+                    argument, enc_format=enc_format, clean_filename=False, ext_logger=ext_logger, debug=debug)]
+            else:
+                return [line.rstrip() for line in Tools.load_file_into_memory_list(
+                    argument, enc_format=enc_format, clean_filename=False, ext_logger=ext_logger, debug=debug)]
         # Arg value is a string with multiple items separated by a comma ("value1, value2, ...")
         elif isinstance(argument, str) and "," in argument:
             if ext_logger and debug:
                 ext_logger.debug(f"The {arg_name} argument is a string list separated by comma")
-            return [arg.replace(" ", "") for arg in argument.split(",")]
+            if Tools.is_linux and clean_arg:
+                return [arg.replace(" ", "") for arg in shlex.quote(argument).split(",")]
+            else:
+                return [arg.replace(" ", "") for arg in argument.split(",")]
         # Arg value is a simple string
         elif isinstance(argument, str):
             if ext_logger and debug:
                 ext_logger.debug(f"The {arg_name} argument is a string")
-            return [argument]
+            if Tools.is_linux and clean_arg:
+                return [shlex.quote(argument)]
+            else:
+                return [argument]
         else:
             error_msg = f"The {arg_name} argument type is not supported"
             if ext_logger:
