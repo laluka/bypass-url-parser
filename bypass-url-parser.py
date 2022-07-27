@@ -459,7 +459,9 @@ class Bypasser:
         else:
             self.logger = Tools.get_new_logger(self.use_classname(), with_colors=True, debug_level=self.debug)
 
-        self.logger.debug(f"Debug level: verbose={self.verbose}, debug={self.debug}, debug_class={self.debug_class}")
+        if self.debug_class:
+            self.logger.debug(f"Debug level: verbose={self.verbose}, debug={self.debug}, "
+                              f"debug_class={self.debug_class}")
 
         # Init object vars
         self.quote = "'"
@@ -490,22 +492,6 @@ class Bypasser:
         self.urls = config_dict.get("--url")
 
     # *** Protected methods *** #
-
-    def _init_debug_level(self, level):
-        if level:
-            self.verbose = True
-            if level == 1:
-                self.debug = True
-                self.debug_class = False
-            elif level == 2:
-                self.debug = True
-                self.debug_class = True
-            else:
-                error_msg = f"Bad debug number argument value => {level}. Only support 2 level [-d or -dd]"
-                raise ValueError(error_msg)
-        else:
-            self.debug = False
-            self.debug_class = False
 
     def _init_curl_base(self, force_user_agent="", debug=False) -> str:
         """ Build curl base command.
@@ -570,6 +556,43 @@ class Bypasser:
             self.logger.debug(f"Base curl command: {self.base_curl}")
 
         return self.base_curl
+
+    def _init_debug_level(self, level):
+        if level:
+            self.verbose = True
+            if level == 1:
+                self.debug = True
+                self.debug_class = False
+            elif level == 2:
+                self.debug = True
+                self.debug_class = True
+            else:
+                error_msg = f"Bad debug number argument value => {level}. Only support 2 level [-d or -dd]"
+                raise ValueError(error_msg)
+        else:
+            self.debug = False
+            self.debug_class = False
+
+    def _init_progress_bar(self, total, prefix="", suffix="", decimals=1, length=100, fill="█") -> None:
+        """ Init progress bar components.
+
+        Inspired from https://stackoverflow.com/a/34325723/355230
+
+        :param int total: Total iterations
+        :param str prefix: Prefix string
+        :param str suffix: Suffix string
+        :param int decimals: Positive number of decimals in percent complete
+        :param int length: Character length of bar
+        :param str fill: bar fill character
+        """
+        self.decimals = decimals
+        self.iteration = 1
+        self.total = total
+        self.length = length
+        self.fill = fill
+        self.print_end = "\r" if Tools.is_linux else ""
+        self.prefix = prefix
+        self.suffix = suffix
 
     def _generate_curls(self, url_obj: ParseResult):
         if self.verbose:
@@ -738,17 +761,37 @@ class Bypasser:
         # Not doing for now, so many curls already... :)
         return
 
+    def _progress_bar_callback(self, *args):
+        """ Callback method to display progress bar. Inspired from https://stackoverflow.com/a/34325723/355230. """
+        percent = ("{0:." + str(self.decimals) + "f}").format(100 * (self.iteration / float(self.total)))
+        filled_length = int(self.length * self.iteration // self.total)
+        bar = self.fill * filled_length + "." * (self.length - filled_length)
+
+        # Print progress bar (disable if self.debug or self.debug_class)
+        if not self.debug:
+            print(f"\r{self.prefix} [{bar}] {percent}% {self.suffix}", end=self.print_end, flush=True)
+
+        # Print newline on completion
+        if self.iteration == self.total:
+            print(flush=True)
+        else:
+            self.iteration = self.iteration + 1
+
     def _run_curls(self, items):
         """ Call multithread curl commands.
 
         :param list[CurlItem] items: List of item objects
         """
+        # Init internal progress bar
+        self._init_progress_bar(len(items), prefix="Send curl requests:",
+                                suffix=f"({self.threads} threads, timeout {self.timeout}s)")
+
         if self.verbose:
-            self.logger.warning("Stage: run_curls")
-        with concurrent.futures.ThreadPoolExecutor(
-                max_workers=self.threads
-        ) as executor:
-            executor.map(self._run_curl, items)
+            self.logger.warning(f"Stage: run_curls")
+        with concurrent.futures.ThreadPoolExecutor(max_workers=self.threads) as executor:
+            for item in items:
+                future = executor.submit(self._run_curl, item)
+                future.add_done_callback(self._progress_bar_callback)
             executor.shutdown(wait=True)
         return
 
@@ -761,47 +804,48 @@ class Bypasser:
             self.logger.info(f"Current: {item.request_curl_cmd}")
         try:
             # Exec curl command. Note: to resolve the path with Popen, the curl_cmd is built using shutil.which("curl")
-            if Tools.is_windows:
-                result = subprocess.Popen(item.request_curl_cmd, text=True, shell=False, stderr=subprocess.STDOUT,
-                                          stdout=subprocess.PIPE).communicate(timeout=self.timeout)[0]
-            else:
-                result = subprocess.Popen(shlex.split(item.request_curl_cmd), text=True,
-                                          shell=False, stderr=subprocess.STDOUT,
-                                          stdout=subprocess.PIPE).communicate(timeout=self.timeout)[0]
+            command = shlex.split(item.request_curl_cmd) if Tools.is_linux else item.request_curl_cmd
+            process = subprocess.Popen(command, text=True, shell=False, stderr=subprocess.STDOUT,
+                                       stdout=subprocess.PIPE)
 
-            if result:
-                # Apply xxx2unix to result. Mandatory under Windows/macOS to save curl responses headers in html file
-                # Notes: subprocess.Popen with text=True => universal_newlines=True so maybe useless
-                result = result.replace(os.linesep, "\n")
+            # Get command results
+            result = process.communicate(timeout=self.timeout)[0]
+            # Successful execution, parse result
+            if process.returncode == 0:
+                if result:
+                    # Apply xxx2unix. Mandatory under Windows/macOS to save curl responses headers in html file
+                    # Notes: subprocess.Popen with text=True => universal_newlines=True so maybe useless
+                    result = result.replace(os.linesep, "\n")
 
-                # Store command result in CurlItem object
-                if not self.proxy:
-                    item.response_raw_output = result
+                    # Store command result in CurlItem object
+                    if not self.proxy:
+                        item.response_raw_output = result
+                    else:
+                        # Delete the additional response proxy header 'HTTP/1.0 200 Connection established'
+                        item.response_raw_output = result.split("\n", 2)[2]
+
+                    # Remove from retry list if present
+                    if item in self.to_retry_items:
+                        self.to_retry_items.remove(item)
                 else:
-                    # Delete the additional response proxy header 'HTTP/1.0 200 Connection established'
-                    item.response_raw_output = result.split("\n", 2)[2]
-
-                # Remove from retry list if present
-                if item in self.to_retry_items:
-                    self.to_retry_items.remove(item)
+                    error_msg = f"Command {item.request_curl_cmd} succeeds but returns no result"
+                    self.logger.error(error_msg)
+                    raise ValueError(error_msg)
+            # Raise a detailed CalledProcessError when the return code != 0
+            else:
+                raise subprocess.CalledProcessError(process.returncode, item.request_curl_cmd, output=result)
 
         except subprocess.CalledProcessError as e:
             if self.verbose:
                 self.logger.warning(f"command '{e.cmd}' returned on-zero error code {e.returncode}: {e.output}")
             # curl: (92) HTTP/2 stream 0 was not closed cleanly: PROTOCOL_ERROR (err 1)
-            # Can occur with the CONNECT method
             if e.returncode == 92:
+                # With recent curl versions, can occur with HTTP/2 and the CONNECT method
                 if self.verbose:
-                    self.logger.warning("Curl HTTP/2 with HTTP/1.1 Upgrade failed. Force HTTP/1.1 for this request "
+                    self.logger.warning("Curl HTTP/2 with HTTP/1.1 upgrade failed. Force HTTP/1.1 for this request "
                                         "and add to retry list")
-                # Replace or add HTTP version in item curl command. Dirty. TODO: Make method for this in CurlItem
-                if self.http_version != "0":
-                    version = f"http{self.http_version}"
-                    item.curl_base_options = item.curl_base_options.replace(version, "http1.1")
-                    item.request_curl_cmd = item.request_curl_cmd.replace(version, "http1.1")
-                else:
-                    item.curl_base_options = item.curl_base_options.replace("path-as-is", "path-as-is --http1.1")
-                    item.request_curl_cmd = item.request_curl_cmd.replace("path-as-is", "path-as-is --http1.1")
+                # Force or add HTTP version 1.1 in item curl command
+                item.force_http_version("1.1")
 
                 # Add modified item in retry list
                 if item not in self.to_retry_items:
@@ -854,9 +898,9 @@ class Bypasser:
                         if not item_lst[0].save(outdir, force_output_dir_creation=False):
                             self.logger.warning(f"Error when saving {outdir}{Tools.separator}{item_lst[0].filename} "
                                                 f"file.")
-                if self.verbose:
-                    self.logger.info(f"Only relevant curl responses (results) were saved in the"
-                                     f" '{outdir}{Tools.separator}' directory")
+                    if self.verbose:
+                        self.logger.info(f"Only relevant curl responses (results) were saved in the"
+                                         f" '{outdir}{Tools.separator}' directory")
                 else:
                     self.logger.warning("No output to save")
 
@@ -874,6 +918,7 @@ class Bypasser:
                     inspect_cmd = f"echo {outdir}{Tools.separator}{{{','.join(filename_lst)}}} | xargs batcat"
                 else:
                     inspect_cmd = f"echo {outdir}{Tools.separator}{filename_lst} | xargs batcat"
+
                 self.logger.info(f"Also, inspect them manually with batcat:\n{inspect_cmd}")
 
             # Logfile - Starting at SaveLevel.MINIMAL
@@ -940,10 +985,10 @@ class Bypasser:
                         # Last round - adjust retry_count for logging
                         if retry_count + 1 == self.retry_number:
                             retry_count = self.retry_number - 1
-                    if self.verbose:
-                        self.logger.info(f"Retry ({retry_count + 1}/{self.retry_number}) the "
-                                         f"'{len(self.to_retry_items)}' failed curl commands with '{self.threads}' "
-                                         f"threads and '{self.timeout}' timeout")
+
+                    self.logger.info(f"Retry ({retry_count + 1}/{self.retry_number}) the "
+                                     f"'{len(self.to_retry_items)}' failed curl commands with '{self.threads}' "
+                                     f"threads and '{self.timeout}' timeout")
 
                     retry_count += 1
                     self._run_curls(self.to_retry_items)
@@ -986,7 +1031,7 @@ class Bypasser:
             # Generate curl items and command
             self._generate_curls(url_obj)
             if not self.verbose and not self.debug and not self.debug_class:
-                self.logger.warning(f"Trying to bypass '{url_obj.geturl()}' url ({len(self.curl_items)}) ...")
+                self.logger.warning(f"Trying to bypass '{url_obj.geturl()}' url ({len(self.curl_items)} payloads)...")
 
             # Send curl commands
             self._run_curls(self.curl_items)
@@ -1398,7 +1443,7 @@ class Bypasser:
         """
         return hash(self.__attrs())
 
-    def __str__(self) -> str:  # TODO: to be finished
+    def __str__(self) -> str:
         out = str()
         out += f"Url(s): {[url_obj.geturl() for url_obj in self.urls]}\n"
         out += f"Headers(s): {self.headers}\n"
@@ -1410,8 +1455,8 @@ class Bypasser:
         out += f"Proxy: {self.proxy}\n"
         out += f"Spoofip(s): {self.spoof_ips}\n"
         out += f"Spoofip replace: {self.spoof_ip_replace}\n"
-        out += f"Spoofports: {self.spoof_ports}\n"
-        out += f"Spoofports replace: {self.spoof_port_replace}\n"
+        out += f"Spoofport(s): {self.spoof_ports}\n"
+        out += f"Spoofport replace: {self.spoof_port_replace}\n"
         out += f"Save level: {self.save_level}\n"
         out += f"Ouput directory: {self.output_dir}\n"
         out += f"Verbose: {self.verbose}\n"
@@ -1441,6 +1486,7 @@ class CurlItem:
     regex_status_code = re.compile(r"HTTP.*\s+(\d+)\s+\w+", re.IGNORECASE)
     regex_content_length = re.compile(r"Content-Length:\s+(\d+)", re.IGNORECASE)
     regex_content_type = re.compile(r"Content-Type:\s+(\w+/\w+)", re.IGNORECASE)
+    regex_http_version = re.compile(r"(?!--)http[\w\d.-]*(?<! )", re.IGNORECASE)
     regex_redirect_url = re.compile(r"Location:\s+(.*)", re.IGNORECASE)
     regex_server_type = re.compile(r"Server:\s+(.*)", re.IGNORECASE)
     regex_title = re.compile(r"<title>(.*)</title>", re.IGNORECASE)
@@ -1475,6 +1521,28 @@ class CurlItem:
         self.response_raw_output = ""  # See property
 
     # *** Public methods *** #
+
+    def force_http_version(self, target_http_version) -> None:
+        """ Patch the current item (curl_base_options and request_curl_cmd) to force a specific http version
+
+        :param str target_http_version: Forced http version. Ex: 1.1
+        """
+        # Security check
+        if str(target_http_version) not in CurlItem.curl_http_versions:
+            error_msg = f"Unknown HTTP version {str(target_http_version)} was ignored. Must be " \
+                        f"in '{CurlItem.curl_http_versions}'"
+            self.logger.error(error_msg)
+            raise ValueError(error_msg)
+        # Patch HTTP version
+        version = f"http{str(target_http_version)}"
+        if "--http" in self.curl_base_options:
+            self.curl_base_options = CurlItem.regex_http_version.sub(version, self.curl_base_options)
+            self.request_curl_cmd = CurlItem.regex_http_version.sub(version, self.request_curl_cmd)
+        # Add HTTP version
+        else:
+            target_opt = f"path-as-is --{version}"
+            self.curl_base_options = self.curl_base_options.replace("path-as-is", target_opt)
+            self.request_curl_cmd = self.request_curl_cmd.replace("path-as-is", target_opt)
 
     @staticmethod
     def get_formatted_item_header(separator="=>") -> str:
@@ -1635,6 +1703,7 @@ class CurlItem:
                 error_msg = f"Unable to return response content_length, please check the format and " \
                             f"redefine the 'response_raw_output' property {e}"
                 self.logger.error(error_msg)
+                self.logger.error(repr(self.response_raw_output))
                 raise ValueError(error_msg)
         else:
             error_msg = "Please set 'response_raw_output' property before trying to access its content_length value."
@@ -1650,6 +1719,7 @@ class CurlItem:
                 error_msg = f"Unable to return response lines_count, please check the format and " \
                             f"redefine the 'response_raw_output' property {e}"
                 self.logger.error(error_msg)
+                self.logger.error(repr(self.response_raw_output))
                 raise ValueError(error_msg)
         else:
             error_msg = "Please set 'response_raw_output' property before trying to access its lines_count value."
@@ -1665,6 +1735,7 @@ class CurlItem:
                 error_msg = f"Unable to return response words_count, please check the format and " \
                             f"redefine the 'response_raw_output' property {e}"
                 self.logger.error(error_msg)
+                self.logger.error(repr(self.response_raw_output))
                 raise ValueError(error_msg)
         else:
             error_msg = "Please set 'response_raw_output' property before trying to access its words_count value."
@@ -1681,6 +1752,7 @@ class CurlItem:
                 error_msg = f"Unable to return response content_type, please check the format and " \
                             f"redefine the 'response_raw_output' property {e}"
                 self.logger.error(error_msg)
+                self.logger.error(repr(self.response_raw_output))
                 raise ValueError(error_msg)
         else:
             error_msg = "Please set 'response_raw_output' property before trying to access its content_type value."
@@ -1697,6 +1769,7 @@ class CurlItem:
                 error_msg = f"Unable to return response redirect_url, please check the format and " \
                             f"redefine the 'response_raw_output' property {e}"
                 self.logger.error(error_msg)
+                self.logger.error(repr(self.response_raw_output))
                 raise ValueError(error_msg)
         else:
             error_msg = "Please set 'response_raw_output' property before trying to access its redirect_url value."
@@ -1793,7 +1866,7 @@ class CurlItem:
         """
         return hash(self.__attrs())
 
-    def __str__(self) -> str:  # TODO with all properties !
+    def __str__(self) -> str:
         out = str()
         out += f"Target url: {self.target_url.geturl()}\n"
         out += f"Target ip: {self.target_ip}\n"
@@ -1889,7 +1962,7 @@ class Tools:
             if ext_logger and debug:
                 ext_logger.debug(f"The {arg_name} argument is a string list separated by comma")
             if Tools.is_linux and clean_arg:
-                return [arg.replace(" ", "") for arg in shlex.quote(argument).split(",")]
+                return [shlex.quote(arg.replace(" ", "")) for arg in argument.split(",")]
             else:
                 return [arg.replace(" ", "") for arg in argument.split(",")]
         # Arg value is a simple string
@@ -1965,7 +2038,7 @@ def library():
     arguments = docopt(__doc__, version=f"bypass-url-parser {VERSION}")
 
     # Init Bypasser (Without external logger. In this case, the library set his own logger)
-    exporter = Bypasser(verbose=True, debug=True, debug_class=True, ext_logger=None)
+    exporter = Bypasser(verbose=True, debug=False, debug_class=False, ext_logger=None)
 
     # Set properties
     exporter.threads = 10
@@ -1978,7 +2051,7 @@ def library():
 
     # Print results
     for url, grouped_items in bypass_results.items():
-        print(f"\nBypass results for '{url.geturl()}' url:")
+        print(f"Bypass results for '{url.geturl()}' url:")
         library_output = Bypasser.get_results_from_grouped_items(url, grouped_items, header_line=True,
                                                                  with_filename=False, filter_sc=filter_status_codes)
         print(library_output)
