@@ -762,20 +762,9 @@ class Bypasser:
         return
 
     def _progress_bar_callback(self, *args):
-        """ Callback method to display progress bar. Inspired from https://stackoverflow.com/a/34325723/355230. """
-        percent = ("{0:." + str(self.decimals) + "f}").format(100 * (self.iteration / float(self.total)))
-        filled_length = int(self.length * self.iteration // self.total)
-        bar = self.fill * filled_length + "." * (self.length - filled_length)
-
-        # Print progress bar (disable if self.debug or self.debug_class)
-        if not self.debug:
-            print(f"\r{self.prefix} [{bar}] {percent}% {self.suffix}", end=self.print_end, flush=True)
-
-        # Print newline on completion
-        if self.iteration == self.total:
-            print(flush=True)
-        else:
-            self.iteration = self.iteration + 1
+        if self.iteration % 100 == 0:
+            self.logger.info(f"Doing: {self.iteration} / {self.total}")
+        self.iteration = self.iteration + 1
 
     def _run_curls(self, items):
         """ Call multithread curl commands.
@@ -1363,8 +1352,7 @@ class Bypasser:
                                     f"at least 3 slashes"
                         self.logger.warning(error_msg)
                     else:
-                        # parsed_url = urlparse(url)
-                        parsed_url = urlparse(url.replace("'", "%27"), allow_fragments=False)
+                        parsed_url = urlparse(url)
                         if parsed_url not in self._urls:
                             self.urls.append(parsed_url)
         except Exception as e:
