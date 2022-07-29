@@ -513,6 +513,9 @@ class Bypasser:
 
         # HTTP version & base options
         binary_name = which("curl")  # Mandatory for subprocess.Popen()
+        if not binary_name:
+            self.logger.error("Program curl not found, install it and ensure it's within your PATH")
+            exit(1)
         http_version = f"--http{self.http_version}" if self.http_version != "0" else None
         base_options = f"-sS -kgi --path-as-is {http_version}" if http_version else "-sS -kgi --path-as-is"
 
