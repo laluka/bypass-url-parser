@@ -4,7 +4,7 @@
 A tool that tests MANY url bypasses to reach a 40X protected page.
 
 Usage:
-    ./bypass-url-parser.py -u <URL> [-m <mode>] [-o <outdir>] [-S <level>] [(-H <header>)...] [-r <num>]
+    ./bypass-url-parser.py -u <URL> [(-m <mode>)...] [-o <outdir>] [-S <level>] [(-H <header>)...] [-r <num>]
                            [-s <ip>] [--spoofip-replace] [-p <port>] [--spoofport-replace]
                            [-t <threads>] [-T <timeout>] [-x <proxy_url>] [-v | -d | -dd]
 
@@ -48,7 +48,6 @@ import logging
 import os
 import platform
 import re
-import shlex
 import socket
 import subprocess
 import sys
@@ -59,7 +58,7 @@ from pathlib import Path
 from shutil import which
 from urllib.parse import urlparse, ParseResult
 
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 logger = logging.getLogger("bup")
 
 
@@ -77,7 +76,6 @@ class Bypasser:
                     "unicode", "char_encode", "http_headers_method", "http_headers_scheme", "http_headers_ip",
                     "http_headers_port", "http_headers_url", "misc"]  # Not yet all implemented, coming soon
     default_bypass_mode = "all"
-    default_clean_inputs = True  # Under linux, calls shlex.quote() to clean user inputs
     default_log_filename = "triaged-bypass.log"
     default_save_level = SaveLevel.MINIMAL
     default_spoof_ip_replace = False
@@ -87,8 +85,7 @@ class Bypasser:
     default_retry_number = 3
     default_http_version = "0"  # Disabled by default. Lets curl to manage its own version of HTTP by default
     default_output_dir = f"{tempfile.TemporaryDirectory().name}-bypass-url-parser"
-    default_user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) " \
-                         "Chrome/101.0.4951.41 Safari/537.36"
+    default_user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36"
 
     # Internal bypass lists
     const_internal_ips = list()
@@ -479,7 +476,7 @@ class Bypasser:
         self.user_agent = Bypasser.default_user_agent
         self.proxy = config_dict.get("--proxy")
         self.current_bypass_modes = config_dict.get("--mode")
-        self.headers = config_dict.get("--header")
+        self.headers = config_dict.get("--header", [])
         self.output_dir = config_dict.get("--outdir")
         self.save_level = config_dict.get("--save-level")
         self.spoof_ip_replace = config_dict.get("--spoofip-replace")  # If False spoof_ips append to existing list
@@ -493,7 +490,7 @@ class Bypasser:
 
     # *** Protected methods *** #
 
-    def _init_curl_base(self, force_user_agent="", debug=False) -> str:
+    def _init_curl_base(self, force_user_agent=None, debug=False) -> str:
         """ Build curl base command.
 
         User-agent prevalence rule : force_user_agent > -H "User-agent: xxx" > Bypasser.default_user_agent
@@ -501,63 +498,35 @@ class Bypasser:
         :param str force_user_agent: Forced user-agent
         :param bool debug: If True, log the obtained base command at the end of this method
         """
-        # Obtaining the appropriate enclosing quotes format by headers examining. By default, fix double quotes (")
-        # for Windows OS to avoid errors when copy/paste command in cmd
-        self.quote = '"' if Tools.is_windows else "'"
-        if self.headers:
-            for key, value in self.headers.items():
-                if "'" in key or "'" in value:
-                    self.quote = '"'
-        if "'" in force_user_agent or "'" in self.user_agent_suffix:
-            self.quote = '"'
-
-        # HTTP version & base options
+        # Specify curl binary
         binary_name = which("curl")  # Mandatory for subprocess.Popen()
         if not binary_name:
             self.logger.error("Program curl not found, install it and ensure it's within your PATH")
             exit(1)
-        http_version = f"--http{self.http_version}" if self.http_version != "0" else None
-        base_options = f"-sS -kgi --path-as-is {http_version}" if http_version else "-sS -kgi --path-as-is"
-
-        # User-agent
-        if not force_user_agent:
-            header_user_agent = f"-H {self.quote}User-agent: {self.user_agent}{self.quote}"
-        else:
-            header_user_agent = f"-H {self.quote}User-agent: {force_user_agent}{self.quote}"
-
+        self.base_curl = [binary_name]
+        # Add sane base options
+        self.base_curl.append("-sS")
+        self.base_curl.append("-kgi")
+        self.base_curl.append("--path-as-is")
+        # HTTP version
+        if self.http_version != "0":
+            self.base_curl.append(f"--http{self.http_version}")
         # HTTP proxy
-        http_proxy = f"-x {self.quote}{self.proxy}{self.quote}"
         if self.proxy:
-            self.base_curl = f"{binary_name} {base_options} {http_proxy}"
-        else:
-            self.base_curl = f"{binary_name} {base_options}"
+            self.base_curl.extend(["-x", self.proxy])
 
         # Custom headers
-        headers = ""
-        if self.headers:
-            for key, value in self.headers.items():
-                if key in ["User-Agent", "User-agent", "user-agent", "user-Agent"]:
-                    # self.logger.warning(f"Header '{key}' was ignored. Please use appropriate user-agent argument")
-                    if not force_user_agent:
-                        header_user_agent = f"-H {self.quote}User-agent: {value}{self.quote}"
-                    else:
-                        header_user_agent = f"-H {self.quote}User-agent: {force_user_agent}{self.quote}"
-                else:
-                    headers += f" -H {self.quote}{key}: {value}{self.quote}"
-
-        # Internal hook for User-agent
-        if self.user_agent_suffix:
-            header_user_agent = f"{header_user_agent.rstrip(self.quote)}{self.user_agent_suffix}{self.quote}"
-
-        # Base command
-        if headers:
-            self.base_curl = f"{self.base_curl} {header_user_agent} {headers.lstrip()}"
-        else:
-            self.base_curl = f"{self.base_curl} {header_user_agent}"
+        print(self.headers)
+        for key, value in self.headers.items():
+            if key.lower() == "user-agent":
+                key = "User-Agent" # Overwrite real curl user-agent
+                # Internal hook for User-Agent
+                if self.user_agent_suffix:
+                    value = f"{value}{self.user_agent_suffix}"
+            self.base_curl.extend(["-H", f"{key}: {value}"])
 
         if debug:
-            self.logger.debug(f"Base curl command: {self.base_curl}")
-
+            self.logger.debug(f"Base curl command: {' '.join(self.base_curl)}")
         return self.base_curl
 
     def _init_debug_level(self, level):
@@ -604,8 +573,7 @@ class Bypasser:
         # Get information from url
         base_url = f"{url_obj.scheme}://{url_obj.netloc}"
         base_path = f"{url_obj.path}{url_obj.query}"
-        full_url = url_obj.geturl()
-        target_url = f"{self.quote}{full_url}{self.quote}"
+        target_url = url_obj.geturl()
         self.logger.debug(f"URL {target_url} parsing: base_url={self.quote}{base_url}{self.quote}, "
                           f"base_path={self.quote}{base_path}{self.quote}")
 
@@ -616,7 +584,7 @@ class Bypasser:
         url_public_ip = socket.gethostbyname(str(url_obj.hostname))
 
         # Original request
-        cmd = f"{self.base_curl} {target_url}"
+        cmd = [*self.base_curl, target_url]
         item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="original_request", target_ip=url_public_ip,
                         debug=self.debug, ext_logger=self.logger)
         if item not in self.curl_items:
@@ -625,7 +593,7 @@ class Bypasser:
         # [http_methods] - Custom methods
         if "all" in self.current_bypass_modes or "http_methods" in self.current_bypass_modes:
             for const_http_method in Bypasser.const_http_methods:
-                cmd = f"{self.base_curl} -X {self.quote}{const_http_method}{self.quote} {target_url}"
+                cmd = [*self.base_curl, "-X", const_http_method, target_url]
                 item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_methods", target_ip=url_public_ip,
                                 debug=self.debug, ext_logger=self.logger)
                 if item not in self.curl_items:
@@ -637,8 +605,7 @@ class Bypasser:
                 if self.spoof_ips:
                     # Custom IP addresses
                     for spoof_ip in self.spoof_ips:
-                        cmd = f"{self.base_curl} -H {self.quote}{const_header_host}: {spoof_ip}{self.quote} " \
-                              f"{target_url}"
+                        cmd = [*self.base_curl, "-H", f"{const_header_host}: {spoof_ip}", target_url]
                         item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_ip",
                                         target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
                         if item not in self.curl_items:
@@ -646,15 +613,13 @@ class Bypasser:
                 if not self.spoof_ip_replace:  # False in any case if self.spoof_ips is empty
                     # Internal IP addresses
                     for const_internal_ip in Bypasser.const_internal_ips:
-                        cmd = f"{self.base_curl} -H {self.quote}{const_header_host}: {const_internal_ip}{self.quote} " \
-                              f"{target_url}"
+                        cmd = [*self.base_curl, "-H", f"{const_header_host}: {const_internal_ip}", target_url]
                         item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_ip",
                                         target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
                         if item not in self.curl_items:
                             self.curl_items.append(item)
                     # Public IP address related to the url subdomain
-                    cmd = f"{self.base_curl} -H {self.quote}{const_header_host}: {url_public_ip}{self.quote} " \
-                          f"{target_url}"
+                    cmd = [*self.base_curl, "-H", f"{const_header_host}: {url_public_ip}", target_url]
                     item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_ip",
                                     target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
                     if item not in self.curl_items:
@@ -664,8 +629,7 @@ class Bypasser:
         if "all" in self.current_bypass_modes or "http_headers_scheme" in self.current_bypass_modes:
             for const_header_scheme in Bypasser.const_header_schemes:
                 for const_proto in Bypasser.const_protos:
-                    cmd = f"{self.base_curl} -H {self.quote}{const_header_scheme}: {const_proto}{self.quote} " \
-                          f"{target_url}"
+                    cmd = [*self.base_curl, "-H", f"{const_header_scheme}: {const_proto}", target_url]
                     item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_scheme",
                                     target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
                     if item not in self.curl_items:
@@ -677,8 +641,7 @@ class Bypasser:
                 if self.spoof_ports:
                     # Custom port(s)
                     for spoof_port in self.spoof_ports:
-                        cmd = f"{self.base_curl} -H {self.quote}{const_header_port}: {spoof_port}{self.quote} " \
-                              f"{target_url}"
+                        cmd = [*self.base_curl, "-H", f"{const_header_port}: {spoof_port}", target_url]
                         item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_port",
                                         target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
                         if item not in self.curl_items:
@@ -686,8 +649,7 @@ class Bypasser:
                 if not self.spoof_port_replace:  # False in any case if self.spoof_ports is empty
                     # Internal ports
                     for const_port in Bypasser.const_ports:
-                        cmd = f"{self.base_curl} -H {self.quote}{const_header_port}: {const_port}{self.quote} " \
-                              f"{target_url}"
+                        cmd = [*self.base_curl, "-H", f"{const_header_port}: {const_port}", target_url]
                         item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_port",
                                         target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
                         if item not in self.curl_items:
@@ -699,15 +661,13 @@ class Bypasser:
                 for const_path in Bypasser.const_paths:
                     path_post = Tools.replacenth(base_path, "/", f"/{const_path}", idx_slash)
                     # First variant
-                    cmd = f"{self.base_curl} {self.quote}{base_url}{path_post}{self.quote}"
-                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="mid_paths", target_ip=url_public_ip,
-                                    debug=self.debug, ext_logger=self.logger)
+                    cmd = [*self.base_curl, f"{base_url}{path_post}"]
+                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="mid_paths", target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
                     if item not in self.curl_items:
                         self.curl_items.append(item)
                     # Second variant
-                    cmd = f"{self.base_curl} {self.quote}{base_url}/{path_post}{self.quote}"
-                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="mid_paths", target_ip=url_public_ip,
-                                    debug=self.debug, ext_logger=self.logger)
+                    cmd = [*self.base_curl, f"{base_url}/{path_post}"]
+                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="mid_paths", target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
                     if item not in self.curl_items:
                         self.curl_items.append(item)
                     if idx_slash <= 1:
@@ -715,15 +675,13 @@ class Bypasser:
 
                     path_pre = Tools.replacenth(base_path, "/", f"{const_path}/", idx_slash)
                     # Fist variant
-                    cmd = f"{self.base_curl} {self.quote}{base_url}{path_pre}{self.quote}"
-                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="mid_paths", target_ip=url_public_ip,
-                                    debug=self.debug, ext_logger=self.logger)
+                    cmd = [*self.base_curl, f"{base_url}{path_pre}"]
+                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="mid_paths", target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
                     if item not in self.curl_items:
                         self.curl_items.append(item)
                     # Second variant
-                    cmd = f"{self.base_curl} {self.quote}{base_url}/{path_pre}{self.quote}"
-                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="mid_paths", target_ip=url_public_ip,
-                                    debug=self.debug, ext_logger=self.logger)
+                    cmd = [*self.base_curl, f"{base_url}/{path_pre}"]
+                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="mid_paths", target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
                     if item not in self.curl_items:
                         self.curl_items.append(item)
 
@@ -734,31 +692,22 @@ class Bypasser:
             if "all" in self.current_bypass_modes or "case_substitution" in self.current_bypass_modes:
                 char_case = base_path[abc_index]
                 char_case = char_case.upper() if char_case.islower() else char_case.lower()
-                cmd = f"{self.base_curl} {self.quote}{base_url}" \
-                      f"{base_path[:abc_index]}{char_case}{base_path[abc_index + 1:]}{self.quote}"
-                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="case_substitution", target_ip=url_public_ip,
-                                debug=self.debug, ext_logger=self.logger)
+                cmd = [*self.base_curl, f"{base_url}/{base_path[:abc_index]}{char_case}{base_path[abc_index + 1:]}"]
+                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="case_substitution", target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
                 if item not in self.curl_items:
                     self.curl_items.append(item)
 
             # [char_encode] - Url-Encoding
             if "all" in self.current_bypass_modes or "char_encode" in self.current_bypass_modes:
                 char_urlencoded = format(ord(base_path[abc_index]), "02x")
-                cmd = \
-                    f"{self.base_curl} {self.quote}{base_url}" \
-                    f"{base_path[:abc_index]}%{char_urlencoded}{base_path[abc_index + 1:]}{self.quote}"
-                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="char_encode", target_ip=url_public_ip,
-                                debug=self.debug, ext_logger=self.logger)
+                cmd = [*self.base_curl, f"{base_url}/{base_path[:abc_index]}%{char_urlencoded}{base_path[abc_index + 1:]}"]
+                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="char_encode", target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
                 if item not in self.curl_items:
                     self.curl_items.append(item)
 
         # Verbose/debug print
         if self.verbose:
             self.logger.info(f"Payloads to test: {len(self.curl_items)}")
-
-        if self.debug_class:
-            for curl in self.curl_items:  # TODO: Maybe useless, better with --list-payloads argument ?
-                self.logger.debug(curl.request_curl_cmd.replace(self.base_curl, ""))
 
         # IDEA Generate moooooore with cross products?
         # Not doing for now, so many curls already... :)
@@ -794,10 +743,9 @@ class Bypasser:
         """
         if self.debug:
             self.logger.info(f"Current: {item.request_curl_cmd}")
+            # input("paused")
         try:
-            # Exec curl command. Note: to resolve the path with Popen, the curl_cmd is built using shutil.which("curl")
-            command = shlex.split(item.request_curl_cmd) if Tools.is_linux else item.request_curl_cmd
-            process = subprocess.Popen(command, text=True, shell=False, stderr=subprocess.STDOUT,
+            process = subprocess.Popen(item.request_curl_cmd, text=True, shell=False, stderr=subprocess.STDOUT,
                                        stdout=subprocess.PIPE)
 
             # Get command results
@@ -1103,9 +1051,7 @@ class Bypasser:
         self._current_bypass_modes.append(Bypasser.default_bypass_mode)
         if modes_lst:
             self._current_bypass_modes.clear()
-            for mode in Tools.get_list_from_generic_arg(modes_lst, arg_name="bypass_mode", stdin_support=True,
-                                                        clean_arg=Bypasser.default_clean_inputs, ext_logger=self.logger,
-                                                        debug=self.debug_class):
+            for mode in Tools.get_list_from_generic_arg(modes_lst, arg_name="bypass_mode", stdin_support=True, ext_logger=self.logger, debug=self.debug_class):
                 if mode in Bypasser.bypass_modes:
                     if mode not in self._current_bypass_modes:
                         self._current_bypass_modes.append(mode)
@@ -1132,8 +1078,7 @@ class Bypasser:
             self._headers = dict()
             if value:
                 for header in Tools.get_list_from_generic_arg(value, arg_name="header", ext_logger=self.logger,
-                                                              stdin_support=False, debug=self.debug_class,
-                                                              clean_arg=Bypasser.default_clean_inputs):
+                                                              stdin_support=False, debug=self.debug_class):
                     key, value = header.split(":", 1)
                     self._headers[key] = value.strip()
         except ValueError as e:
@@ -1240,15 +1185,9 @@ class Bypasser:
         try:
             self._spoof_ips = list()
             if value:
-                for ip in Tools.get_list_from_generic_arg(value, arg_name="spoofip", stdin_support=True,
-                                                          ext_logger=self.logger, debug=self.debug_class,
-                                                          clean_arg=Bypasser.default_clean_inputs):
-                    if "'" in ip:
-                        self.logger.warning(f"IP '{ip}' was ignored. Single quotes in ip/hostname are currently "
-                                            f"unsupported")
-                    else:
-                        if ip not in self._spoof_ips:
-                            self._spoof_ips.append(ip)
+                for ip in Tools.get_list_from_generic_arg(value, arg_name="spoofip", stdin_support=True, ext_logger=self.logger, debug=self.debug_class):
+                    if ip not in self._spoof_ips:
+                        self._spoof_ips.append(ip)
             # Cancel the possible replace_mode that could block internal ip list in [http_headers_ip]
             if not self._spoof_ips:
                 self.spoof_ip_replace = False
@@ -1278,8 +1217,7 @@ class Bypasser:
             self._spoof_ports = list()
             if value:
                 for port in Tools.get_list_from_generic_arg(value, arg_name="spoofport", stdin_support=True,
-                                                            ext_logger=self.logger, debug=self.debug_class,
-                                                            clean_arg=Bypasser.default_clean_inputs):
+                                                            ext_logger=self.logger, debug=self.debug_class):
                     if int(port) not in self._spoof_ports:
                         self._spoof_ports.append(int(port))
             # Cancel the possible replace_mode that could block internal port list in [http_headers_port]
@@ -1348,8 +1286,7 @@ class Bypasser:
             self._urls = list()
             if value:
                 for url in Tools.get_list_from_generic_arg(value, arg_name="url", stdin_support=True,
-                                                           ext_logger=self.logger, debug=self.debug_class,
-                                                           clean_arg=Bypasser.default_clean_inputs):
+                                                           ext_logger=self.logger, debug=self.debug_class):
                     if not Bypasser.regex_url.match(url):
                         error_msg = f"URL {url} was ignored. Must start with http:// or https:// and contain " \
                                     f"at least 3 slashes"
@@ -1613,11 +1550,8 @@ class CurlItem:
 
     @property
     def request_curl_payload(self) -> str:
-        # Remove base options
-        tmp = self._curl_cmd.replace(self.curl_base_options, "")
-        # Remove the URL, except for mid_path/end_path which differs from the target url
-        tmp = tmp.replace(f"'{self.target_url.geturl()}'", "")
-        return tmp.strip()
+        # import ipdb; ipdb.set_trace()
+        return " ".join(self._curl_cmd[self._curl_cmd.index("--path-as-is")+1:])
 
     @property
     def request_curl_cmd(self) -> str:
@@ -1875,8 +1809,8 @@ class Tools:
     """ Utility class for this project. """
 
     # Useful cross-platform properties
-    is_windows = True if platform.system() == "Windows" else False
-    is_linux = True if platform.system() == "Linux" else False
+    is_windows = platform.system() == "Windows"
+    is_linux = platform.system() == "Linux"
     separator = '\\' if is_windows else "/"
 
     @staticmethod
@@ -1908,7 +1842,7 @@ class Tools:
 
     @staticmethod
     def get_list_from_generic_arg(argument, arg_name="generic", enc_format="ISO-8859-1", stdin_support=True,
-                                  clean_arg=False, ext_logger=None, debug=False) -> list[str]:
+                                  ext_logger=None, debug=False) -> list[str]:
         """ Return list from generic argument.
 
         Useful when the argument could be a string, a list or a filename
@@ -1917,7 +1851,6 @@ class Tools:
         :param str arg_name: Argument name just for debug message (Optional)
         :param str enc_format: Encoding format to read file if arg is filename. Default (FR) = ISO-8859-1 (Optional)
         :param bool stdin_support: Make this function compatible with stdin '-' standard (default: True) (Optional)
-        :param bool clean_arg: Under linux, calls shlex.quote() to clean user inputs (default: False) (Optional)
         :param logger ext_logger: Specify your own logger (default: None) (Optional)
         :param bool debug: Show method debug information (default:False, need ext_logger) (Optional)
         :return: List from generic argument
@@ -1926,44 +1859,23 @@ class Tools:
         if stdin_support and argument == "-":
             if ext_logger and debug:
                 ext_logger.debug(f"Read {arg_name} argument as a list from stdin")
-            if Tools.is_linux and clean_arg:
-                return [shlex.quote(line) for line in sys.stdin.read().splitlines()]
-            else:
-                return sys.stdin.read().splitlines()
+            return sys.stdin.read().splitlines()
         # Arg value is already a list, useful for library mode. Just return
         if isinstance(argument, list):
             if ext_logger and debug:
                 ext_logger.debug(f"The {arg_name} argument is already a list")
-            if Tools.is_linux and clean_arg:
-                return [shlex.quote(elt) for elt in argument]
-            else:
-                return argument
+            return argument
         # Arg value is a filename (/path/file)
         elif os.path.isfile(argument):
             if ext_logger and debug:
                 ext_logger.debug(f"The {arg_name} argument is a file")
-            if Tools.is_linux and clean_arg:
-                return [shlex.quote(line.rstrip()) for line in Tools.load_file_into_memory_list(
+            return [line.rstrip() for line in Tools.load_file_into_memory_list(
                     argument, enc_format=enc_format, clean_filename=False, ext_logger=ext_logger, debug=debug)]
-            else:
-                return [line.rstrip() for line in Tools.load_file_into_memory_list(
-                    argument, enc_format=enc_format, clean_filename=False, ext_logger=ext_logger, debug=debug)]
-        # Arg value is a string with multiple items separated by a comma ("value1, value2, ...")
-        elif isinstance(argument, str) and "," in argument:
-            if ext_logger and debug:
-                ext_logger.debug(f"The {arg_name} argument is a string list separated by comma")
-            if Tools.is_linux and clean_arg:
-                return [shlex.quote(arg.replace(" ", "")) for arg in argument.split(",")]
-            else:
-                return [arg.replace(" ", "") for arg in argument.split(",")]
         # Arg value is a simple string
         elif isinstance(argument, str):
             if ext_logger and debug:
                 ext_logger.debug(f"The {arg_name} argument is a string")
-            if Tools.is_linux and clean_arg:
-                return [shlex.quote(argument)]
-            else:
-                return [argument]
+            return [argument]
         else:
             error_msg = f"The {arg_name} argument type is not supported"
             if ext_logger:
