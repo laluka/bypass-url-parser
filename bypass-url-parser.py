@@ -61,9 +61,11 @@ from urllib.parse import urlparse, ParseResult
 VERSION = "0.2.0"
 logger = logging.getLogger("bup")
 
+
 def file_to_list(filename):
     with open(filename, "r") as f:
         return f.read().strip().splitlines()
+
 
 class Bypasser:
     class SaveLevel(IntEnum):
@@ -75,9 +77,23 @@ class Bypasser:
     # Default class values
     regex_url = re.compile(r"^https?://[^/]+", re.IGNORECASE)
     regex_proxy_url = re.compile(r"^https?://.*:\d{2,5}$", re.IGNORECASE)
-    bypass_modes = ["all", "mid_paths", "end_paths", "http_host", "http_methods", "http_versions", "case_substitution",
-                    "unicode", "char_encode", "http_headers_method", "http_headers_scheme", "http_headers_ip",
-                    "http_headers_port", "http_headers_url", "misc"]  # Not yet all implemented, coming soon
+    bypass_modes = [
+        "all",
+        "mid_paths",
+        "end_paths",
+        "http_host",
+        "http_methods",
+        "http_versions",
+        "case_substitution",
+        "unicode",
+        "char_encode",
+        "http_headers_method",
+        "http_headers_scheme",
+        "http_headers_ip",
+        "http_headers_port",
+        "http_headers_url",
+        "misc",
+    ]  # Not yet all implemented, coming soon
     default_bypass_mode = "all"
     default_log_filename = "triaged-bypass.log"
     default_save_level = SaveLevel.MINIMAL
@@ -100,12 +116,23 @@ class Bypasser:
     const_header_hosts = file_to_list("payloads/const_header_hosts.lst")
     const_paths = file_to_list("payloads/const_paths.lst")
 
-    def __init__(self, config_dict=None, verbose=False, debug=False, debug_class=False, ext_logger=None):
+    def __init__(
+        self,
+        config_dict=None,
+        verbose=False,
+        debug=False,
+        debug_class=False,
+        ext_logger=None,
+    ):
         if not config_dict:
             config_dict = dict()
 
         # Init verbose and/or debug level
-        if config_dict and "--verbose" in config_dict.keys() and "--debug" in config_dict.keys():
+        if (
+            config_dict
+            and "--verbose" in config_dict.keys()
+            and "--debug" in config_dict.keys()
+        ):
             self.verbose = config_dict.get("--verbose", False)
             self.debug = False
             self.debug_class = False
@@ -119,11 +146,15 @@ class Bypasser:
         if ext_logger:
             self.logger = ext_logger
         else:
-            self.logger = Tools.get_new_logger(self.use_classname(), with_colors=True, debug_level=self.debug)
+            self.logger = Tools.get_new_logger(
+                self.use_classname(), with_colors=True, debug_level=self.debug
+            )
 
         if self.debug_class:
-            self.logger.debug(f"Debug level: verbose={self.verbose}, debug={self.debug}, "
-                              f"debug_class={self.debug_class}")
+            self.logger.debug(
+                f"Debug level: verbose={self.verbose}, debug={self.debug}, "
+                f"debug_class={self.debug_class}"
+            )
 
         # Init object vars
         self.quote = "'"
@@ -144,9 +175,13 @@ class Bypasser:
         self.headers = config_dict.get("--header", [])
         self.output_dir = config_dict.get("--outdir")
         self.save_level = config_dict.get("--save-level")
-        self.spoof_ip_replace = config_dict.get("--spoofip-replace")  # If False spoof_ips append to existing list
+        self.spoof_ip_replace = config_dict.get(
+            "--spoofip-replace"
+        )  # If False spoof_ips append to existing list
         self.spoof_ips = config_dict.get("--spoofip")
-        self.spoof_port_replace = config_dict.get("--spoofport-replace")  # If False spoof_ports append to existing list
+        self.spoof_port_replace = config_dict.get(
+            "--spoofport-replace"
+        )  # If False spoof_ports append to existing list
         self.spoof_ports = config_dict.get("--spoofport")
         self.threads = config_dict.get("--threads")
         self.timeout = config_dict.get("--timeout")
@@ -156,7 +191,7 @@ class Bypasser:
     # *** Protected methods *** #
 
     def _init_curl_base(self, force_user_agent=None, debug=False) -> str:
-        """ Build curl base command.
+        """Build curl base command.
 
         User-agent prevalence rule : force_user_agent > -H "User-agent: xxx" > Bypasser.default_user_agent
 
@@ -166,7 +201,9 @@ class Bypasser:
         # Specify curl binary
         binary_name = which("curl")  # Mandatory for subprocess.Popen()
         if not binary_name:
-            self.logger.error("Program curl not found, install it and ensure it's within your PATH")
+            self.logger.error(
+                "Program curl not found, install it and ensure it's within your PATH"
+            )
             exit(1)
         self.base_curl = [binary_name]
         # Add sane base options
@@ -184,7 +221,7 @@ class Bypasser:
         print(self.headers)
         for key, value in self.headers.items():
             if key.lower() == "user-agent":
-                key = "User-Agent" # Overwrite real curl user-agent
+                key = "User-Agent"  # Overwrite real curl user-agent
                 # Internal hook for User-Agent
                 if self.user_agent_suffix:
                     value = f"{value}{self.user_agent_suffix}"
@@ -210,8 +247,10 @@ class Bypasser:
             self.debug = False
             self.debug_class = False
 
-    def _init_progress_bar(self, total, prefix="", suffix="", decimals=1, length=100, fill="█") -> None:
-        """ Init progress bar components.
+    def _init_progress_bar(
+        self, total, prefix="", suffix="", decimals=1, length=100, fill="█"
+    ) -> None:
+        """Init progress bar components.
 
         Inspired from https://stackoverflow.com/a/34325723/355230
 
@@ -239,8 +278,10 @@ class Bypasser:
         base_url = f"{url_obj.scheme}://{url_obj.netloc}"
         base_path = f"{url_obj.path}{url_obj.query}"
         target_url = url_obj.geturl()
-        self.logger.debug(f"URL {target_url} parsing: base_url={self.quote}{base_url}{self.quote}, "
-                          f"base_path={self.quote}{base_path}{self.quote}")
+        self.logger.debug(
+            f"URL {target_url} parsing: base_url={self.quote}{base_url}{self.quote}, "
+            f"base_path={self.quote}{base_path}{self.quote}"
+        )
 
         # Reset curl list
         self.curl_items.clear()
@@ -250,103 +291,244 @@ class Bypasser:
 
         # Original request
         cmd = [*self.base_curl, target_url]
-        item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="original_request", target_ip=url_public_ip,
-                        debug=self.debug, ext_logger=self.logger)
+        item = CurlItem(
+            url_obj,
+            self.base_curl,
+            cmd,
+            bypass_mode="original_request",
+            target_ip=url_public_ip,
+            debug=self.debug,
+            ext_logger=self.logger,
+        )
         if item not in self.curl_items:
             self.curl_items.append(item)
 
         # [http_methods] - Custom methods
-        if "all" in self.current_bypass_modes or "http_methods" in self.current_bypass_modes:
+        if (
+            "all" in self.current_bypass_modes
+            or "http_methods" in self.current_bypass_modes
+        ):
             for const_http_method in Bypasser.const_http_methods:
                 cmd = [*self.base_curl, "-X", const_http_method, target_url]
-                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_methods", target_ip=url_public_ip,
-                                debug=self.debug, ext_logger=self.logger)
+                item = CurlItem(
+                    url_obj,
+                    self.base_curl,
+                    cmd,
+                    bypass_mode="http_methods",
+                    target_ip=url_public_ip,
+                    debug=self.debug,
+                    ext_logger=self.logger,
+                )
                 if item not in self.curl_items:
                     self.curl_items.append(item)
 
         # [http_headers_ip] - Custom host injection headers
-        if "all" in self.current_bypass_modes or "http_headers_ip" in self.current_bypass_modes:
+        if (
+            "all" in self.current_bypass_modes
+            or "http_headers_ip" in self.current_bypass_modes
+        ):
             for const_header_host in Bypasser.const_header_hosts:
                 if self.spoof_ips:
                     # Custom IP addresses
                     for spoof_ip in self.spoof_ips:
-                        cmd = [*self.base_curl, "-H", f"{const_header_host}: {spoof_ip}", target_url]
-                        item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_ip",
-                                        target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                        cmd = [
+                            *self.base_curl,
+                            "-H",
+                            f"{const_header_host}: {spoof_ip}",
+                            target_url,
+                        ]
+                        item = CurlItem(
+                            url_obj,
+                            self.base_curl,
+                            cmd,
+                            bypass_mode="http_headers_ip",
+                            target_ip=url_public_ip,
+                            debug=self.debug,
+                            ext_logger=self.logger,
+                        )
                         if item not in self.curl_items:
                             self.curl_items.append(item)
-                if not self.spoof_ip_replace:  # False in any case if self.spoof_ips is empty
+                if (
+                    not self.spoof_ip_replace
+                ):  # False in any case if self.spoof_ips is empty
                     # Internal IP addresses
                     for const_internal_ip in Bypasser.const_internal_ips:
-                        cmd = [*self.base_curl, "-H", f"{const_header_host}: {const_internal_ip}", target_url]
-                        item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_ip",
-                                        target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                        cmd = [
+                            *self.base_curl,
+                            "-H",
+                            f"{const_header_host}: {const_internal_ip}",
+                            target_url,
+                        ]
+                        item = CurlItem(
+                            url_obj,
+                            self.base_curl,
+                            cmd,
+                            bypass_mode="http_headers_ip",
+                            target_ip=url_public_ip,
+                            debug=self.debug,
+                            ext_logger=self.logger,
+                        )
                         if item not in self.curl_items:
                             self.curl_items.append(item)
                     # Public IP address related to the url subdomain
-                    cmd = [*self.base_curl, "-H", f"{const_header_host}: {url_public_ip}", target_url]
-                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_ip",
-                                    target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                    cmd = [
+                        *self.base_curl,
+                        "-H",
+                        f"{const_header_host}: {url_public_ip}",
+                        target_url,
+                    ]
+                    item = CurlItem(
+                        url_obj,
+                        self.base_curl,
+                        cmd,
+                        bypass_mode="http_headers_ip",
+                        target_ip=url_public_ip,
+                        debug=self.debug,
+                        ext_logger=self.logger,
+                    )
                     if item not in self.curl_items:
                         self.curl_items.append(item)
 
         # [http_headers_scheme] - Custom scheme rewrite with X-Forwarded-Scheme
-        if "all" in self.current_bypass_modes or "http_headers_scheme" in self.current_bypass_modes:
+        if (
+            "all" in self.current_bypass_modes
+            or "http_headers_scheme" in self.current_bypass_modes
+        ):
             for const_header_scheme in Bypasser.const_header_schemes:
                 for const_proto in Bypasser.const_protos:
-                    cmd = [*self.base_curl, "-H", f"{const_header_scheme}: {const_proto}", target_url]
-                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_scheme",
-                                    target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                    cmd = [
+                        *self.base_curl,
+                        "-H",
+                        f"{const_header_scheme}: {const_proto}",
+                        target_url,
+                    ]
+                    item = CurlItem(
+                        url_obj,
+                        self.base_curl,
+                        cmd,
+                        bypass_mode="http_headers_scheme",
+                        target_ip=url_public_ip,
+                        debug=self.debug,
+                        ext_logger=self.logger,
+                    )
                     if item not in self.curl_items:
                         self.curl_items.append(item)
 
         # [http_headers_port] Custom port rewrite
-        if "all" in self.current_bypass_modes or "http_headers_port" in self.current_bypass_modes:
+        if (
+            "all" in self.current_bypass_modes
+            or "http_headers_port" in self.current_bypass_modes
+        ):
             for const_header_port in Bypasser.const_header_ports:
                 if self.spoof_ports:
                     # Custom port(s)
                     for spoof_port in self.spoof_ports:
-                        cmd = [*self.base_curl, "-H", f"{const_header_port}: {spoof_port}", target_url]
-                        item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_port",
-                                        target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                        cmd = [
+                            *self.base_curl,
+                            "-H",
+                            f"{const_header_port}: {spoof_port}",
+                            target_url,
+                        ]
+                        item = CurlItem(
+                            url_obj,
+                            self.base_curl,
+                            cmd,
+                            bypass_mode="http_headers_port",
+                            target_ip=url_public_ip,
+                            debug=self.debug,
+                            ext_logger=self.logger,
+                        )
                         if item not in self.curl_items:
                             self.curl_items.append(item)
-                if not self.spoof_port_replace:  # False in any case if self.spoof_ports is empty
+                if (
+                    not self.spoof_port_replace
+                ):  # False in any case if self.spoof_ports is empty
                     # Internal ports
                     for const_port in Bypasser.const_ports:
-                        cmd = [*self.base_curl, "-H", f"{const_header_port}: {const_port}", target_url]
-                        item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_port",
-                                        target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                        cmd = [
+                            *self.base_curl,
+                            "-H",
+                            f"{const_header_port}: {const_port}",
+                            target_url,
+                        ]
+                        item = CurlItem(
+                            url_obj,
+                            self.base_curl,
+                            cmd,
+                            bypass_mode="http_headers_port",
+                            target_ip=url_public_ip,
+                            debug=self.debug,
+                            ext_logger=self.logger,
+                        )
                         if item not in self.curl_items:
                             self.curl_items.append(item)
 
         # [mid_paths] - Custom paths with extra-mid-slash
-        if "all" in self.current_bypass_modes or "mid_paths" in self.current_bypass_modes:
+        if (
+            "all" in self.current_bypass_modes
+            or "mid_paths" in self.current_bypass_modes
+        ):
             for idx_slash in range(base_path.count("/")):
                 for const_path in Bypasser.const_paths:
-                    path_post = Tools.replacenth(base_path, "/", f"/{const_path}", idx_slash)
+                    path_post = Tools.replacenth(
+                        base_path, "/", f"/{const_path}", idx_slash
+                    )
                     # First variant
                     cmd = [*self.base_curl, f"{base_url}{path_post}"]
-                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="mid_paths", target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                    item = CurlItem(
+                        url_obj,
+                        self.base_curl,
+                        cmd,
+                        bypass_mode="mid_paths",
+                        target_ip=url_public_ip,
+                        debug=self.debug,
+                        ext_logger=self.logger,
+                    )
                     if item not in self.curl_items:
                         self.curl_items.append(item)
                     # Second variant
                     cmd = [*self.base_curl, f"{base_url}/{path_post}"]
-                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="mid_paths", target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                    item = CurlItem(
+                        url_obj,
+                        self.base_curl,
+                        cmd,
+                        bypass_mode="mid_paths",
+                        target_ip=url_public_ip,
+                        debug=self.debug,
+                        ext_logger=self.logger,
+                    )
                     if item not in self.curl_items:
                         self.curl_items.append(item)
                     if idx_slash <= 1:
                         continue
 
-                    path_pre = Tools.replacenth(base_path, "/", f"{const_path}/", idx_slash)
+                    path_pre = Tools.replacenth(
+                        base_path, "/", f"{const_path}/", idx_slash
+                    )
                     # Fist variant
                     cmd = [*self.base_curl, f"{base_url}{path_pre}"]
-                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="mid_paths", target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                    item = CurlItem(
+                        url_obj,
+                        self.base_curl,
+                        cmd,
+                        bypass_mode="mid_paths",
+                        target_ip=url_public_ip,
+                        debug=self.debug,
+                        ext_logger=self.logger,
+                    )
                     if item not in self.curl_items:
                         self.curl_items.append(item)
                     # Second variant
                     cmd = [*self.base_curl, f"{base_url}/{path_pre}"]
-                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="mid_paths", target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                    item = CurlItem(
+                        url_obj,
+                        self.base_curl,
+                        cmd,
+                        bypass_mode="mid_paths",
+                        target_ip=url_public_ip,
+                        debug=self.debug,
+                        ext_logger=self.logger,
+                    )
                     if item not in self.curl_items:
                         self.curl_items.append(item)
 
@@ -354,19 +536,49 @@ class Bypasser:
         abc_indexes = [span.start() for span in re.finditer(r"[a-zA-Z]", base_path)]
         for abc_index in abc_indexes:
             # [case_substitution] - Case-Inversion
-            if "all" in self.current_bypass_modes or "case_substitution" in self.current_bypass_modes:
+            if (
+                "all" in self.current_bypass_modes
+                or "case_substitution" in self.current_bypass_modes
+            ):
                 char_case = base_path[abc_index]
-                char_case = char_case.upper() if char_case.islower() else char_case.lower()
-                cmd = [*self.base_curl, f"{base_url}/{base_path[:abc_index]}{char_case}{base_path[abc_index + 1:]}"]
-                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="case_substitution", target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                char_case = (
+                    char_case.upper() if char_case.islower() else char_case.lower()
+                )
+                cmd = [
+                    *self.base_curl,
+                    f"{base_url}/{base_path[:abc_index]}{char_case}{base_path[abc_index + 1:]}",
+                ]
+                item = CurlItem(
+                    url_obj,
+                    self.base_curl,
+                    cmd,
+                    bypass_mode="case_substitution",
+                    target_ip=url_public_ip,
+                    debug=self.debug,
+                    ext_logger=self.logger,
+                )
                 if item not in self.curl_items:
                     self.curl_items.append(item)
 
             # [char_encode] - Url-Encoding
-            if "all" in self.current_bypass_modes or "char_encode" in self.current_bypass_modes:
+            if (
+                "all" in self.current_bypass_modes
+                or "char_encode" in self.current_bypass_modes
+            ):
                 char_urlencoded = format(ord(base_path[abc_index]), "02x")
-                cmd = [*self.base_curl, f"{base_url}/{base_path[:abc_index]}%{char_urlencoded}{base_path[abc_index + 1:]}"]
-                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="char_encode", target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                cmd = [
+                    *self.base_curl,
+                    f"{base_url}/{base_path[:abc_index]}%{char_urlencoded}{base_path[abc_index + 1:]}",
+                ]
+                item = CurlItem(
+                    url_obj,
+                    self.base_curl,
+                    cmd,
+                    bypass_mode="char_encode",
+                    target_ip=url_public_ip,
+                    debug=self.debug,
+                    ext_logger=self.logger,
+                )
                 if item not in self.curl_items:
                     self.curl_items.append(item)
 
@@ -384,17 +596,22 @@ class Bypasser:
         self.iteration = self.iteration + 1
 
     def _run_curls(self, items):
-        """ Call multithread curl commands.
+        """Call multithread curl commands.
 
         :param list[CurlItem] items: List of item objects
         """
         # Init internal progress bar
-        self._init_progress_bar(len(items), prefix="Send curl requests:",
-                                suffix=f"({self.threads} threads, timeout {self.timeout}s)")
+        self._init_progress_bar(
+            len(items),
+            prefix="Send curl requests:",
+            suffix=f"({self.threads} threads, timeout {self.timeout}s)",
+        )
 
         if self.verbose:
             self.logger.warning(f"Stage: run_curls")
-        with concurrent.futures.ThreadPoolExecutor(max_workers=self.threads) as executor:
+        with concurrent.futures.ThreadPoolExecutor(
+            max_workers=self.threads
+        ) as executor:
             for item in items:
                 future = executor.submit(self._run_curl, item)
                 future.add_done_callback(self._progress_bar_callback)
@@ -402,7 +619,7 @@ class Bypasser:
         return
 
     def _run_curl(self, item):
-        """ Exec curl command.
+        """Exec curl command.
 
         :param CurlItem item: Item object
         """
@@ -410,8 +627,13 @@ class Bypasser:
             self.logger.info(f"Current: {item.request_curl_cmd}")
             # input("paused")
         try:
-            process = subprocess.Popen(item.request_curl_cmd, text=True, shell=False, stderr=subprocess.STDOUT,
-                                       stdout=subprocess.PIPE)
+            process = subprocess.Popen(
+                item.request_curl_cmd,
+                text=True,
+                shell=False,
+                stderr=subprocess.STDOUT,
+                stdout=subprocess.PIPE,
+            )
 
             # Get command results
             result = process.communicate(timeout=self.timeout)[0]
@@ -438,17 +660,23 @@ class Bypasser:
                     raise ValueError(error_msg)
             # Raise a detailed CalledProcessError when the return code != 0
             else:
-                raise subprocess.CalledProcessError(process.returncode, item.request_curl_cmd, output=result)
+                raise subprocess.CalledProcessError(
+                    process.returncode, item.request_curl_cmd, output=result
+                )
 
         except subprocess.CalledProcessError as e:
             if self.verbose:
-                self.logger.warning(f"command '{e.cmd}' returned on-zero error code {e.returncode}: {e.output}")
+                self.logger.warning(
+                    f"command '{e.cmd}' returned on-zero error code {e.returncode}: {e.output}"
+                )
             # curl: (92) HTTP/2 stream 0 was not closed cleanly: PROTOCOL_ERROR (err 1)
             if e.returncode == 92:
                 # With recent curl versions, can occur with HTTP/2 and the CONNECT method
                 if self.verbose:
-                    self.logger.warning("Curl HTTP/2 with HTTP/1.1 upgrade failed. Force HTTP/1.1 for this request "
-                                        "and add to retry list")
+                    self.logger.warning(
+                        "Curl HTTP/2 with HTTP/1.1 upgrade failed. Force HTTP/1.1 for this request "
+                        "and add to retry list"
+                    )
                 # Force or add HTTP version 1.1 in item curl command
                 item.force_http_version("1.1")
 
@@ -478,7 +706,9 @@ class Bypasser:
                 # Create directory
                 if Tools.is_exist_directory(outdir, force_create=True):
                     if self.debug_class:
-                        self.logger.debug(f"Output directory '{outdir}{Tools.separator}' exists on system")
+                        self.logger.debug(
+                            f"Output directory '{outdir}{Tools.separator}' exists on system"
+                        )
             except Exception as e:
                 error_msg = f"Error while creating output directory '{outdir}{Tools.separator}': {e}"
                 self.logger.error(error_msg)
@@ -490,22 +720,31 @@ class Bypasser:
                     # Save only completed requests
                     if item not in self.to_retry_items:
                         if not item.save(outdir, force_output_dir_creation=False):
-                            self.logger.warning(f"Error when saving {outdir}{Tools.separator}{item.filename} file.")
+                            self.logger.warning(
+                                f"Error when saving {outdir}{Tools.separator}{item.filename} file."
+                            )
                 if self.verbose:
                     self.logger.info(
                         f"All curl responses were saved in the '{outdir}{Tools.separator}' "
-                        f"directory")
+                        f"directory"
+                    )
 
             # SaveLevel.PERTINENT - Save only results items (single and first element of each group)
             elif self.save_level >= self.SaveLevel.PERTINENT:
                 if self.bypass_results[url_obj]:
                     for url, item_lst in self.bypass_results[url_obj].items():
-                        if not item_lst[0].save(outdir, force_output_dir_creation=False):
-                            self.logger.warning(f"Error when saving {outdir}{Tools.separator}{item_lst[0].filename} "
-                                                f"file.")
+                        if not item_lst[0].save(
+                            outdir, force_output_dir_creation=False
+                        ):
+                            self.logger.warning(
+                                f"Error when saving {outdir}{Tools.separator}{item_lst[0].filename} "
+                                f"file."
+                            )
                     if self.verbose:
-                        self.logger.info(f"Only relevant curl responses (results) were saved in the"
-                                         f" '{outdir}{Tools.separator}' directory")
+                        self.logger.info(
+                            f"Only relevant curl responses (results) were saved in the"
+                            f" '{outdir}{Tools.separator}' directory"
+                        )
                 else:
                     self.logger.warning("No output to save")
 
@@ -522,9 +761,13 @@ class Bypasser:
                 if len(self.clean_output) > 1:
                     inspect_cmd = f"echo {outdir}{Tools.separator}{{{','.join(filename_lst)}}} | xargs batcat"
                 else:
-                    inspect_cmd = f"echo {outdir}{Tools.separator}{filename_lst} | xargs batcat"
+                    inspect_cmd = (
+                        f"echo {outdir}{Tools.separator}{filename_lst} | xargs batcat"
+                    )
 
-                self.logger.info(f"Also, inspect them manually with batcat:\n{inspect_cmd}")
+                self.logger.info(
+                    f"Also, inspect them manually with batcat:\n{inspect_cmd}"
+                )
 
             # Logfile - Starting at SaveLevel.MINIMAL
             if self.save_level >= self.SaveLevel.MINIMAL:
@@ -535,7 +778,9 @@ class Bypasser:
                     if self.save_level >= self.SaveLevel.PERTINENT and inspect_cmd:
                         f.write(f"{inspect_cmd}")
                 if self.verbose:
-                    self.logger.info(f"Program log file which contains the results saved in {log_file}")
+                    self.logger.info(
+                        f"Program log file which contains the results saved in {log_file}"
+                    )
         else:
             if self.debug_class:
                 self.logger.debug("No saving any output: SaveLevel.NONE")
@@ -549,18 +794,26 @@ class Bypasser:
         for item in self.curl_items:
             # Results aggregating
             if item.response_raw_output:
-                key_for_unicity = item.get_formatted_response(with_content_length=False, trunk_redirect_url=True)
+                key_for_unicity = item.get_formatted_response(
+                    with_content_length=False, trunk_redirect_url=True
+                )
                 if item not in self.grouped_curl_items[key_for_unicity]:
                     self.grouped_curl_items[key_for_unicity].append(item)
 
         # Output program result
         if self.grouped_curl_items:
             # Get results and store (for the program log file) program output.
-            with_filename = True if self.save_level >= self.SaveLevel.PERTINENT else False
-            self.clean_output = \
-                Bypasser.get_results_from_grouped_items(url_obj, self.grouped_curl_items, header_line=True,
-                                                        with_filename=with_filename, ext_logger=self.logger,
-                                                        verbose=self.verbose)
+            with_filename = (
+                True if self.save_level >= self.SaveLevel.PERTINENT else False
+            )
+            self.clean_output = Bypasser.get_results_from_grouped_items(
+                url_obj,
+                self.grouped_curl_items,
+                header_line=True,
+                with_filename=with_filename,
+                ext_logger=self.logger,
+                verbose=self.verbose,
+            )
             # Print results
             if not silent_mode:
                 self.logger.info(f"\n{self.clean_output}")
@@ -568,7 +821,7 @@ class Bypasser:
         return self.grouped_curl_items
 
     def _retry_failed_commands(self):
-        """ Retry/Resend curl commands against failed items. """
+        """Retry/Resend curl commands against failed items."""
         if self.to_retry_items:
             if self.retry_number > 0:
                 # Save original threads number and timeout
@@ -591,9 +844,11 @@ class Bypasser:
                         if retry_count + 1 == self.retry_number:
                             retry_count = self.retry_number - 1
 
-                    self.logger.info(f"Retry ({retry_count + 1}/{self.retry_number}) the "
-                                     f"'{len(self.to_retry_items)}' failed curl commands with '{self.threads}' "
-                                     f"threads and '{self.timeout}' timeout")
+                    self.logger.info(
+                        f"Retry ({retry_count + 1}/{self.retry_number}) the "
+                        f"'{len(self.to_retry_items)}' failed curl commands with '{self.threads}' "
+                        f"threads and '{self.timeout}' timeout"
+                    )
 
                     retry_count += 1
                     self._run_curls(self.to_retry_items)
@@ -603,15 +858,19 @@ class Bypasser:
                 self.timeout = original_timeout
             # Failed request / retry_number = 0
             else:
-                self.logger.warning(f"'{len(self.to_retry_items)}' curl requests failed and were lost for results. "
-                                    f"Retry mode is disabled")
+                self.logger.warning(
+                    f"'{len(self.to_retry_items)}' curl requests failed and were lost for results. "
+                    f"Retry mode is disabled"
+                )
         # No failed requests
         else:
             self.logger.debug("Each request has reached its target. No need for retry")
 
     # *** Public methods *** #
 
-    def run(self, urls=None, silent_mode=False) -> defaultdict[ParseResult, defaultdict]:
+    def run(
+        self, urls=None, silent_mode=False
+    ) -> defaultdict[ParseResult, defaultdict]:
         # Target URLs can be defined in object initialization or here
         if urls:
             self.urls = urls
@@ -636,7 +895,9 @@ class Bypasser:
             # Generate curl items and command
             self._generate_curls(url_obj)
             if not self.verbose and not self.debug and not self.debug_class:
-                self.logger.warning(f"Trying to bypass '{url_obj.geturl()}' url ({len(self.curl_items)} payloads)...")
+                self.logger.warning(
+                    f"Trying to bypass '{url_obj.geturl()}' url ({len(self.curl_items)} payloads)..."
+                )
 
             # Send curl commands
             self._run_curls(self.curl_items)
@@ -656,9 +917,16 @@ class Bypasser:
         return self.bypass_results
 
     @staticmethod
-    def get_results_from_grouped_items(url_obj: ParseResult, grouped_curl_items: defaultdict[list], header_line=True,
-                                       with_filename=True, filter_sc=None, ext_logger=None, verbose=False) -> str:
-        """ Ungroup and return string from aggregated curl items.
+    def get_results_from_grouped_items(
+        url_obj: ParseResult,
+        grouped_curl_items: defaultdict[list],
+        header_line=True,
+        with_filename=True,
+        filter_sc=None,
+        ext_logger=None,
+        verbose=False,
+    ) -> str:
+        """Ungroup and return string from aggregated curl items.
 
         When the Bypasser is used as a library, this method is useful to retrieve the aggregated results in a string,
         as usually returned by the program. See the commented code in the main() function for an example of use.
@@ -676,11 +944,15 @@ class Bypasser:
         if grouped_curl_items:
             filter_status_codes = filter_sc if filter_sc else list()
             if ext_logger and verbose:
-                ext_logger.warning(f"Triaged results & distinct pages for '{url_obj.geturl()}' url:")
+                ext_logger.warning(
+                    f"Triaged results & distinct pages for '{url_obj.geturl()}' url:"
+                )
             # Build output
             if header_line:
                 if with_filename:
-                    clean_output += f"{CurlItem.get_formatted_item_header()} (filename)\n"
+                    clean_output += (
+                        f"{CurlItem.get_formatted_item_header()} (filename)\n"
+                    )
                 else:
                     clean_output += f"{CurlItem.get_formatted_item_header()}\n"
             for out_key, item_lst in grouped_curl_items.items():
@@ -690,17 +962,23 @@ class Bypasser:
                         if with_filename:
                             clean_output += f"[SINGLE] {item_lst[0].get_formatted_item()} ({item_lst[0].filename})\n"
                         else:
-                            clean_output += f"[SINGLE] {item_lst[0].get_formatted_item()}\n"
+                            clean_output += (
+                                f"[SINGLE] {item_lst[0].get_formatted_item()}\n"
+                            )
                 else:
                     if item_lst[0].response_status_code not in filter_status_codes:
                         if with_filename:
-                            clean_output += f"[GROUP ({item_count})] {item_lst[0].get_formatted_item()} " \
-                                            f"({item_lst[0].filename})\n"
+                            clean_output += (
+                                f"[GROUP ({item_count})] {item_lst[0].get_formatted_item()} "
+                                f"({item_lst[0].filename})\n"
+                            )
                         else:
                             clean_output += f"[GROUP ({item_count})] {item_lst[0].get_formatted_item()}\n"
         else:
             if ext_logger and verbose:
-                ext_logger.warning(f"Failed to find any valid response for '{url_obj.geturl()}' url")
+                ext_logger.warning(
+                    f"Failed to find any valid response for '{url_obj.geturl()}' url"
+                )
 
         return clean_output.rstrip("\n")
 
@@ -716,17 +994,27 @@ class Bypasser:
         self._current_bypass_modes.append(Bypasser.default_bypass_mode)
         if modes_lst:
             self._current_bypass_modes.clear()
-            for mode in Tools.get_list_from_generic_arg(modes_lst, arg_name="bypass_mode", stdin_support=True, ext_logger=self.logger, debug=self.debug_class):
+            for mode in Tools.get_list_from_generic_arg(
+                modes_lst,
+                arg_name="bypass_mode",
+                stdin_support=True,
+                ext_logger=self.logger,
+                debug=self.debug_class,
+            ):
                 if mode in Bypasser.bypass_modes:
                     if mode not in self._current_bypass_modes:
                         self._current_bypass_modes.append(mode)
                 else:
-                    self.logger.warning(f"Unknown bypass mode {mode} was ignored. Must be in {Bypasser.bypass_modes}")
+                    self.logger.warning(
+                        f"Unknown bypass mode {mode} was ignored. Must be in {Bypasser.bypass_modes}"
+                    )
             if "all" in self._current_bypass_modes:
                 self._current_bypass_modes.clear()
                 self._current_bypass_modes.append("all")
                 if self.debug_class:
-                    self.logger.debug("'all' was found in custom bypass mode list. Only this value will be kept")
+                    self.logger.debug(
+                        "'all' was found in custom bypass mode list. Only this value will be kept"
+                    )
             # If all bypass_modes was ignored
             if not self._current_bypass_modes:
                 error_msg = f"Can't find any valid bypass mode. Need at least one value in {Bypasser.bypass_modes}"
@@ -742,14 +1030,21 @@ class Bypasser:
         try:
             self._headers = dict()
             if value:
-                for header in Tools.get_list_from_generic_arg(value, arg_name="header", ext_logger=self.logger,
-                                                              stdin_support=False, debug=self.debug_class):
+                for header in Tools.get_list_from_generic_arg(
+                    value,
+                    arg_name="header",
+                    ext_logger=self.logger,
+                    stdin_support=False,
+                    debug=self.debug_class,
+                ):
                     key, value = header.split(":", 1)
                     self._headers[key] = value.strip()
         except ValueError as e:
             if "not enough values to unpack" in str(e):
-                error_msg = "Custom headers parsing error: missing ':' in one header. " \
-                            "Please use 'header: value' format"
+                error_msg = (
+                    "Custom headers parsing error: missing ':' in one header. "
+                    "Please use 'header: value' format"
+                )
                 self.logger.error(error_msg)
                 raise ValueError(error_msg)
         except Exception as e:
@@ -767,7 +1062,9 @@ class Bypasser:
             self._output_dir = Bypasser.default_output_dir
             if value:
                 # Transform if needed relative path to absolute
-                self._output_dir = os.path.join(os.path.realpath(os.path.dirname(value)), os.path.basename(value))
+                self._output_dir = os.path.join(
+                    os.path.realpath(os.path.dirname(value)), os.path.basename(value)
+                )
         except Exception as e:
             error_msg = f"Custom output_dir parsing error: {e}"
             self.logger.error(error_msg)
@@ -779,7 +1076,7 @@ class Bypasser:
 
     @http_version.setter
     def http_version(self, value) -> None:
-        """ Set HTTP version used in curl base command.
+        """Set HTTP version used in curl base command.
 
         Reference: https://everything.curl.dev/http/versions
         CurlItem.curl_http_versions: ["0.9", "1.0", "1.1", "2", "2-prior-knowledge", "3"]
@@ -794,8 +1091,10 @@ class Bypasser:
                 if str(value) in CurlItem.curl_http_versions:
                     self._http_version = str(value)
                 else:
-                    error_msg = f"Unknown HTTP version {str(value)} was ignored. Must be " \
-                                f"in '{CurlItem.curl_http_versions}'"
+                    error_msg = (
+                        f"Unknown HTTP version {str(value)} was ignored. Must be "
+                        f"in '{CurlItem.curl_http_versions}'"
+                    )
                     self.logger.error(error_msg)
                     raise ValueError(error_msg)
         except Exception as e:
@@ -850,7 +1149,13 @@ class Bypasser:
         try:
             self._spoof_ips = list()
             if value:
-                for ip in Tools.get_list_from_generic_arg(value, arg_name="spoofip", stdin_support=True, ext_logger=self.logger, debug=self.debug_class):
+                for ip in Tools.get_list_from_generic_arg(
+                    value,
+                    arg_name="spoofip",
+                    stdin_support=True,
+                    ext_logger=self.logger,
+                    debug=self.debug_class,
+                ):
                     if ip not in self._spoof_ips:
                         self._spoof_ips.append(ip)
             # Cancel the possible replace_mode that could block internal ip list in [http_headers_ip]
@@ -881,8 +1186,13 @@ class Bypasser:
         try:
             self._spoof_ports = list()
             if value:
-                for port in Tools.get_list_from_generic_arg(value, arg_name="spoofport", stdin_support=True,
-                                                            ext_logger=self.logger, debug=self.debug_class):
+                for port in Tools.get_list_from_generic_arg(
+                    value,
+                    arg_name="spoofport",
+                    stdin_support=True,
+                    ext_logger=self.logger,
+                    debug=self.debug_class,
+                ):
                     if int(port) not in self._spoof_ports:
                         self._spoof_ports.append(int(port))
             # Cancel the possible replace_mode that could block internal port list in [http_headers_port]
@@ -937,7 +1247,9 @@ class Bypasser:
             self.logger.error(error_msg)
             raise ValueError(error_msg)
         if self._timeout <= 0:
-            error_msg = f"Timeout value (sec) number must be positive: '{self._timeout}'"
+            error_msg = (
+                f"Timeout value (sec) number must be positive: '{self._timeout}'"
+            )
             self.logger.error(error_msg)
             raise ValueError(error_msg)
 
@@ -950,11 +1262,18 @@ class Bypasser:
         try:
             self._urls = list()
             if value:
-                for url in Tools.get_list_from_generic_arg(value, arg_name="url", stdin_support=True,
-                                                           ext_logger=self.logger, debug=self.debug_class):
+                for url in Tools.get_list_from_generic_arg(
+                    value,
+                    arg_name="url",
+                    stdin_support=True,
+                    ext_logger=self.logger,
+                    debug=self.debug_class,
+                ):
                     if not Bypasser.regex_url.match(url):
-                        error_msg = f"URL {url} was ignored. Must start with http:// or https:// and contain " \
-                                    f"at least 3 slashes"
+                        error_msg = (
+                            f"URL {url} was ignored. Must start with http:// or https:// and contain "
+                            f"at least 3 slashes"
+                        )
                         self.logger.warning(error_msg)
                     else:
                         parsed_url = urlparse(url)
@@ -1003,18 +1322,28 @@ class Bypasser:
 
     @classmethod
     def get_classname(cls):
-        """ Returns the fully-qualified class name string of this object. """
+        """Returns the fully-qualified class name string of this object."""
         return cls.__name__
 
     def use_classname(self) -> str:
         return self.get_classname()
 
     def __attrs(self):
-        return self.current_bypass_modes, self.headers, self.spoof_ips, self.threads, self.timeout, self.urls, \
-               self.user_agent, self.verbose, self.debug, self.debug_class
+        return (
+            self.current_bypass_modes,
+            self.headers,
+            self.spoof_ips,
+            self.threads,
+            self.timeout,
+            self.urls,
+            self.user_agent,
+            self.verbose,
+            self.debug,
+            self.debug_class,
+        )
 
     def __eq__(self, other) -> bool:
-        """ Equality test, always use after __hash__ when object compare with ==, or if a match occurs in iterable.
+        """Equality test, always use after __hash__ when object compare with ==, or if a match occurs in iterable.
 
         :param Bypasser other: Other object to compare with this
         :return: True is same object, else False
@@ -1022,7 +1351,7 @@ class Bypasser:
         return isinstance(other, Bypasser) and self.__attrs() == other.__attrs()
 
     def __ne__(self, other) -> bool:
-        """ Define a non-equality test.
+        """Define a non-equality test.
 
         :param Bypasser other: Other object to compare with this
         :return: False is same object, else True
@@ -1030,7 +1359,7 @@ class Bypasser:
         return not self.__eq__(other)
 
     def __hash__(self) -> int:
-        """ Always used first in iterable object compare (set, list..) if match, call __eq__().
+        """Always used first in iterable object compare (set, list..) if match, call __eq__().
 
         :return: Object hash
         """
@@ -1060,21 +1389,22 @@ class Bypasser:
 
 
 class CurlItem:
-    """ Utility Class to store request and response elements related to a curl commands
+    """Utility Class to store request and response elements related to a curl commands
 
-        How to use this class:
-          - Init object with at least Url (ParseResult) object, curl base command, final curl cmd and bypass_mode:
-            item = CurlItem(url_obj, base_curl_cmd, curl_cmd, "[http_methods]")
-          - Send curl command outside this class:
-            response = exec_fct(item.self.request_curl_cmd)
-          - Pass curl command output to response_raw_output property
-            item.response_raw_output = response
+    How to use this class:
+      - Init object with at least Url (ParseResult) object, curl base command, final curl cmd and bypass_mode:
+        item = CurlItem(url_obj, base_curl_cmd, curl_cmd, "[http_methods]")
+      - Send curl command outside this class:
+        response = exec_fct(item.self.request_curl_cmd)
+      - Pass curl command output to response_raw_output property
+        item.response_raw_output = response
 
-        CurlItem exposes the following properties / public variables:
-          - request_curl_cmd, request_curl_payload, curl_base_options, target_url, target_ip, bypass_mode
-          - response_raw_output, response_headers, response_data, response_content_length, response_content_type,
-            response_lines_count, response_redirect_url, response_server_type, response_status_code, response_title
+    CurlItem exposes the following properties / public variables:
+      - request_curl_cmd, request_curl_payload, curl_base_options, target_url, target_ip, bypass_mode
+      - response_raw_output, response_headers, response_data, response_content_length, response_content_type,
+        response_lines_count, response_redirect_url, response_server_type, response_status_code, response_title
     """
+
     curl_http_versions = ["0.9", "1.0", "1.1", "2", "2-prior-knowledge", "3"]
     regex_status_code = re.compile(r"HTTP.*\s+(\d+)\s+\w+", re.IGNORECASE)
     regex_content_length = re.compile(r"Content-Length:\s+(\d+)", re.IGNORECASE)
@@ -1085,9 +1415,17 @@ class CurlItem:
     regex_title = re.compile(r"<title>(.*)</title>", re.IGNORECASE)
     redirect_url_max_size = 25
 
-    def __init__(self, target_url: ParseResult, curl_base, curl_cmd, bypass_mode=None, target_ip=None,
-                 debug=False, ext_logger=None):
-        """ CurlItem object init method
+    def __init__(
+        self,
+        target_url: ParseResult,
+        curl_base,
+        curl_cmd,
+        bypass_mode=None,
+        target_ip=None,
+        debug=False,
+        ext_logger=None,
+    ):
+        """CurlItem object init method
 
         :param ParseResult target_url: Curl command target url object
         :param str curl_base: Curl base command. Ex: curl -sS -kgi --path-as-is
@@ -1100,7 +1438,9 @@ class CurlItem:
         if ext_logger:
             self.logger = ext_logger
         else:
-            self.logger = Tools.get_new_logger(self.use_classname(), with_colors=True, debug_level=self.debug)
+            self.logger = Tools.get_new_logger(
+                self.use_classname(), with_colors=True, debug_level=self.debug
+            )
 
         # Request elements #
         self.target_url = target_url
@@ -1116,57 +1456,73 @@ class CurlItem:
     # *** Public methods *** #
 
     def force_http_version(self, target_http_version) -> None:
-        """ Patch the current item (curl_base_options and request_curl_cmd) to force a specific http version
+        """Patch the current item (curl_base_options and request_curl_cmd) to force a specific http version
 
         :param str target_http_version: Forced http version. Ex: 1.1
         """
         # Security check
         if str(target_http_version) not in CurlItem.curl_http_versions:
-            error_msg = f"Unknown HTTP version {str(target_http_version)} was ignored. Must be " \
-                        f"in '{CurlItem.curl_http_versions}'"
+            error_msg = (
+                f"Unknown HTTP version {str(target_http_version)} was ignored. Must be "
+                f"in '{CurlItem.curl_http_versions}'"
+            )
             self.logger.error(error_msg)
             raise ValueError(error_msg)
         # Patch HTTP version
         version = f"http{str(target_http_version)}"
         if "--http" in self.curl_base_options:
-            self.curl_base_options = CurlItem.regex_http_version.sub(version, self.curl_base_options)
-            self.request_curl_cmd = CurlItem.regex_http_version.sub(version, self.request_curl_cmd)
+            self.curl_base_options = CurlItem.regex_http_version.sub(
+                version, self.curl_base_options
+            )
+            self.request_curl_cmd = CurlItem.regex_http_version.sub(
+                version, self.request_curl_cmd
+            )
         # Add HTTP version
         else:
             target_opt = f"path-as-is --{version}"
-            self.curl_base_options = self.curl_base_options.replace("path-as-is", target_opt)
-            self.request_curl_cmd = self.request_curl_cmd.replace("path-as-is", target_opt)
+            self.curl_base_options = self.curl_base_options.replace(
+                "path-as-is", target_opt
+            )
+            self.request_curl_cmd = self.request_curl_cmd.replace(
+                "path-as-is", target_opt
+            )
 
     @staticmethod
     def get_formatted_item_header(separator="=>") -> str:
-        """ Return formatted curl item as string.
+        """Return formatted curl item as string.
 
         Ex: [http_methods] [-X 'TRACE'] => [405] [text/html] [524] [12] [70] [405 Not Allowed] []
 
         :return: Formatted curl item response.
         """
-        return f"[#####] [bypass_method] [payload] {separator} [status_code] [content_type] [content_length] " \
-               f"[lines_count] [word_counts] [title] [server] [redirect_url]"
+        return (
+            f"[#####] [bypass_method] [payload] {separator} [status_code] [content_type] [content_length] "
+            f"[lines_count] [word_counts] [title] [server] [redirect_url]"
+        )
 
     def get_formatted_item(self, separator="=>") -> str:
-        """ Return formatted curl item as string.
+        """Return formatted curl item as string.
 
         Ex: [http_methods] [-X 'TRACE'] => [405] [text/html] [524] [12] [70] [405 Not Allowed] [nginx] []
 
         :return: Formatted curl item response.
         """
-        return f"{self.get_formatted_payload()} {separator} " \
-               f"{self.get_formatted_response(with_content_length=True)}"
+        return (
+            f"{self.get_formatted_payload()} {separator} "
+            f"{self.get_formatted_response(with_content_length=True)}"
+        )
 
     def get_formatted_payload(self) -> str:
-        """ Return formatted curl item payload as string.
+        """Return formatted curl item payload as string.
 
         :return: Formatted curl item response. Ex: [http_method] [-X 'POST']
         """
         return f"[{self.bypass_mode}] [{self.request_curl_payload}]"
 
-    def get_formatted_response(self, with_content_length=False, trunk_redirect_url=True) -> str:
-        """ Return formatted curl item response as string
+    def get_formatted_response(
+        self, with_content_length=False, trunk_redirect_url=True
+    ) -> str:
+        """Return formatted curl item response as string
 
         Format:
          - [Status-code] [Content-type] [Content-length] [Lines-count] [Words-count] [Title] [Server] [Redirect_url]
@@ -1184,25 +1540,33 @@ class CurlItem:
         # Limit the size of the redirect URL (optional)
         redirect_url = self.response_redirect_url
         if redirect_url and trunk_redirect_url:
-            redirect_url = self.response_redirect_url[:CurlItem.redirect_url_max_size]
+            redirect_url = self.response_redirect_url[: CurlItem.redirect_url_max_size]
 
         # Use it for full response output (content_length and full redirect_url)
         if with_content_length:
-            return f"[{self.response_status_code}] [{self.response_content_type}] [{self.response_content_length}] " \
-                   f"[{self.response_lines_count}] [{self.response_words_count}] [{self.response_title}] " \
-                   f"[{self.response_server_type}] [{self.response_redirect_url}]"
+            return (
+                f"[{self.response_status_code}] [{self.response_content_type}] [{self.response_content_length}] "
+                f"[{self.response_lines_count}] [{self.response_words_count}] [{self.response_title}] "
+                f"[{self.response_server_type}] [{self.response_redirect_url}]"
+            )
         # Use it for response aggregating (no content_length and trunked redirect_url)
         else:
-            return f"[{self.response_status_code}] [{self.response_content_type}] [{self.response_lines_count}] " \
-                   f"[{self.response_words_count}] [{self.response_title}] [{self.response_server_type}] " \
-                   f"[{redirect_url}]"
+            return (
+                f"[{self.response_status_code}] [{self.response_content_type}] [{self.response_lines_count}] "
+                f"[{self.response_words_count}] [{self.response_title}] [{self.response_server_type}] "
+                f"[{redirect_url}]"
+            )
 
     def save(self, output_dir, force_output_dir_creation=False) -> bool:
         out_filename = f"{output_dir}{Tools.separator}{self.filename}"
-        if self.response_raw_output and Tools.is_exist_directory(output_dir, force_create=force_output_dir_creation):
+        if self.response_raw_output and Tools.is_exist_directory(
+            output_dir, force_create=force_output_dir_creation
+        ):
             # self.logger.info(f"Saving html pages and short output in: '{output_dir}{Tools.separator}'")
             with open(f"{out_filename}", "wt") as f:
-                f.write(f"{self.request_curl_cmd}\n\n{self.response_headers}\n\n{self.response_data}")
+                f.write(
+                    f"{self.request_curl_cmd}\n\n{self.response_headers}\n\n{self.response_data}"
+                )
             return True
         else:
             return False
@@ -1216,7 +1580,7 @@ class CurlItem:
     @property
     def request_curl_payload(self) -> str:
         # import ipdb; ipdb.set_trace()
-        return " ".join(self._curl_cmd[self._curl_cmd.index("--path-as-is")+1:])
+        return " ".join(self._curl_cmd[self._curl_cmd.index("--path-as-is") + 1 :])
 
     @property
     def request_curl_cmd(self) -> str:
@@ -1240,8 +1604,10 @@ class CurlItem:
                 # Note: Do not use os.linesep here, all OS specific line separators have already been replaced by '\n'.
                 return self.response_raw_output.split("\n\n")[1]
             except Exception as e:
-                error_msg = f"Unable to return response data, please check the format and " \
-                            f"redefine the 'response_raw_output' property {e}"
+                error_msg = (
+                    f"Unable to return response data, please check the format and "
+                    f"redefine the 'response_raw_output' property {e}"
+                )
                 self.logger.error(error_msg)
                 self.logger.error(repr(self.response_raw_output))
                 raise ValueError(error_msg)
@@ -1257,8 +1623,10 @@ class CurlItem:
                 # Note: Do not use os.linesep here, all OS specific line separators have already been replaced by '\n'.
                 return self.response_raw_output.split("\n\n")[0]
             except Exception as e:
-                error_msg = f"Unable to return response headers, please check the format and " \
-                            f"redefine the 'response_raw_output' property {e}"
+                error_msg = (
+                    f"Unable to return response headers, please check the format and "
+                    f"redefine the 'response_raw_output' property {e}"
+                )
                 self.logger.error(error_msg)
                 self.logger.error(repr(self.response_raw_output))
                 raise ValueError(error_msg)
@@ -1271,10 +1639,14 @@ class CurlItem:
     def response_status_code(self) -> int:
         if self.response_raw_output:
             try:
-                return int(CurlItem.regex_status_code.search(self.response_headers).group(1))
+                return int(
+                    CurlItem.regex_status_code.search(self.response_headers).group(1)
+                )
             except Exception as e:
-                error_msg = f"Unable to return response status_code, please check the format and " \
-                            f"redefine the 'response_raw_output' property {e}"
+                error_msg = (
+                    f"Unable to return response status_code, please check the format and "
+                    f"redefine the 'response_raw_output' property {e}"
+                )
                 self.logger.error(error_msg)
                 self.logger.error(repr(self.response_raw_output))
                 raise ValueError(error_msg)
@@ -1287,11 +1659,19 @@ class CurlItem:
     def response_content_length(self) -> int:
         if self.response_raw_output:
             try:
-                match_content_length = CurlItem.regex_content_length.search(self.response_headers)
-                return int(match_content_length.group(1).rstrip()) if match_content_length else ""
+                match_content_length = CurlItem.regex_content_length.search(
+                    self.response_headers
+                )
+                return (
+                    int(match_content_length.group(1).rstrip())
+                    if match_content_length
+                    else ""
+                )
             except Exception as e:
-                error_msg = f"Unable to return response content_length, please check the format and " \
-                            f"redefine the 'response_raw_output' property {e}"
+                error_msg = (
+                    f"Unable to return response content_length, please check the format and "
+                    f"redefine the 'response_raw_output' property {e}"
+                )
                 self.logger.error(error_msg)
                 self.logger.error(repr(self.response_raw_output))
                 raise ValueError(error_msg)
@@ -1306,8 +1686,10 @@ class CurlItem:
             try:
                 return int(self.response_data.count("\n"))
             except Exception as e:
-                error_msg = f"Unable to return response lines_count, please check the format and " \
-                            f"redefine the 'response_raw_output' property {e}"
+                error_msg = (
+                    f"Unable to return response lines_count, please check the format and "
+                    f"redefine the 'response_raw_output' property {e}"
+                )
                 self.logger.error(error_msg)
                 self.logger.error(repr(self.response_raw_output))
                 raise ValueError(error_msg)
@@ -1322,8 +1704,10 @@ class CurlItem:
             try:
                 return int(self.response_data.count(" "))
             except Exception as e:
-                error_msg = f"Unable to return response words_count, please check the format and " \
-                            f"redefine the 'response_raw_output' property {e}"
+                error_msg = (
+                    f"Unable to return response words_count, please check the format and "
+                    f"redefine the 'response_raw_output' property {e}"
+                )
                 self.logger.error(error_msg)
                 self.logger.error(repr(self.response_raw_output))
                 raise ValueError(error_msg)
@@ -1336,11 +1720,17 @@ class CurlItem:
     def response_content_type(self) -> str:
         if self.response_raw_output:
             try:
-                match_content_type = CurlItem.regex_content_type.search(self.response_headers)
-                return match_content_type.group(1).rstrip() if match_content_type else ""
+                match_content_type = CurlItem.regex_content_type.search(
+                    self.response_headers
+                )
+                return (
+                    match_content_type.group(1).rstrip() if match_content_type else ""
+                )
             except Exception as e:
-                error_msg = f"Unable to return response content_type, please check the format and " \
-                            f"redefine the 'response_raw_output' property {e}"
+                error_msg = (
+                    f"Unable to return response content_type, please check the format and "
+                    f"redefine the 'response_raw_output' property {e}"
+                )
                 self.logger.error(error_msg)
                 self.logger.error(repr(self.response_raw_output))
                 raise ValueError(error_msg)
@@ -1353,11 +1743,17 @@ class CurlItem:
     def response_redirect_url(self) -> str:
         if self.response_raw_output:
             try:
-                match_redirect_url = CurlItem.regex_redirect_url.search(self.response_headers)
-                return match_redirect_url.group(1).rstrip() if match_redirect_url else ""
+                match_redirect_url = CurlItem.regex_redirect_url.search(
+                    self.response_headers
+                )
+                return (
+                    match_redirect_url.group(1).rstrip() if match_redirect_url else ""
+                )
             except Exception as e:
-                error_msg = f"Unable to return response redirect_url, please check the format and " \
-                            f"redefine the 'response_raw_output' property {e}"
+                error_msg = (
+                    f"Unable to return response redirect_url, please check the format and "
+                    f"redefine the 'response_raw_output' property {e}"
+                )
                 self.logger.error(error_msg)
                 self.logger.error(repr(self.response_raw_output))
                 raise ValueError(error_msg)
@@ -1370,11 +1766,15 @@ class CurlItem:
     def response_server_type(self) -> str:
         if self.response_raw_output:
             try:
-                match_server_type = CurlItem.regex_server_type.search(self.response_headers)
+                match_server_type = CurlItem.regex_server_type.search(
+                    self.response_headers
+                )
                 return match_server_type.group(1).rstrip() if match_server_type else ""
             except Exception as e:
-                error_msg = f"Unable to return response server_type, please check the format and " \
-                            f"redefine the 'response_raw_output' property {e}"
+                error_msg = (
+                    f"Unable to return response server_type, please check the format and "
+                    f"redefine the 'response_raw_output' property {e}"
+                )
                 self.logger.error(error_msg)
                 raise ValueError(error_msg)
         else:
@@ -1389,8 +1789,10 @@ class CurlItem:
                 match_title = CurlItem.regex_title.search(self.response_data)
                 return match_title.group(1) if match_title else ""
             except Exception as e:
-                error_msg = f"Unable to return response title, please check the format and " \
-                            f"redefine the 'response_raw_output' property {e}"
+                error_msg = (
+                    f"Unable to return response title, please check the format and "
+                    f"redefine the 'response_raw_output' property {e}"
+                )
                 self.logger.error(error_msg)
                 raise ValueError(error_msg)
         else:
@@ -1408,9 +1810,13 @@ class CurlItem:
         try:
             if value:
                 # Can occur under Linux when a curl response is received from a Windows server.
-                if '\r' in value:
-                    self.response_raw_output = value.replace("\r\n", "\n")  # Windows server responses
-                    self.response_raw_output = self.response_raw_output.replace("\r", "\n")  # Mac OS <= 9, useless ?
+                if "\r" in value:
+                    self.response_raw_output = value.replace(
+                        "\r\n", "\n"
+                    )  # Windows server responses
+                    self.response_raw_output = self.response_raw_output.replace(
+                        "\r", "\n"
+                    )  # Mac OS <= 9, useless ?
                 else:
                     self._response_raw_output = value
         except Exception as e:
@@ -1423,18 +1829,24 @@ class CurlItem:
 
     @classmethod
     def get_classname(cls) -> str:
-        """ Returns the fully-qualified class name string of this object. """
+        """Returns the fully-qualified class name string of this object."""
         return cls.__name__
 
     def use_classname(self) -> str:
         return self.get_classname()
 
     def __attrs(self):
-        return self.target_url, self.target_ip, self.bypass_mode, self.curl_base_options, self.request_curl_cmd, \
-               self.response_raw_output
+        return (
+            self.target_url,
+            self.target_ip,
+            self.bypass_mode,
+            self.curl_base_options,
+            self.request_curl_cmd,
+            self.response_raw_output,
+        )
 
     def __eq__(self, other) -> bool:
-        """ Equality test, always use after __hash__ when object compare with ==, or if a match occurs in iterable.
+        """Equality test, always use after __hash__ when object compare with ==, or if a match occurs in iterable.
 
         :param CurlItem other: Other object to compare with this
         :return: True is same object, else False
@@ -1442,7 +1854,7 @@ class CurlItem:
         return isinstance(other, CurlItem) and self.__attrs() == other.__attrs()
 
     def __ne__(self, other) -> bool:
-        """ Define a non-equality test.
+        """Define a non-equality test.
 
         :param CurlItem other: Other object to compare with this
         :return: False is same object, else True
@@ -1450,7 +1862,7 @@ class CurlItem:
         return not self.__eq__(other)
 
     def __hash__(self) -> int:
-        """ Always used first in iterable object compare (set, list..) if match, call __eq__().
+        """Always used first in iterable object compare (set, list..) if match, call __eq__().
 
         :return: Object hash
         """
@@ -1465,28 +1877,30 @@ class CurlItem:
         out += f"Curl base: {self.curl_base_options}\n"
         out += f"Curl payload: {self.request_curl_payload}\n"
         if self.response_raw_output:
-            out += f"Formatted response: " \
-                   f"{self.get_formatted_response(with_content_length=True, trunk_redirect_url=False)}\n"
+            out += (
+                f"Formatted response: "
+                f"{self.get_formatted_response(with_content_length=True, trunk_redirect_url=False)}\n"
+            )
         return out
 
 
 class Tools:
-    """ Utility class for this project. """
+    """Utility class for this project."""
 
     # Useful cross-platform properties
     is_windows = platform.system() == "Windows"
     is_linux = platform.system() == "Linux"
-    separator = '\\' if is_windows else "/"
+    separator = "\\" if is_windows else "/"
 
     @staticmethod
     def replacenth(string, sub, wanted, n) -> str:
-        """ Based on https://stackoverflow.com/a/35091558 """
+        """Based on https://stackoverflow.com/a/35091558"""
         where = [m.start() for m in re.finditer(sub, string)][n - 1]
         return string[:where] + string[where:].replace(sub, wanted, 1)
 
     @staticmethod
     def get_new_logger(logger_name, with_colors=False, debug_level=False) -> logger:
-        """ Create and return new logger.
+        """Create and return new logger.
 
         :param str logger_name: Logger name
         :param with_colors: If True apply logger coloration with coloredlogs lib
@@ -1495,10 +1909,12 @@ class Tools:
         """
         new_logger = logging.getLogger(logger_name)
         if with_colors:
-            coloredlogs.install(logger=new_logger, level=logging.DEBUG if debug_level else logging.INFO)
+            coloredlogs.install(
+                logger=new_logger, level=logging.DEBUG if debug_level else logging.INFO
+            )
         else:
             new_logger.setLevel(logging.DEBUG if debug_level else logging.INFO)
-            formatter = logging.Formatter('%(name)s %(levelname)s > %(message)s')
+            formatter = logging.Formatter("%(name)s %(levelname)s > %(message)s")
             handler = logging.StreamHandler()
             handler.setFormatter(formatter)
             new_logger.addHandler(handler)
@@ -1506,9 +1922,15 @@ class Tools:
         return new_logger
 
     @staticmethod
-    def get_list_from_generic_arg(argument, arg_name="generic", enc_format="ISO-8859-1", stdin_support=True,
-                                  ext_logger=None, debug=False) -> list[str]:
-        """ Return list from generic argument.
+    def get_list_from_generic_arg(
+        argument,
+        arg_name="generic",
+        enc_format="ISO-8859-1",
+        stdin_support=True,
+        ext_logger=None,
+        debug=False,
+    ) -> list[str]:
+        """Return list from generic argument.
 
         Useful when the argument could be a string, a list or a filename
 
@@ -1534,8 +1956,16 @@ class Tools:
         elif os.path.isfile(argument):
             if ext_logger and debug:
                 ext_logger.debug(f"The {arg_name} argument is a file")
-            return [line.rstrip() for line in Tools.load_file_into_memory_list(
-                    argument, enc_format=enc_format, clean_filename=False, ext_logger=ext_logger, debug=debug)]
+            return [
+                line.rstrip()
+                for line in Tools.load_file_into_memory_list(
+                    argument,
+                    enc_format=enc_format,
+                    clean_filename=False,
+                    ext_logger=ext_logger,
+                    debug=debug,
+                )
+            ]
         # Arg value is a simple string
         elif isinstance(argument, str):
             if ext_logger and debug:
@@ -1548,9 +1978,14 @@ class Tools:
             raise ValueError(error_msg)
 
     @staticmethod
-    def load_file_into_memory_list(filename, enc_format="ISO-8859-1", clean_filename=False, debug=False,
-                                   ext_logger=None) -> list[str]:
-        """ Load whole file into a list in memory, using file.readlines()
+    def load_file_into_memory_list(
+        filename,
+        enc_format="ISO-8859-1",
+        clean_filename=False,
+        debug=False,
+        ext_logger=None,
+    ) -> list[str]:
+        """Load whole file into a list in memory, using file.readlines()
 
         Note: Fast for small files, do not use with huge file...
 
@@ -1562,7 +1997,9 @@ class Tools:
         :return: List containing the whole file
         """
         if not clean_filename:
-            absolute_filename = os.path.join(os.path.realpath(os.path.dirname(filename)), os.path.basename(filename))
+            absolute_filename = os.path.join(
+                os.path.realpath(os.path.dirname(filename)), os.path.basename(filename)
+            )
             if ext_logger and debug and absolute_filename != filename:
                 ext_logger.debug(f"Filename {filename} modified to {absolute_filename}")
         else:
@@ -1570,7 +2007,7 @@ class Tools:
         file = ""
         # Not using with statement, prefer keep control of debug_class
         try:
-            file = open(absolute_filename, mode='rt', encoding=enc_format)
+            file = open(absolute_filename, mode="rt", encoding=enc_format)
             tmp_list = file.readlines()
         except IOError as error:
             error_msg = f"Unable to open {absolute_filename} file: \n{error}"
@@ -1599,7 +2036,7 @@ class Tools:
 
 
 def library():
-    """ Library utilisation example."""
+    """Library utilisation example."""
     # Show all options by Default
     if len(sys.argv) == 1:
         sys.argv.append("-h")
@@ -1611,7 +2048,9 @@ def library():
     # Set properties
     exporter.threads = 10
     exporter.timeout = 3
-    exporter.current_bypass_modes = "http_methods, http_headers_scheme, case_substitution, char_encode"
+    exporter.current_bypass_modes = (
+        "http_methods, http_headers_scheme, case_substitution, char_encode"
+    )
     exporter.save_level = 0
     bypass_results = exporter.run(arguments.get("--url"), silent_mode=True)
     filter_status_codes = []
@@ -1620,8 +2059,13 @@ def library():
     # Print results
     for url, grouped_items in bypass_results.items():
         print(f"Bypass results for '{url.geturl()}' url:")
-        library_output = Bypasser.get_results_from_grouped_items(url, grouped_items, header_line=True,
-                                                                 with_filename=False, filter_sc=filter_status_codes)
+        library_output = Bypasser.get_results_from_grouped_items(
+            url,
+            grouped_items,
+            header_line=True,
+            with_filename=False,
+            filter_sc=filter_status_codes,
+        )
         print(library_output)
 
 
@@ -1632,7 +2076,9 @@ def main():
     arguments = docopt(__doc__, version=f"bypass-url-parser {VERSION}")
 
     # Log level
-    coloredlogs.install(logger=logger, level=logging.DEBUG if arguments["--debug"] else logging.INFO)
+    coloredlogs.install(
+        logger=logger, level=logging.DEBUG if arguments["--debug"] else logging.INFO
+    )
 
     # Debug args and config
     if arguments.get("--debug") == 2:
