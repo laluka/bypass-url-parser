@@ -154,18 +154,17 @@ class Bypasser:
 
         if self.debug_class:
             self.logger.debug(
-                f"Debug level: verbose={self.verbose}, debug={self.debug}, "
-                f"debug_class={self.debug_class}"
+                f"Debug level: verbose={self.verbose}, debug={self.debug}, debug_class={self.debug_class}"
             )
 
         # Init object vars
         self.base_curl = ""
         self.user_agent_suffix = ""
-        self.curls = list()
-        self.curl_items = list()
+        self.curls = []
+        self.curl_items = []
         self.grouped_curl_items = defaultdict(list)
         self.bypass_results = defaultdict(defaultdict)
-        self.to_retry_items = list()
+        self.to_retry_items = []
         self.clean_output = ""
 
         # Init properties
@@ -220,7 +219,7 @@ class Bypasser:
             self.base_curl.extend(["-x", self.proxy])
 
         # Custom headers
-        if 'user-agent' not in [key.lower() for key in self.headers.keys()]:
+        if "user-agent" not in [key.lower() for key in self.headers.keys()]:
             self.headers["User-Agent"] = self._user_agent
         for key, value in self.headers.items():
             if key.lower() == "user-agent":
@@ -754,7 +753,7 @@ class Bypasser:
             inspect_cmd = ""
             if self.save_level >= self.SaveLevel.PERTINENT and Tools.is_linux:
                 # Get first item filename of each group
-                filename_lst = list()
+                filename_lst = []
                 for out_key, item_lst in self.grouped_curl_items.items():
                     filename = item_lst[0].filename
                     if filename not in filename_lst:
@@ -956,7 +955,7 @@ class Bypasser:
         """
         clean_output = ""
         if grouped_curl_items:
-            filter_status_codes = filter_sc if filter_sc else list()
+            filter_status_codes = filter_sc if filter_sc else []
             if ext_logger and verbose:
                 ext_logger.warning(
                     f"Triaged results & distinct pages for '{url_obj.geturl()}' url:"
@@ -1004,7 +1003,7 @@ class Bypasser:
 
     @current_bypass_modes.setter
     def current_bypass_modes(self, modes_lst):
-        self._current_bypass_modes = list()
+        self._current_bypass_modes = []
         self._current_bypass_modes.append(Bypasser.default_bypass_mode)
         if modes_lst:
             self._current_bypass_modes.clear()
@@ -1161,7 +1160,7 @@ class Bypasser:
     @spoof_ips.setter
     def spoof_ips(self, value):
         try:
-            self._spoof_ips = list()
+            self._spoof_ips = []
             if value:
                 for ip in Tools.get_list_from_generic_arg(
                     value,
@@ -1198,7 +1197,7 @@ class Bypasser:
     @spoof_ports.setter
     def spoof_ports(self, value):
         try:
-            self._spoof_ports = list()
+            self._spoof_ports = []
             if value:
                 for port in Tools.get_list_from_generic_arg(
                     value,
@@ -1274,7 +1273,7 @@ class Bypasser:
     @urls.setter
     def urls(self, value):
         try:
-            self._urls = list()
+            self._urls = []
             if value:
                 for url in Tools.get_list_from_generic_arg(
                     value,
