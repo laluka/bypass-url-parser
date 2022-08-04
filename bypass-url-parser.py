@@ -5,7 +5,7 @@ A tool that tests MANY url bypasses to reach a 40X protected page.
 
 Usage:
     ./bypass-url-parser.py -u <URL> [(-m <mode>)...] [-o <outdir>] [-S <level>] [(-H <header>)...] [-r <num>]
-                           [-s <ip>] [--spoofip-replace] [-p <port>] [--spoofport-replace]
+                           [-s <ip>] [--spoofip-replace] [-p <port>] [--spoofport-replace] [--dump-payloads]
                            [-t <threads>] [-T <timeout>] [-x <proxy_url>] [-v | -d | -dd]
 
 Program options:
@@ -31,6 +31,7 @@ General options:
 Misc options:
     --spoofip-replace         Disable list of default internal IPs in 'http_headers_ip' bypass mode
     --spoofport-replace       Disable list of default internal ports in 'http_headers_port' bypass mode
+    --dump-payloads           Dumps all payloads (curls) to /tmp/bup-payloads.lst.
 
 Examples:
     ./bypass-url-parser.py -u "http://127.0.0.1/juicy_403_endpoint/" -s 8.8.8.8 -d
@@ -185,6 +186,7 @@ class Bypasser:
         self.spoof_ports = config_dict.get("--spoofport")
         self.threads = config_dict.get("--threads")
         self.timeout = config_dict.get("--timeout")
+        self.dump_payloads = config_dict.get("--dump-payloads")
         self.retry_number = config_dict.get("--retry")
         self.urls = config_dict.get("--url")
 
@@ -894,6 +896,18 @@ class Bypasser:
 
             # Generate curl items and command
             self._generate_curls(url_obj)
+            if self.dump_payloads:
+                with open("/tmp/bup-payloads.lst", "w") as f:
+                    f.write(
+                        "\n".join(
+                            sorted([str(_.request_curl_cmd) for _ in self.curl_items])
+                        )
+                    )
+                    logger.info(
+                        "All curl commands have be written to /tmp/bup-payloads.lst"
+                    )
+                exit(0)
+            self.curl_items
             if not self.verbose and not self.debug and not self.debug_class:
                 self.logger.warning(
                     f"Trying to bypass '{url_obj.geturl()}' url ({len(self.curl_items)} payloads)..."
@@ -1335,6 +1349,7 @@ class Bypasser:
             self.spoof_ips,
             self.threads,
             self.timeout,
+            self.dump_payloads,
             self.urls,
             self.user_agent,
             self.verbose,
@@ -1371,6 +1386,7 @@ class Bypasser:
         out += f"Headers(s): {self.headers}\n"
         out += f"Current bypass modes: {self.current_bypass_modes}\n"
         out += f"Threads: {self.threads}\n"
+        out += f"Dump Payloads: {self.dump_payloads}\n"
         out += f"Timeout: {self.timeout}\n"
         out += f"Retry number: {self.retry_number}\n"
         out += f"User-agent: {self.user_agent}\n"
