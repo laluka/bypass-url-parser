@@ -11,29 +11,19 @@ If you wonder why this code is `nothing but a dirty curl wrapper`, here's why:
 This is `surprisingly hard` to achieve in python without loosing all of the lib goodies like parsing, ssl/tls encapsulation and so on. \
 So, be like me, use `curl as a backend`, it's gonna be just fine.
 
-
-## Setup
-
-```bash
-# Deps
-sudo apt install -y bat curl virtualenv python3
-# Tool
-virtualenv -p python3 .py3
-source .py3/bin/activate
-pip install -r requirements.txt
-./bypass-url-parser.py --url "http://127.0.0.1/juicy_403_endpoint/"
-```
+Also, this tool can be used as a library, see [lib-sample-usage.py](lib-sample-usage.py)
 
 
 ## Usage
 
 ```
 Bypass Url Parser, made with love by @TheLaluka
+Improvements & Refactoring with the help of @jtop_fap
 A tool that tests MANY url bypasses to reach a 40X protected page.
 
 Usage:
-    ./bypass-url-parser.py -u <URL> [-m <mode>] [-o <outdir>] [-S <level>] [(-H <header>)...] [-r <num>]
-                           [-s <ip>] [--spoofip-replace] [-p <port>] [--spoofport-replace]
+    ./bypass-url-parser.py -u <URL> [(-m <mode>)...] [-o <outdir>] [-S <level>] [(-H <header>)...] [-r <num>]
+                           [-s <ip>] [--spoofip-replace] [-p <port>] [--spoofport-replace] [--dump-payloads]
                            [-t <threads>] [-T <timeout>] [-x <proxy_url>] [-v | -d | -dd]
 
 Program options:
@@ -59,6 +49,7 @@ General options:
 Misc options:
     --spoofip-replace         Disable list of default internal IPs in 'http_headers_ip' bypass mode
     --spoofport-replace       Disable list of default internal ports in 'http_headers_port' bypass mode
+    --dump-payloads           Dumps all payloads (curls) to /tmp/bup-payloads.lst.
 
 Examples:
     ./bypass-url-parser.py -u "http://127.0.0.1/juicy_403_endpoint/" -s 8.8.8.8 -d
@@ -89,22 +80,44 @@ bypass-405eafe576175042d3615b2ad83eab38.html,bypass-aff8205929cbf18f7356020c1f85
 2022-07-27 14:19:11 work bup[12437] INFO Program log file which contains the results saved in /tmp/tmpxrdl861p-bypass-url-parser/triaged-bypass.log
 ```
 
+
+## Setup
+
+### LINUX
+
+```bash
+# Deps
+sudo apt install -y bat curl virtualenv python3
+# Tool
+virtualenv -p python3 .py3
+source .py3/bin/activate
+pip install -r requirements.txt
+python bypass-url-parser.py -u "http://thinkloveshare.com/juicy_403_endpoint/"
+```
+
+### DOCKER
+
+```bash
+docker build .
+docker run --rm -it -v "$PWD:/host" "$BUILD_TAG" -u /host/urls.lst
+```
+
+
 ## More about supported arguments
 
 ### Arguments parsing
 
 Bypass-url-parser allows to define some arguments in many ways:
 
- - `-u, --url`, `-m, --mode`, `-s, --spoofip` and `-p, --spoofport` arguments can be a filename, a string, a comma-separated string list or a list (when `Bypasser` is used as a library);
+ - `-u, --url`, `-m, --mode`, `-s, --spoofip` and `-p, --spoofport` arguments can be a filename, a string, or a list (when `Bypasser` is used as a library);
  - `stdin` support for these three arguments (with `-`).
  
 For example, if you want to define several target urls (`-u, --url`), all the following commands produce the same result:
 
 ```bash
-./bypass-url-parser.py -v -t 10 -u "https://target1.com/test, https://target2.com/admin"
 ./bypass-url-parser.py -u /path/urls
 cat /path/urls | ./bypass-url-parser.py -u -
-echo 'https://target1.com/test' | ./bypass-url-parser.py -u -
+echo 'http://thinkloveshare.com/test' | ./bypass-url-parser.py -u -
 ```
 
 ### Bypass mode
@@ -120,7 +133,7 @@ all, mid_paths, case_substitution, char_encode, http_methods, http_headers_schem
 Example: 
 
 ```bash
-./bypass-url-parser.py -u /path/urls -m "case_substitution, char_encode, http_headers_scheme"
+./bypass-url-parser.py -u /path/urls -m case_substitution -m char_encode -m http_headers_scheme
 ```
 
 ### Spoofip / Spoofport
@@ -136,7 +149,7 @@ Example:
 
 ```bash
 ./bypass-url-parser.py -u /path/urls -s /path/custom_ip --spoofip-replace
-./bypass-url-parser.py -u /path/urls -p "3000, 9443, 10443" 
+./bypass-url-parser.py -u /path/urls -p 3000 -p 9443 -p 10443
 ```
 
 ### Results saving
@@ -163,7 +176,7 @@ Example:
 ```bash
 ./bypass-url-parser.py -S 0
 ./bypass-url-parser.py -o /tmp/bypass-res 
-./bypass-url-parser.py -o /tmp/bypass-res2 -S 2 -u "http://127.0.0.1/juicy_403_endpoint/"
+./bypass-url-parser.py -o /tmp/bypass-res2 -S 2 -u "http://thinkloveshare.com/juicy_403_endpoint/"
 tree /tmp/bypass-res2/
 /tmp/bypass-res2/
 ├── bypass-3d9d56e24d0284ea2c78ebf031f3f755.html
@@ -176,39 +189,6 @@ tree /tmp/bypass-res2/
 0 directories, 6 files
 ```
 
-## Library usage
-
-Bypasser class is also a full library that can be called in other projects:
-
-```python
-from lib.bypass-url-parser import Bypasser
-
-# Init Bypasser (Without external logger. In this case, the library set his own logger)
-exporter = Bypasser(verbose=True, debug=False, debug_class=False, ext_logger=None)
-
-# Set properties (complete list in Bypasser.__init__())
-exporter.threads = 10
-exporter.timeout = 3
-exporter.current_bypass_modes = "http_methods, http_headers_scheme, case_substitution, char_encode"
-exporter.save_level = 0  # Disable results saving
-
-# Set target(s)
-urls = list()
-urls.append("http://127.0.0.1/juicy_403_endpoint/")
-urls.append("http://www.target.tld/manager")
-
-# Run curl commands
-bypass_results = exporter.run(urls, silent_mode=True)
-
-# Print results like tool output
-for url, grouped_items in bypass_results.items():
-    print(f"Bypass results for '{url.geturl()}' url:")
-    library_output = Bypasser.get_results_from_grouped_items(url, grouped_items, header_line=True, with_filename=False)
-    print(library_output)
-
-do stuff...
-```
-
 
 ## Non-Regression tests & Code Cleanup
 
@@ -216,7 +196,7 @@ do stuff...
 # Code Cleanup
 black .
 # Ensure no regression is pushed
-python bypass-url-parser.py -u "http://127.0.0.1:8000/foo" -dd --dump-payloads
+python bypass-url-parser.py -u "http://127.0.0.1:8000/foo/bar" -dd --dump-payloads
 # Compare /tmp/bup-payloads.lst and the latest tests-history/bup-payloads-YYYY-MM-DD.lst
 # TODO create ls/sort/diff bash command for maintainers
 # Archive current test-set
