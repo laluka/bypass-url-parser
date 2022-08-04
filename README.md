@@ -11,6 +11,7 @@ If you wonder why this code is `nothing but a dirty curl wrapper`, here's why:
 This is `surprisingly hard` to achieve in python without loosing all of the lib goodies like parsing, ssl/tls encapsulation and so on. \
 So, be like me, use `curl as a backend`, it's gonna be just fine.
 
+
 ## Setup
 
 ```bash
@@ -22,6 +23,7 @@ source .py3/bin/activate
 pip install -r requirements.txt
 ./bypass-url-parser.py --url "http://127.0.0.1/juicy_403_endpoint/"
 ```
+
 
 ## Usage
 
@@ -62,6 +64,7 @@ Examples:
     ./bypass-url-parser.py -u "http://127.0.0.1/juicy_403_endpoint/" -s 8.8.8.8 -d
     ./bypass-url-parser.py -u /path/urls -t 30 -T 5 -H "Cookie: me_iz=admin" -H "User-agent: test"
 ```
+
 
 ## Expected result
 
@@ -207,10 +210,16 @@ do stuff...
 ```
 
 
-## Non-Regression tests
+## Non-Regression tests & Code Cleanup
 
 ```bash
+# Code Cleanup
+black .
+# Ensure no regression is pushed
 python bypass-url-parser.py -u "http://127.0.0.1:8000/foo" -dd --dump-payloads
-# Compare /tmp/bup-payloads.lst to the latest file within tests-history
+# Compare /tmp/bup-payloads.lst and the latest tests-history/bup-payloads-YYYY-MM-DD.lst
 # TODO create ls/sort/diff bash command for maintainers
+# Archive current test-set
+mv /tmp/bup-payloads.lst tests-history/bup-payloads-YYYY-MM-DD.lst
+# Commit & Merge if everything's clean & tested! :)
 ```

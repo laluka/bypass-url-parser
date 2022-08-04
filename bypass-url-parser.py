@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Bypass Url Parser, made with love by @TheLaluka
+Improvements & Refactoring with the help of @jtop_fap
 A tool that tests MANY url bypasses to reach a 40X protected page.
 
 Usage:
@@ -158,7 +159,6 @@ class Bypasser:
             )
 
         # Init object vars
-        self.quote = "'"
         self.base_curl = ""
         self.user_agent_suffix = ""
         self.curls = list()
@@ -220,7 +220,8 @@ class Bypasser:
             self.base_curl.extend(["-x", self.proxy])
 
         # Custom headers
-        print(self.headers)
+        if 'user-agent' not in [key.lower() for key in self.headers.keys()]:
+            self.headers["User-Agent"] = self._user_agent
         for key, value in self.headers.items():
             if key.lower() == "user-agent":
                 key = "User-Agent"  # Overwrite real curl user-agent
@@ -281,8 +282,7 @@ class Bypasser:
         base_path = f"{url_obj.path}{url_obj.query}"
         target_url = url_obj.geturl()
         self.logger.debug(
-            f"URL {target_url} parsing: base_url={self.quote}{base_url}{self.quote}, "
-            f"base_path={self.quote}{base_path}{self.quote}"
+            f"URL {target_url} parsing: base_url={base_url}, " f"base_path={base_path}"
         )
 
         # Reset curl list
