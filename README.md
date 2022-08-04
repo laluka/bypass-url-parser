@@ -205,3 +205,12 @@ for url, grouped_items in bypass_results.items():
 
 do stuff...
 ```
+
+
+## Non-Regression tests
+
+```bash
+python bypass-url-parser.py -u "http://127.0.0.1:8000/foo" -dd --dump-payloads
+# Compare /tmp/bup-payloads.lst to the latest file within tests-history
+# TODO create ls/sort/diff bash command for maintainers
+```
