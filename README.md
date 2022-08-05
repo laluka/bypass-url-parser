@@ -194,7 +194,7 @@ tree /tmp/bypass-res2/
 
 ```bash
 # Code Cleanup
-black .
+black --line-length 999 --target-version py311 .
 # Ensure no regression is pushed
 python bypass-url-parser.py -u "http://127.0.0.1:8000/foo/bar" -dd --dump-payloads
 # Compare /tmp/bup-payloads.lst and the latest tests-history/bup-payloads-YYYY-MM-DD.lst
