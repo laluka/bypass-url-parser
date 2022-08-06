@@ -1,6 +1,6 @@
-FROM python:3.11.0b5-alpine3.16
+FROM python:3.11.0b5-bullseye
 WORKDIR /bup
 COPY . /bup
-RUN apk add curl
+RUN apt-get install -y curl
 RUN pip install --no-cache-dir -r requirements.txt
 ENTRYPOINT [ "python", "bypass-url-parser.py" ]

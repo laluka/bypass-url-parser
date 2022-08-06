@@ -98,8 +98,12 @@ python bypass-url-parser.py -u "http://thinkloveshare.com/juicy_403_endpoint/"
 ### DOCKER
 
 ```bash
-docker build .
-docker run --rm -it -v "$PWD:/host" "$BUILD_TAG" -u /host/urls.lst
+docker build -t thelaluka/bypass-url-parser:latest .
+docker run --rm -it --net=host -v "$PWD:/host" thelaluka/bypass-url-parser:latest -u http://127.0.0.1:8000/dummy
+docker run --rm -it --net=host -v "$PWD:/host" thelaluka/bypass-url-parser:latest -u /host/urls.lst
+# TODO later, tag & push releases to dockerhub :)
+# -t thelaluka/bypass-url-parser:0.2.0
+# docker push thelaluka/bypass-url-parser:latest
 ```
 
 
