@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Bypass Url Parser, made with love by @TheLaluka
-Improvements & Refactoring with the help of @jtop_fap
 A tool that tests MANY url bypasses to reach a 40X protected page.
 
 Usage:

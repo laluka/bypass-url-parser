@@ -203,3 +203,9 @@ python bypass-url-parser.py -u "http://127.0.0.1:8000/foo/bar" -dd --dump-payloa
 mv /tmp/bup-payloads.lst tests-history/bup-payloads-YYYY-MM-DD.lst
 # Commit & Merge if everything's clean & tested! :)
 ```
+
+
+## Contributors
+
+- Initial release by [@TheLaluka](https://twitter.com/TheLaluka)
+- Huge refactoring & lib-mode with thanks to [@jtop_fap](https://twitter.com/jtop_fap)
