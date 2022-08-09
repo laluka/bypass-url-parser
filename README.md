@@ -60,28 +60,28 @@ Examples:
 ## Expected result
 
 ```
-python bypass_url_parser.py -u "http://127.0.0.1:8000/foo"                                                                                                                          130 ↵
-2022-08-09 14:22:29 lalu-perso bup[304341] WARNING Trying to bypass 'http://127.0.0.1:8000/foo' url (1131 payloads)...
-2022-08-09 14:22:29 lalu-perso bup[304341] INFO Doing: 50 / 1131
+python bypass_url_parser.py -u "http://127.0.0.1:8000/foo/bar"                                                                                                                      130 ↵
+2022-08-09 14:52:40 lalu-perso bup[361559] WARNING Trying to bypass 'http://127.0.0.1:8000/foo/bar' url (1625 payloads)...
+2022-08-09 14:52:40 lalu-perso bup[361559] INFO Doing: 50 / 1625
 [...]
-2022-08-09 14:22:37 lalu-perso bup[304341] INFO Doing: 1100 / 1131
-2022-08-09 14:22:37 lalu-perso bup[304341] INFO Retry (1/3) the '8' failed curl commands with 10 threads and 10s timeout
-2022-08-09 14:22:37 lalu-perso bup[304341] INFO Retry (2/3) the '8' failed curl commands with 5 threads and 20s timeout
-2022-08-09 14:22:37 lalu-perso bup[304341] INFO Retry (3/3) the '8' failed curl commands with 1 threads and 30s timeout
-2022-08-09 14:22:38 lalu-perso bup[304341] INFO
+2022-08-09 14:52:54 lalu-perso bup[361559] INFO Doing: 1600 / 1625
+2022-08-09 14:52:54 lalu-perso bup[361559] INFO Retry (1/3) the '16' failed curl commands with 10 threads and 10s timeout
+2022-08-09 14:52:54 lalu-perso bup[361559] INFO Retry (2/3) the '16' failed curl commands with 5 threads and 20s timeout
+2022-08-09 14:52:54 lalu-perso bup[361559] INFO Retry (3/3) the '16' failed curl commands with 1 threads and 30s timeout
+2022-08-09 14:52:55 lalu-perso bup[361559] INFO 
 [#####] [bypass_method] [payload] => [status_code] [content_type] [content_length] [lines_count] [word_counts] [title] [server] [redirect_url]
-[GROUP (1101)] [original_request] [http://127.0.0.1:8000/foo] => [404] [text/html] [469] [14] [95] [Error response] [SimpleHTTP/0.6 Python/3.8.10] []
-[GROUP (10)] [http_methods] [-X CONNECT http://127.0.0.1:8000/foo] => [501] [text/html] [500] [14] [96] [Error response] [SimpleHTTP/0.6 Python/3.8.10] []
-[SINGLE] [mid_paths] [http://127.0.0.1:8000/???foo] => [200] [text/html] [905] [26] [27] [Directory listing for /???foo] [SimpleHTTP/0.6 Python/3.8.10] []
-[SINGLE] [mid_paths] [http://127.0.0.1:8000//???foo] => [301] [] [] [0] [0] [] [SimpleHTTP/0.6 Python/3.8.10] [/???foo]
-[SINGLE] [mid_paths] [http://127.0.0.1:8000/??foo] => [200] [text/html] [903] [26] [27] [Directory listing for /??foo] [SimpleHTTP/0.6 Python/3.8.10] []
-[SINGLE] [mid_paths] [http://127.0.0.1:8000//??foo] => [301] [] [] [0] [0] [] [SimpleHTTP/0.6 Python/3.8.10] [/??foo]
-[SINGLE] [mid_paths] [http://127.0.0.1:8000/?foo] => [200] [text/html] [901] [26] [27] [Directory listing for /?foo] [SimpleHTTP/0.6 Python/3.8.10] []
-[SINGLE] [mid_paths] [http://127.0.0.1:8000//?foo] => [301] [] [] [0] [0] [] [SimpleHTTP/0.6 Python/3.8.10] [/?foo]
-[SINGLE] [mid_paths] [http://127.0.0.1:8000///?anythingfoo] => [200] [text/html] [921] [26] [27] [Directory listing for ///?anythingfoo] [SimpleHTTP/0.6 Python/3.8.10] []
-[SINGLE] [mid_paths] [http://127.0.0.1:8000////?anythingfoo] => [200] [text/html] [923] [26] [27] [Directory listing for ////?anythingfoo] [SimpleHTTP/0.6 Python/3.8.10] []
-[GROUP (2)] [mid_paths] [http://127.0.0.1:8000/#?foo] => [200] [text/html] [893] [26] [27] [Directory listing for /] [SimpleHTTP/0.6 Python/3.8.10] []
-[GROUP (2)] [mid_paths] [http://127.0.0.1:8000//#?foo] => [301] [] [] [0] [0] [] [SimpleHTTP/0.6 Python/3.8.10] [/]
+[GROUP (1587)] [original_request] [http://127.0.0.1:8000/foo/bar] => [404] [text/html] [469] [14] [95] [Error response] [SimpleHTTP/0.6 Python/3.8.10] []
+[GROUP (10)] [http_methods] [-X CONNECT http://127.0.0.1:8000/foo/bar] => [501] [text/html] [500] [14] [96] [Error response] [SimpleHTTP/0.6 Python/3.8.10] []
+[SINGLE] [mid_paths] [http://127.0.0.1:8000/???foo/bar] => [200] [text/html] [913] [26] [27] [Directory listing for /???foo/bar] [SimpleHTTP/0.6 Python/3.8.10] []
+[SINGLE] [mid_paths] [http://127.0.0.1:8000//???foo/bar] => [301] [] [] [0] [0] [] [SimpleHTTP/0.6 Python/3.8.10] [/???foo/bar]
+[SINGLE] [mid_paths] [http://127.0.0.1:8000/??foo/bar] => [200] [text/html] [911] [26] [27] [Directory listing for /??foo/bar] [SimpleHTTP/0.6 Python/3.8.10] []
+[SINGLE] [mid_paths] [http://127.0.0.1:8000//??foo/bar] => [301] [] [] [0] [0] [] [SimpleHTTP/0.6 Python/3.8.10] [/??foo/bar]
+[SINGLE] [mid_paths] [http://127.0.0.1:8000/?foo/bar] => [200] [text/html] [909] [26] [27] [Directory listing for /?foo/bar] [SimpleHTTP/0.6 Python/3.8.10] []
+[SINGLE] [mid_paths] [http://127.0.0.1:8000//?foo/bar] => [301] [] [] [0] [0] [] [SimpleHTTP/0.6 Python/3.8.10] [/?foo/bar]
+[SINGLE] [mid_paths] [http://127.0.0.1:8000///?anythingfoo/bar] => [200] [text/html] [929] [26] [27] [Directory listing for ///?anythingfoo/bar] [SimpleHTTP/0.6 Python/3.8.10] []
+[SINGLE] [mid_paths] [http://127.0.0.1:8000////?anythingfoo/bar] => [200] [text/html] [931] [26] [27] [Directory listing for ////?anythingfoo/bar] [SimpleHTTP/0.6 Python/3.8.10] []
+[GROUP (2)] [mid_paths] [http://127.0.0.1:8000/#?foo/bar] => [200] [text/html] [893] [26] [27] [Directory listing for /] [SimpleHTTP/0.6 Python/3.8.10] []
+[GROUP (2)] [mid_paths] [http://127.0.0.1:8000//#?foo/bar] => [301] [] [] [0] [0] [] [SimpleHTTP/0.6 Python/3.8.10] [/]
 ```
 
 
@@ -205,11 +205,9 @@ tree /tmp/bypass-res2/
 isort --py 37 *.py
 autopep8 -a --max-line-length 120 -i *.py
 # Ensure no regression is pushed
-python bypass_url_parser.py -u "http://127.0.0.1:8000/foo/bar" -dd --dump-payloads
+python bypass_url_parser.py -u "http://127.0.0.1:8000/foo/bar" --dump-payloads > "tests-history/bup-payloads-$(date +'%Y-%m-%d').lst"
 # Compare /tmp/bup-payloads.lst and the latest tests-history/bup-payloads-YYYY-MM-DD.lst
 # TODO create ls/sort/diff bash command for maintainers
-# Archive current test-set
-mv /tmp/bup-payloads.lst tests-history/bup-payloads-YYYY-MM-DD.lst
 # Commit & Merge if everything's clean & tested! :)
 ```
 
