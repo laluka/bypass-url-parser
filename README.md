@@ -11,7 +11,7 @@ If you wonder why this code is `nothing but a dirty curl wrapper`, here's why:
 This is `surprisingly hard` to achieve in python without loosing all of the lib goodies like parsing, ssl/tls encapsulation and so on. \
 So, be like me, use `curl as a backend`, it's gonna be just fine.
 
-Also, this tool can be used as a library, see [lib-sample-usage.py](lib-sample-usage.py)
+Also, this tool can be used as a library, see [lib_sample_usage.py](lib_sample_usage.py)
 
 
 ## Usage
@@ -22,7 +22,7 @@ Improvements & Refactoring with the help of @jtop_fap
 A tool that tests MANY url bypasses to reach a 40X protected page.
 
 Usage:
-    ./bypass-url-parser.py -u <URL> [(-m <mode>)...] [-o <outdir>] [-S <level>] [(-H <header>)...] [-r <num>]
+    ./bypass_url_parser.py -u <URL> [(-m <mode>)...] [-o <outdir>] [-S <level>] [(-H <header>)...] [-r <num>]
                            [-s <ip>] [--spoofip-replace] [-p <port>] [--spoofport-replace] [--dump-payloads]
                            [-t <threads>] [-T <timeout>] [-x <proxy_url>] [-v | -d | -dd]
 
@@ -52,32 +52,36 @@ Misc options:
     --dump-payloads           Dumps all payloads (curls) to /tmp/bup-payloads.lst.
 
 Examples:
-    ./bypass-url-parser.py -u "http://127.0.0.1/juicy_403_endpoint/" -s 8.8.8.8 -d
-    ./bypass-url-parser.py -u /path/urls -t 30 -T 5 -H "Cookie: me_iz=admin" -H "User-agent: test"
+    ./bypass_url_parser.py -u "http://127.0.0.1/juicy_403_endpoint/" -s 8.8.8.8 -d
+    ./bypass_url_parser.py -u /path/urls -t 30 -T 5 -H "Cookie: me_iz=admin" -H "User-agent: test"
 ```
 
 
 ## Expected result
 
-```bash
-./bypass-url-parser.py -u "http://thinkloveshare.com/api/jolokia/list" -t 20 -T 2 -S 2 -v
-2022-07-27 14:18:07 work bup[12437] WARNING Stage: generate_curls for http://thinkloveshare.com/api/jolokia/list url
-2022-07-27 14:18:14 work bup[12437] INFO Payloads to test: 2649
-2022-07-27 14:18:14 work bup[12437] WARNING Stage: run_curls
-Send curl requests: [████████████████████████████████████████████████████████████████████████████████████████████████████] 100.0% (20 threads, timeout 2s)
-2022-07-27 14:19:11 work bup[12437] WARNING Triaged results & distinct pages for 'http://thinkloveshare.com/api/jolokia/list' url:
-2022-07-27 14:19:11 work bup[12437] INFO
-[#####] [bypass_method] [payload] => [status_code] [content_type] [content_length] [lines_count] [word_counts] [title] [server] [redirect_url] (filename)
-[GROUP (2389)] [original_request] [] => [301] [text/html] [162] [7] [4] [301 Moved Permanently] [GitHub.com] [https://thinkloveshare.com/api/jolokia/list] (bypass-770e5322396930f5e6e6166c8d76ef48.html)
-[GROUP (10)] [http_methods] [-X 'CONNECT'] => [405] [] [131] [5] [5] [405 Not Allowed] [Varnish] [] (bypass-4664f26a295212981877122fae274dc3.html)
-[GROUP (13)] [http_headers_ip] [-H 'Content-Length: *'] => [413] [text/plain] [33] [1] [4] [] [Varnish] [] (bypass-3d9d56e24d0284ea2c78ebf031f3f755.html)
-[GROUP (13)] [http_headers_ip] [-H 'Host: *'] => [404] [text/html] [9115] [11] [82] [Site not found &middot; GitHub Pages] [GitHub.com] [] (bypass-405eafe576175042d3615b2ad83eab38.html)
-[GROUP (224)] [mid_paths] ['http://thinkloveshare.com/api/jolokia/..;%00/list'] => [400] [text/html] [9121] [11] [81] [Bad request &middot; GitHub Pages] [GitHub.com] [] (bypass-aff8205929cbf18f7356020c1f85dd21.html)
-2022-07-27 14:19:11 work bup[12437] INFO Only relevant curl responses (results) were saved in the '/tmp/tmpxrdl861p-bypass-url-parser/' directory
-2022-07-27 14:19:11 work bup[12437] INFO Also, inspect them manually with batcat:
-echo /tmp/tmpxrdl861p-bypass-url-parser/{bypass-770e5322396930f5e6e6166c8d76ef48.html,bypass-4664f26a295212981877122fae274dc3.html,bypass-3d9d56e24d0284ea2c78ebf031f3f755.html, \
-bypass-405eafe576175042d3615b2ad83eab38.html,bypass-aff8205929cbf18f7356020c1f85dd21.html} | xargs batcat
-2022-07-27 14:19:11 work bup[12437] INFO Program log file which contains the results saved in /tmp/tmpxrdl861p-bypass-url-parser/triaged-bypass.log
+```
+python bypass_url_parser.py -u "http://127.0.0.1:8000/foo"                                                                                                                          130 ↵
+2022-08-09 14:22:29 lalu-perso bup[304341] WARNING Trying to bypass 'http://127.0.0.1:8000/foo' url (1131 payloads)...
+2022-08-09 14:22:29 lalu-perso bup[304341] INFO Doing: 50 / 1131
+[...]
+2022-08-09 14:22:37 lalu-perso bup[304341] INFO Doing: 1100 / 1131
+2022-08-09 14:22:37 lalu-perso bup[304341] INFO Retry (1/3) the '8' failed curl commands with 10 threads and 10s timeout
+2022-08-09 14:22:37 lalu-perso bup[304341] INFO Retry (2/3) the '8' failed curl commands with 5 threads and 20s timeout
+2022-08-09 14:22:37 lalu-perso bup[304341] INFO Retry (3/3) the '8' failed curl commands with 1 threads and 30s timeout
+2022-08-09 14:22:38 lalu-perso bup[304341] INFO
+[#####] [bypass_method] [payload] => [status_code] [content_type] [content_length] [lines_count] [word_counts] [title] [server] [redirect_url]
+[GROUP (1101)] [original_request] [http://127.0.0.1:8000/foo] => [404] [text/html] [469] [14] [95] [Error response] [SimpleHTTP/0.6 Python/3.8.10] []
+[GROUP (10)] [http_methods] [-X CONNECT http://127.0.0.1:8000/foo] => [501] [text/html] [500] [14] [96] [Error response] [SimpleHTTP/0.6 Python/3.8.10] []
+[SINGLE] [mid_paths] [http://127.0.0.1:8000/???foo] => [200] [text/html] [905] [26] [27] [Directory listing for /???foo] [SimpleHTTP/0.6 Python/3.8.10] []
+[SINGLE] [mid_paths] [http://127.0.0.1:8000//???foo] => [301] [] [] [0] [0] [] [SimpleHTTP/0.6 Python/3.8.10] [/???foo]
+[SINGLE] [mid_paths] [http://127.0.0.1:8000/??foo] => [200] [text/html] [903] [26] [27] [Directory listing for /??foo] [SimpleHTTP/0.6 Python/3.8.10] []
+[SINGLE] [mid_paths] [http://127.0.0.1:8000//??foo] => [301] [] [] [0] [0] [] [SimpleHTTP/0.6 Python/3.8.10] [/??foo]
+[SINGLE] [mid_paths] [http://127.0.0.1:8000/?foo] => [200] [text/html] [901] [26] [27] [Directory listing for /?foo] [SimpleHTTP/0.6 Python/3.8.10] []
+[SINGLE] [mid_paths] [http://127.0.0.1:8000//?foo] => [301] [] [] [0] [0] [] [SimpleHTTP/0.6 Python/3.8.10] [/?foo]
+[SINGLE] [mid_paths] [http://127.0.0.1:8000///?anythingfoo] => [200] [text/html] [921] [26] [27] [Directory listing for ///?anythingfoo] [SimpleHTTP/0.6 Python/3.8.10] []
+[SINGLE] [mid_paths] [http://127.0.0.1:8000////?anythingfoo] => [200] [text/html] [923] [26] [27] [Directory listing for ////?anythingfoo] [SimpleHTTP/0.6 Python/3.8.10] []
+[GROUP (2)] [mid_paths] [http://127.0.0.1:8000/#?foo] => [200] [text/html] [893] [26] [27] [Directory listing for /] [SimpleHTTP/0.6 Python/3.8.10] []
+[GROUP (2)] [mid_paths] [http://127.0.0.1:8000//#?foo] => [301] [] [] [0] [0] [] [SimpleHTTP/0.6 Python/3.8.10] [/]
 ```
 
 
@@ -92,7 +96,7 @@ sudo apt install -y bat curl virtualenv python3
 virtualenv -p python3 .py3
 source .py3/bin/activate
 pip install -r requirements.txt
-python bypass-url-parser.py -u "http://thinkloveshare.com/juicy_403_endpoint/"
+python bypass_url_parser.py -u "http://thinkloveshare.com/juicy_403_endpoint/"
 ```
 
 ### DOCKER
@@ -119,9 +123,9 @@ Bypass-url-parser allows to define some arguments in many ways:
 For example, if you want to define several target urls (`-u, --url`), all the following commands produce the same result:
 
 ```bash
-./bypass-url-parser.py -u /path/urls
-cat /path/urls | ./bypass-url-parser.py -u -
-echo 'http://thinkloveshare.com/test' | ./bypass-url-parser.py -u -
+./bypass_url_parser.py -u /path/urls
+cat /path/urls | ./bypass_url_parser.py -u -
+echo 'http://thinkloveshare.com/test' | ./bypass_url_parser.py -u -
 ```
 
 ### Bypass mode
@@ -137,7 +141,7 @@ all, mid_paths, case_substitution, char_encode, http_methods, http_headers_schem
 Example: 
 
 ```bash
-./bypass-url-parser.py -u /path/urls -m case_substitution -m char_encode -m http_headers_scheme
+./bypass_url_parser.py -u /path/urls -m case_substitution -m char_encode -m http_headers_scheme
 ```
 
 ### Spoofip / Spoofport
@@ -152,8 +156,8 @@ By default, these custom entries are added to the internal IP/port lists. If you
 Example: 
 
 ```bash
-./bypass-url-parser.py -u /path/urls -s /path/custom_ip --spoofip-replace
-./bypass-url-parser.py -u /path/urls -p 3000 -p 9443 -p 10443
+./bypass_url_parser.py -u /path/urls -s /path/custom_ip --spoofip-replace
+./bypass_url_parser.py -u /path/urls -p 3000 -p 9443 -p 10443
 ```
 
 ### Results saving
@@ -178,9 +182,9 @@ The saving levels are:
 Example: 
 
 ```bash
-./bypass-url-parser.py -S 0
-./bypass-url-parser.py -o /tmp/bypass-res 
-./bypass-url-parser.py -o /tmp/bypass-res2 -S 2 -u "http://thinkloveshare.com/juicy_403_endpoint/"
+./bypass_url_parser.py -S 0
+./bypass_url_parser.py -o /tmp/bypass-res
+./bypass_url_parser.py -o /tmp/bypass-res2 -S 2 -u "http://thinkloveshare.com/juicy_403_endpoint/"
 tree /tmp/bypass-res2/
 /tmp/bypass-res2/
 ├── bypass-3d9d56e24d0284ea2c78ebf031f3f755.html
@@ -198,9 +202,10 @@ tree /tmp/bypass-res2/
 
 ```bash
 # Code Cleanup
-black --line-length 999 --target-version py311 .
+isort --py 37 *.py
+autopep8 -a --max-line-length 120 -i *.py
 # Ensure no regression is pushed
-python bypass-url-parser.py -u "http://127.0.0.1:8000/foo/bar" -dd --dump-payloads
+python bypass_url_parser.py -u "http://127.0.0.1:8000/foo/bar" -dd --dump-payloads
 # Compare /tmp/bup-payloads.lst and the latest tests-history/bup-payloads-YYYY-MM-DD.lst
 # TODO create ls/sort/diff bash command for maintainers
 # Archive current test-set
