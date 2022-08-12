@@ -1,5 +1,5 @@
 
-Bypasser has generated 1741 payloads for 'http://127.0.0.1:8000/foo/bar' url:
+Bypasser has generated 1781 payloads for 'http://127.0.0.1:8000/foo/bar' url:
 [case_substitution] http://127.0.0.1:8000/Foo/bar
 [case_substitution] http://127.0.0.1:8000/fOo/bar
 [case_substitution] http://127.0.0.1:8000/foO/bar
@@ -12,6 +12,35 @@ Bypasser has generated 1741 payloads for 'http://127.0.0.1:8000/foo/bar' url:
 [char_encode] http://127.0.0.1:8000/foo/%62ar
 [char_encode] http://127.0.0.1:8000/foo/b%61r
 [char_encode] http://127.0.0.1:8000/foo/ba%72
+[end_paths] http://127.0.0.1:8000/foo/bar#
+[end_paths] http://127.0.0.1:8000/foo/bar#/
+[end_paths] http://127.0.0.1:8000/foo/bar#/./
+[end_paths] http://127.0.0.1:8000/foo/bar#/.//
+[end_paths] http://127.0.0.1:8000/foo/bar#//
+[end_paths] http://127.0.0.1:8000/foo/bar%
+[end_paths] http://127.0.0.1:8000/foo/bar%/
+[end_paths] http://127.0.0.1:8000/foo/bar%00
+[end_paths] http://127.0.0.1:8000/foo/bar%00/
+[end_paths] http://127.0.0.1:8000/foo/bar%09
+[end_paths] http://127.0.0.1:8000/foo/bar%09/
+[end_paths] http://127.0.0.1:8000/foo/bar%0A
+[end_paths] http://127.0.0.1:8000/foo/bar%0A/
+[end_paths] http://127.0.0.1:8000/foo/bar%0D
+[end_paths] http://127.0.0.1:8000/foo/bar%0D/
+[end_paths] http://127.0.0.1:8000/foo/bar%20
+[end_paths] http://127.0.0.1:8000/foo/bar%20/
+[end_paths] http://127.0.0.1:8000/foo/bar%23
+[end_paths] http://127.0.0.1:8000/foo/bar%23/
+[end_paths] http://127.0.0.1:8000/foo/bar%26
+[end_paths] http://127.0.0.1:8000/foo/bar%26/
+[end_paths] http://127.0.0.1:8000/foo/bar%3f
+[end_paths] http://127.0.0.1:8000/foo/bar%3f/
+[end_paths] http://127.0.0.1:8000/foo/bar%61
+[end_paths] http://127.0.0.1:8000/foo/bar%61/
+[end_paths] http://127.0.0.1:8000/foo/bar&
+[end_paths] http://127.0.0.1:8000/foo/bar&/
+[end_paths] http://127.0.0.1:8000/foo/bar-
+[end_paths] http://127.0.0.1:8000/foo/bar-/
 [end_paths] http://127.0.0.1:8000/foo/bar.
 [end_paths] http://127.0.0.1:8000/foo/bar..;
 [end_paths] http://127.0.0.1:8000/foo/bar..;/
@@ -31,6 +60,7 @@ Bypasser has generated 1741 payloads for 'http://127.0.0.1:8000/foo/bar' url:
 [end_paths] http://127.0.0.1:8000/foo/bar.svc?wsdl/
 [end_paths] http://127.0.0.1:8000/foo/bar.wsdl
 [end_paths] http://127.0.0.1:8000/foo/bar.wsdl/
+[end_paths] http://127.0.0.1:8000/foo/bar/
 [end_paths] http://127.0.0.1:8000/foo/bar/#
 [end_paths] http://127.0.0.1:8000/foo/bar/#/
 [end_paths] http://127.0.0.1:8000/foo/bar/#/./
@@ -114,6 +144,10 @@ Bypasser has generated 1741 payloads for 'http://127.0.0.1:8000/foo/bar' url:
 [end_paths] http://127.0.0.1:8000/foo/bar/~/
 [end_paths] http://127.0.0.1:8000/foo/bar/°/
 [end_paths] http://127.0.0.1:8000/foo/bar/°//
+[end_paths] http://127.0.0.1:8000/foo/bar0
+[end_paths] http://127.0.0.1:8000/foo/bar0/
+[end_paths] http://127.0.0.1:8000/foo/bar1
+[end_paths] http://127.0.0.1:8000/foo/bar1/
 [end_paths] http://127.0.0.1:8000/foo/bar?
 [end_paths] http://127.0.0.1:8000/foo/bar?/
 [end_paths] http://127.0.0.1:8000/foo/bar??
@@ -128,6 +162,12 @@ Bypasser has generated 1741 payloads for 'http://127.0.0.1:8000/foo/bar' url:
 [end_paths] http://127.0.0.1:8000/foo/bar?debug=true/
 [end_paths] http://127.0.0.1:8000/foo/bar?param
 [end_paths] http://127.0.0.1:8000/foo/bar?param/
+[end_paths] http://127.0.0.1:8000/foo/bar\/\/
+[end_paths] http://127.0.0.1:8000/foo/bar\/\//
+[end_paths] http://127.0.0.1:8000/foo/bar~
+[end_paths] http://127.0.0.1:8000/foo/bar~/
+[end_paths] http://127.0.0.1:8000/foo/bar°/
+[end_paths] http://127.0.0.1:8000/foo/bar°//
 [http_headers_ip] -H Access-Control-Allow-Origin: * http://127.0.0.1:8000/foo/bar
 [http_headers_ip] -H Access-Control-Allow-Origin: 0.0.0.0 http://127.0.0.1:8000/foo/bar
 [http_headers_ip] -H Access-Control-Allow-Origin: 0177.1 http://127.0.0.1:8000/foo/bar

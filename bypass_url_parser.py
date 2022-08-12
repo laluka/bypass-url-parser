@@ -306,7 +306,7 @@ class Bypasser:
                     if item not in self.curl_items:
                         self.curl_items.append(item)
 
-        # [end_paths] - Custom paths with extra-mid-slash
+        # [end_paths] - Add suffix
         if "all" in self.current_bypass_modes or "end_paths" in self.current_bypass_modes:
             commands = set()
             separator = "" if (base_path == "/" or base_path.endswith("/")) else "/"
@@ -315,9 +315,9 @@ class Bypasser:
                 commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{separator}{const_endpath}"]))
                 # Second variant - 'url/suffix/'
                 commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{separator}{const_endpath}/"]))
-                # Only if base_path otherwise the subdomain will be modified and for ^. and ^? end_paths
+                # Only if base_path otherwise the subdomain will be modified and for any non ^[a-zA-Z] endpath
                 if base_path != "/":
-                    if const_endpath.startswith(".") or const_endpath.startswith("?"):
+                    if not re.search(r"^[a-zA-Z]$", const_endpath[0]):
                         # Third variant - Add 'suffix'
                         commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{const_endpath}"]))
                         # Fourth variant variant - Add 'suffix/'
