@@ -198,7 +198,7 @@ tree /tmp/bypass-res2/
 isort --py 37 *.py
 autopep8 -a --max-line-length 120 -i *.py
 # Ensure no regression is pushed
-./bypass_url_parser.py -v -u http://127.0.0.1:8000/foo/bar --dump-payloads > "tests-history/bup-payloads-$(date +'%Y-%m-%d').lst"
+./bypass_url_parser.py -S 0 -v -u http://127.0.0.1:8000/foo/bar --dump-payloads > "tests-history/bup-payloads-$(date +'%Y-%m-%d').lst"
 # Compare /tmp/bup-payloads-YYYY-MM-DD.lst and the latest tests-history/bup-payloads-YYYY-MM-DD.lst
 git diff --no-index tests-history/bup-payloads-[OLD].lst tests-history/bup-payloads-[NEW].lst
 # TODO create ls/sort/diff bash command for maintainers
