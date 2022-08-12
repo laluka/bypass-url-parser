@@ -132,8 +132,10 @@ class Bypasser:
                                                             ext_logger=self.logger, debug=self.debug_class)
         self.const_header_hosts = Tools.load_file_into_memory_list("payloads/const_header_hosts.lst",
                                                                    ext_logger=self.logger, debug=self.debug_class)
-        self.const_paths = Tools.load_file_into_memory_list("payloads/const_paths.lst",
-                                                            ext_logger=self.logger, debug=self.debug_class)
+        self.const_midpaths = Tools.load_file_into_memory_list("payloads/const_midpaths.lst",
+                                                               ext_logger=self.logger, debug=self.debug_class)
+        self.const_endpaths = Tools.load_file_into_memory_list("payloads/const_endpaths.lst",
+                                                               ext_logger=self.logger, debug=self.debug_class)
 
         # Init object vars
         self.base_curl = []
@@ -250,7 +252,7 @@ class Bypasser:
                     if item not in self.curl_items:
                         self.curl_items.append(item)
 
-        # [http_headers_port] Custom port rewrite
+        # [http_headers_port] - Custom port rewrite
         if "all" in self.current_bypass_modes or "http_headers_port" in self.current_bypass_modes:
             for const_header_port in self.const_header_ports:
                 if self.spoof_ports:
@@ -273,7 +275,7 @@ class Bypasser:
         # [mid_paths] - Custom paths with extra-mid-slash
         if "all" in self.current_bypass_modes or "mid_paths" in self.current_bypass_modes:
             for idx_slash in range(base_path.count("/")):
-                for const_path in self.const_paths:
+                for const_path in self.const_midpaths:
                     path_post = Tools.replacenth(base_path, "/", f"/{const_path}", idx_slash)
                     # First variant
                     cmd = [*self.base_curl, f"{base_url}{path_post}"]
@@ -301,6 +303,29 @@ class Bypasser:
                     cmd = [*self.base_curl, f"{base_url}/{path_pre}"]
                     item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="mid_paths", target_ip=url_public_ip,
                                     debug=self.debug, ext_logger=self.logger)
+                    if item not in self.curl_items:
+                        self.curl_items.append(item)
+
+        # [end_paths] - Custom paths with extra-mid-slash
+        if "all" in self.current_bypass_modes or "end_paths" in self.current_bypass_modes:
+            commands = set()
+            separator = "" if (base_path == "/" or base_path.endswith("/")) else "/"
+            for const_endpath in self.const_endpaths:
+                # First variant - 'url/suffix'
+                commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{separator}{const_endpath}"]))
+                # Second variant - 'url/suffix/'
+                commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{separator}{const_endpath}/"]))
+                # Only if base_path otherwise the subdomain will be modified and for ^. and ^? end_paths
+                if base_path != "/":
+                    if const_endpath.startswith(".") or const_endpath.startswith("?"):
+                        # Third variant - Add 'suffix'
+                        commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{const_endpath}"]))
+                        # Fourth variant variant - Add 'suffix/'
+                        commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{const_endpath}/"]))
+                # Add items
+                for command in commands:
+                    item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="end_paths",
+                                    target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
                     if item not in self.curl_items:
                         self.curl_items.append(item)
 
@@ -337,7 +362,7 @@ class Bypasser:
 
     def _progress_bar_callback(self, *args):
         self.iteration = self.pbar_queue.get(timeout=10)  # out =>
-        # Other rounds, log every 10 completed requests
+        # Log every 50 completed requests
         if self.iteration % 50 == 0:
             self.logger.info(f"Doing: {self.iteration} / {self.total}")
         self.pbar_queue.put(self.iteration + 1)  # <= in
