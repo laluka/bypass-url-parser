@@ -57,7 +57,7 @@ Examples:
 ## Expected result
 
 ```bash
-python bypass_url_parser.py -u "http://127.0.0.1:8000/foo/bar"                                                                                           
+./bypass_url_parser.py -u http://127.0.0.1:8000/foo/bar
 2022-08-09 14:52:40 lalu-perso bup[361559] WARNING Trying to bypass 'http://127.0.0.1:8000/foo/bar' url (1625 payloads)...
 2022-08-09 14:52:40 lalu-perso bup[361559] INFO Doing: 50 / 1625
 [...]
@@ -92,7 +92,7 @@ sudo apt install -y bat curl virtualenv python3
 virtualenv -p python3 .py3
 source .py3/bin/activate
 pip install -r requirements.txt
-python bypass_url_parser.py -u "http://thinkloveshare.com/juicy_403_endpoint/"
+./bypass_url_parser.py -u http://thinkloveshare.com/juicy_403_endpoint/
 ```
 
 ### DOCKER
@@ -119,7 +119,7 @@ Bypass_url_parser allows to define some arguments in many ways:
 For example, if you want to define several target urls (`-u, --url`), all the following commands produce the same result:
 
 ```bash
-./bypass_url_parser.py -u 'http://thinkloveshare.com/test'
+./bypass_url_parser.py -u http://thinkloveshare.com/test
 ./bypass_url_parser.py -u /path/urls
 cat /path/urls | ./bypass_url_parser.py -u -
 echo 'http://thinkloveshare.com/test' | ./bypass_url_parser.py -u -
@@ -132,7 +132,7 @@ If `-m, --mode` is specified, you can select the desired bypass mode to run a sp
 For now, the following bypass mode(s) are supported:
 
 ```
-all, mid_paths, case_substitution, char_encode, http_methods, http_headers_scheme, http_headers_ip, http_headers_port
+all, mid_paths, end_paths, case_substitution, char_encode, http_methods, http_headers_scheme, http_headers_ip, http_headers_port
 ```
 
 Example: 
@@ -165,7 +165,7 @@ By default, if target url is unique, the tool saves a copy of the results in `/t
 
 There are two arguments to customize this behavior:
 
-- `-o, --outdir` to set a custome output directory
+- `-o, --outdir` to set a custom output directory
 - `-S, --save-level` to choose a saving level
 
 The saving levels are:
@@ -180,7 +180,7 @@ Example:
 ```bash
 ./bypass_url_parser.py -S 0
 ./bypass_url_parser.py -o /tmp/bypass-res
-./bypass_url_parser.py -o /tmp/bypass-res2 -S 2 -u "http://thinkloveshare.com/juicy_403_endpoint/"
+./bypass_url_parser.py -o /tmp/bypass-res2 -S 2 -u http://thinkloveshare.com/juicy_403_endpoint/
 tree /tmp/bypass-res2/
 ├── bypass-14193b8d2e14ec60d52405f46c5d35f3.html
 ├── bypass-782550777a661b7bef046b5d899b403a.html
@@ -198,8 +198,9 @@ tree /tmp/bypass-res2/
 isort --py 37 *.py
 autopep8 -a --max-line-length 120 -i *.py
 # Ensure no regression is pushed
-./bypass_url_parser.py -u "http://127.0.0.1:8000/foo/bar" --dump-payloads > "tests-history/bup-payloads-$(date +'%Y-%m-%d').lst"
+./bypass_url_parser.py -S 0 -v -u http://127.0.0.1:8000/foo/bar --dump-payloads > "tests-history/bup-payloads-$(date +'%Y-%m-%d').lst"
 # Compare /tmp/bup-payloads-YYYY-MM-DD.lst and the latest tests-history/bup-payloads-YYYY-MM-DD.lst
+git diff --no-index tests-history/bup-payloads-[OLD].lst tests-history/bup-payloads-[NEW].lst
 # TODO create ls/sort/diff bash command for maintainers
 git commit -m "My cool feature or bugfix"
 git tag -a vX.Y.Z "$COMMIT_HASH" -m "New release: vX.Y.Z"
