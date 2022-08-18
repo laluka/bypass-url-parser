@@ -418,11 +418,11 @@ class Bypasser:
                     result = result.replace(os.linesep, "\n")
 
                     # Store command result in CurlItem object
-                    if not self.proxy:
-                        item.response_raw_output = result
-                    else:
+                    if self.proxy and "HTTP/1.0 200 Connection established" in result:
                         # Delete the additional response proxy header 'HTTP/1.0 200 Connection established'
                         item.response_raw_output = result.split("\n", 2)[2]
+                    else:
+                        item.response_raw_output = result
 
                     # Remove from retry list if present
                     if item in self.to_retry_items:
