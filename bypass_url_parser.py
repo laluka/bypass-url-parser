@@ -216,6 +216,16 @@ class Bypasser:
                 if item not in self.curl_items:
                     self.curl_items.append(item)
 
+        # [http_versions] - Tests the url with all http versions supported by curl
+        if "all" in self.current_bypass_modes or "http_versions" in self.current_bypass_modes:
+            for http_version in CurlItem.CURL_HTTP_VERSIONS[:-1]:
+                cmd = [*self.get_curl_base(forced_http_version=http_version), target_url]
+                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_versions",
+                                target_ip=url_public_ip,
+                                debug=self.debug, ext_logger=self.logger)
+                if item not in self.curl_items:
+                    self.curl_items.append(item)
+
         # [http_headers_ip] - Custom host injection headers
         if "all" in self.current_bypass_modes or "http_headers_ip" in self.current_bypass_modes:
             for const_header_host in self.const_header_hosts:
