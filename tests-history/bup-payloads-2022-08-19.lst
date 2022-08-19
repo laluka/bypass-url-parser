@@ -1,0 +1,1788 @@
+
+Bypasser has generated 1786 payloads for 'http://127.0.0.1:8000/foo/bar' url:
+[case_substitution] http://127.0.0.1:8000/Foo/bar
+[case_substitution] http://127.0.0.1:8000/fOo/bar
+[case_substitution] http://127.0.0.1:8000/foO/bar
+[case_substitution] http://127.0.0.1:8000/foo/Bar
+[case_substitution] http://127.0.0.1:8000/foo/bAr
+[case_substitution] http://127.0.0.1:8000/foo/baR
+[char_encode] http://127.0.0.1:8000/%66oo/bar
+[char_encode] http://127.0.0.1:8000/f%6fo/bar
+[char_encode] http://127.0.0.1:8000/fo%6f/bar
+[char_encode] http://127.0.0.1:8000/foo/%62ar
+[char_encode] http://127.0.0.1:8000/foo/b%61r
+[char_encode] http://127.0.0.1:8000/foo/ba%72
+[end_paths] http://127.0.0.1:8000/foo/bar#
+[end_paths] http://127.0.0.1:8000/foo/bar#/
+[end_paths] http://127.0.0.1:8000/foo/bar#/./
+[end_paths] http://127.0.0.1:8000/foo/bar#/.//
+[end_paths] http://127.0.0.1:8000/foo/bar#//
+[end_paths] http://127.0.0.1:8000/foo/bar%
+[end_paths] http://127.0.0.1:8000/foo/bar%/
+[end_paths] http://127.0.0.1:8000/foo/bar%00
+[end_paths] http://127.0.0.1:8000/foo/bar%00/
+[end_paths] http://127.0.0.1:8000/foo/bar%09
+[end_paths] http://127.0.0.1:8000/foo/bar%09/
+[end_paths] http://127.0.0.1:8000/foo/bar%0A
+[end_paths] http://127.0.0.1:8000/foo/bar%0A/
+[end_paths] http://127.0.0.1:8000/foo/bar%0D
+[end_paths] http://127.0.0.1:8000/foo/bar%0D/
+[end_paths] http://127.0.0.1:8000/foo/bar%20
+[end_paths] http://127.0.0.1:8000/foo/bar%20/
+[end_paths] http://127.0.0.1:8000/foo/bar%23
+[end_paths] http://127.0.0.1:8000/foo/bar%23/
+[end_paths] http://127.0.0.1:8000/foo/bar%26
+[end_paths] http://127.0.0.1:8000/foo/bar%26/
+[end_paths] http://127.0.0.1:8000/foo/bar%3f
+[end_paths] http://127.0.0.1:8000/foo/bar%3f/
+[end_paths] http://127.0.0.1:8000/foo/bar%61
+[end_paths] http://127.0.0.1:8000/foo/bar%61/
+[end_paths] http://127.0.0.1:8000/foo/bar&
+[end_paths] http://127.0.0.1:8000/foo/bar&/
+[end_paths] http://127.0.0.1:8000/foo/bar-
+[end_paths] http://127.0.0.1:8000/foo/bar-/
+[end_paths] http://127.0.0.1:8000/foo/bar.
+[end_paths] http://127.0.0.1:8000/foo/bar..;
+[end_paths] http://127.0.0.1:8000/foo/bar..;/
+[end_paths] http://127.0.0.1:8000/foo/bar..\;
+[end_paths] http://127.0.0.1:8000/foo/bar..\;/
+[end_paths] http://127.0.0.1:8000/foo/bar./
+[end_paths] http://127.0.0.1:8000/foo/bar.//
+[end_paths] http://127.0.0.1:8000/foo/bar.html
+[end_paths] http://127.0.0.1:8000/foo/bar.html/
+[end_paths] http://127.0.0.1:8000/foo/bar.json
+[end_paths] http://127.0.0.1:8000/foo/bar.json/
+[end_paths] http://127.0.0.1:8000/foo/bar.random
+[end_paths] http://127.0.0.1:8000/foo/bar.random/
+[end_paths] http://127.0.0.1:8000/foo/bar.svc
+[end_paths] http://127.0.0.1:8000/foo/bar.svc/
+[end_paths] http://127.0.0.1:8000/foo/bar.svc?wsdl
+[end_paths] http://127.0.0.1:8000/foo/bar.svc?wsdl/
+[end_paths] http://127.0.0.1:8000/foo/bar.wsdl
+[end_paths] http://127.0.0.1:8000/foo/bar.wsdl/
+[end_paths] http://127.0.0.1:8000/foo/bar/
+[end_paths] http://127.0.0.1:8000/foo/bar/#
+[end_paths] http://127.0.0.1:8000/foo/bar/#/
+[end_paths] http://127.0.0.1:8000/foo/bar/#/./
+[end_paths] http://127.0.0.1:8000/foo/bar/#/.//
+[end_paths] http://127.0.0.1:8000/foo/bar/#//
+[end_paths] http://127.0.0.1:8000/foo/bar/%
+[end_paths] http://127.0.0.1:8000/foo/bar/%/
+[end_paths] http://127.0.0.1:8000/foo/bar/%00
+[end_paths] http://127.0.0.1:8000/foo/bar/%00/
+[end_paths] http://127.0.0.1:8000/foo/bar/%09
+[end_paths] http://127.0.0.1:8000/foo/bar/%09/
+[end_paths] http://127.0.0.1:8000/foo/bar/%0A
+[end_paths] http://127.0.0.1:8000/foo/bar/%0A/
+[end_paths] http://127.0.0.1:8000/foo/bar/%0D
+[end_paths] http://127.0.0.1:8000/foo/bar/%0D/
+[end_paths] http://127.0.0.1:8000/foo/bar/%20
+[end_paths] http://127.0.0.1:8000/foo/bar/%20/
+[end_paths] http://127.0.0.1:8000/foo/bar/%23
+[end_paths] http://127.0.0.1:8000/foo/bar/%23/
+[end_paths] http://127.0.0.1:8000/foo/bar/%26
+[end_paths] http://127.0.0.1:8000/foo/bar/%26/
+[end_paths] http://127.0.0.1:8000/foo/bar/%3f
+[end_paths] http://127.0.0.1:8000/foo/bar/%3f/
+[end_paths] http://127.0.0.1:8000/foo/bar/%61
+[end_paths] http://127.0.0.1:8000/foo/bar/%61/
+[end_paths] http://127.0.0.1:8000/foo/bar/&
+[end_paths] http://127.0.0.1:8000/foo/bar/&/
+[end_paths] http://127.0.0.1:8000/foo/bar/-
+[end_paths] http://127.0.0.1:8000/foo/bar/-/
+[end_paths] http://127.0.0.1:8000/foo/bar/.
+[end_paths] http://127.0.0.1:8000/foo/bar/..;
+[end_paths] http://127.0.0.1:8000/foo/bar/..;/
+[end_paths] http://127.0.0.1:8000/foo/bar/..\;
+[end_paths] http://127.0.0.1:8000/foo/bar/..\;/
+[end_paths] http://127.0.0.1:8000/foo/bar/./
+[end_paths] http://127.0.0.1:8000/foo/bar/.//
+[end_paths] http://127.0.0.1:8000/foo/bar/.html
+[end_paths] http://127.0.0.1:8000/foo/bar/.html/
+[end_paths] http://127.0.0.1:8000/foo/bar/.json
+[end_paths] http://127.0.0.1:8000/foo/bar/.json/
+[end_paths] http://127.0.0.1:8000/foo/bar/.random
+[end_paths] http://127.0.0.1:8000/foo/bar/.random/
+[end_paths] http://127.0.0.1:8000/foo/bar/.svc
+[end_paths] http://127.0.0.1:8000/foo/bar/.svc/
+[end_paths] http://127.0.0.1:8000/foo/bar/.svc?wsdl
+[end_paths] http://127.0.0.1:8000/foo/bar/.svc?wsdl/
+[end_paths] http://127.0.0.1:8000/foo/bar/.wsdl
+[end_paths] http://127.0.0.1:8000/foo/bar/.wsdl/
+[end_paths] http://127.0.0.1:8000/foo/bar//
+[end_paths] http://127.0.0.1:8000/foo/bar///
+[end_paths] http://127.0.0.1:8000/foo/bar////
+[end_paths] http://127.0.0.1:8000/foo/bar/0
+[end_paths] http://127.0.0.1:8000/foo/bar/0/
+[end_paths] http://127.0.0.1:8000/foo/bar/1
+[end_paths] http://127.0.0.1:8000/foo/bar/1/
+[end_paths] http://127.0.0.1:8000/foo/bar/?
+[end_paths] http://127.0.0.1:8000/foo/bar/?/
+[end_paths] http://127.0.0.1:8000/foo/bar/??
+[end_paths] http://127.0.0.1:8000/foo/bar/??/
+[end_paths] http://127.0.0.1:8000/foo/bar/???
+[end_paths] http://127.0.0.1:8000/foo/bar/???/
+[end_paths] http://127.0.0.1:8000/foo/bar/?WSDL
+[end_paths] http://127.0.0.1:8000/foo/bar/?WSDL/
+[end_paths] http://127.0.0.1:8000/foo/bar/?debug=1
+[end_paths] http://127.0.0.1:8000/foo/bar/?debug=1/
+[end_paths] http://127.0.0.1:8000/foo/bar/?debug=true
+[end_paths] http://127.0.0.1:8000/foo/bar/?debug=true/
+[end_paths] http://127.0.0.1:8000/foo/bar/?param
+[end_paths] http://127.0.0.1:8000/foo/bar/?param/
+[end_paths] http://127.0.0.1:8000/foo/bar/\/\/
+[end_paths] http://127.0.0.1:8000/foo/bar/\/\//
+[end_paths] http://127.0.0.1:8000/foo/bar/debug
+[end_paths] http://127.0.0.1:8000/foo/bar/debug/
+[end_paths] http://127.0.0.1:8000/foo/bar/false
+[end_paths] http://127.0.0.1:8000/foo/bar/false/
+[end_paths] http://127.0.0.1:8000/foo/bar/null
+[end_paths] http://127.0.0.1:8000/foo/bar/null/
+[end_paths] http://127.0.0.1:8000/foo/bar/true
+[end_paths] http://127.0.0.1:8000/foo/bar/true/
+[end_paths] http://127.0.0.1:8000/foo/bar/~
+[end_paths] http://127.0.0.1:8000/foo/bar/~/
+[end_paths] http://127.0.0.1:8000/foo/bar/°/
+[end_paths] http://127.0.0.1:8000/foo/bar/°//
+[end_paths] http://127.0.0.1:8000/foo/bar0
+[end_paths] http://127.0.0.1:8000/foo/bar0/
+[end_paths] http://127.0.0.1:8000/foo/bar1
+[end_paths] http://127.0.0.1:8000/foo/bar1/
+[end_paths] http://127.0.0.1:8000/foo/bar?
+[end_paths] http://127.0.0.1:8000/foo/bar?/
+[end_paths] http://127.0.0.1:8000/foo/bar??
+[end_paths] http://127.0.0.1:8000/foo/bar??/
+[end_paths] http://127.0.0.1:8000/foo/bar???
+[end_paths] http://127.0.0.1:8000/foo/bar???/
+[end_paths] http://127.0.0.1:8000/foo/bar?WSDL
+[end_paths] http://127.0.0.1:8000/foo/bar?WSDL/
+[end_paths] http://127.0.0.1:8000/foo/bar?debug=1
+[end_paths] http://127.0.0.1:8000/foo/bar?debug=1/
+[end_paths] http://127.0.0.1:8000/foo/bar?debug=true
+[end_paths] http://127.0.0.1:8000/foo/bar?debug=true/
+[end_paths] http://127.0.0.1:8000/foo/bar?param
+[end_paths] http://127.0.0.1:8000/foo/bar?param/
+[end_paths] http://127.0.0.1:8000/foo/bar\/\/
+[end_paths] http://127.0.0.1:8000/foo/bar\/\//
+[end_paths] http://127.0.0.1:8000/foo/bar~
+[end_paths] http://127.0.0.1:8000/foo/bar~/
+[end_paths] http://127.0.0.1:8000/foo/bar°/
+[end_paths] http://127.0.0.1:8000/foo/bar°//
+[http_headers_ip] -H Access-Control-Allow-Origin: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Access-Control-Allow-Origin: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Access-Control-Allow-Origin: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Access-Control-Allow-Origin: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Access-Control-Allow-Origin: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Access-Control-Allow-Origin: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Access-Control-Allow-Origin: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Access-Control-Allow-Origin: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Access-Control-Allow-Origin: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Access-Control-Allow-Origin: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Access-Control-Allow-Origin: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Access-Control-Allow-Origin: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Base-Url: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Base-Url: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Base-Url: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Base-Url: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Base-Url: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Base-Url: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Base-Url: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Base-Url: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Base-Url: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Base-Url: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Base-Url: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Base-Url: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting-IP: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting-IP: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting-IP: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting-IP: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting-IP: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting-IP: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting-IP: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting-IP: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting-IP: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting-IP: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting-IP: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting-IP: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting_IP: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting_IP: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting_IP: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting_IP: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting_IP: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting_IP: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting_IP: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting_IP: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting_IP: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting_IP: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting_IP: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H CF-Connecting_IP: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Client-IP: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Client-IP: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Client-IP: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Client-IP: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Client-IP: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Client-IP: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Client-IP: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Client-IP: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Client-IP: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Client-IP: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Client-IP: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Client-IP: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Destination: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Destination: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Destination: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Destination: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Destination: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Destination: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Destination: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Destination: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Destination: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Destination: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Destination: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Destination: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For-IP: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For-IP: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For-IP: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For-IP: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For-IP: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For-IP: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For-IP: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For-IP: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For-IP: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For-IP: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For-IP: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For-IP: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded-For: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Forwarded: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Host: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Host: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Host: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Host: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Host: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Host: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Host: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Host: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Host: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Host: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Host: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Host: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Http-Url: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Http-Url: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Http-Url: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Http-Url: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Http-Url: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Http-Url: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Http-Url: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Http-Url: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Http-Url: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Http-Url: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Http-Url: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Http-Url: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Origin: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Origin: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Origin: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Origin: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Origin: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Origin: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Origin: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Origin: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Origin: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Origin: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Origin: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Origin: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Profile: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Profile: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Profile: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Profile: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Profile: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Profile: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Profile: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Profile: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Profile: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Profile: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Profile: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Profile: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Host: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Host: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Host: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Host: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Host: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Host: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Host: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Host: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Host: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Host: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Host: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Host: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Url: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Url: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Url: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Url: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Url: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Url: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Url: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Url: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Url: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Url: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Url: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy-Url: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Proxy: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Real-Ip: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Real-Ip: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Real-Ip: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Real-Ip: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Real-Ip: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Real-Ip: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Real-Ip: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Real-Ip: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Real-Ip: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Real-Ip: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Real-Ip: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Real-Ip: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Redirect: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Redirect: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Redirect: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Redirect: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Redirect: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Redirect: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Redirect: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Redirect: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Redirect: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Redirect: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Redirect: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Redirect: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referer: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referer: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referer: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referer: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referer: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referer: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referer: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referer: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referer: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referer: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referer: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referer: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referrer: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referrer: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referrer: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referrer: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referrer: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referrer: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referrer: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referrer: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referrer: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referrer: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referrer: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Referrer: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Request-Uri: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Request-Uri: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Request-Uri: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Request-Uri: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Request-Uri: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Request-Uri: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Request-Uri: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Request-Uri: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Request-Uri: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Request-Uri: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Request-Uri: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Request-Uri: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H True-Client-IP: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H True-Client-IP: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H True-Client-IP: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H True-Client-IP: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H True-Client-IP: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H True-Client-IP: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H True-Client-IP: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H True-Client-IP: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H True-Client-IP: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H True-Client-IP: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H True-Client-IP: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H True-Client-IP: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Uri: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Uri: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Uri: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Uri: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Uri: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Uri: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Uri: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Uri: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Uri: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Uri: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Uri: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Uri: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Url: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Url: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Url: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Url: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Url: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Url: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Url: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Url: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Url: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Url: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Url: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H Url: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Arbitrary: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Arbitrary: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Arbitrary: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Arbitrary: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Arbitrary: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Arbitrary: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Arbitrary: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Arbitrary: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Arbitrary: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Arbitrary: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Arbitrary: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Arbitrary: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Client-IP: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Client-IP: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Client-IP: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Client-IP: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Client-IP: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Client-IP: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Client-IP: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Client-IP: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Client-IP: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Client-IP: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Client-IP: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Client-IP: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Custom-IP-Authorization: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Custom-IP-Authorization: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Custom-IP-Authorization: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Custom-IP-Authorization: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Custom-IP-Authorization: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Custom-IP-Authorization: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Custom-IP-Authorization: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Custom-IP-Authorization: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Custom-IP-Authorization: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Custom-IP-Authorization: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Custom-IP-Authorization: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Custom-IP-Authorization: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forward-For: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forward-For: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forward-For: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forward-For: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forward-For: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forward-For: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forward-For: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forward-For: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forward-For: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forward-For: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forward-For: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forward-For: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-By: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-By: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-By: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-By: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-By: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-By: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-By: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-By: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-By: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-By: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-By: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-By: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For-Original: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For-Original: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For-Original: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For-Original: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For-Original: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For-Original: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For-Original: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For-Original: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For-Original: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For-Original: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For-Original: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For-Original: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-For: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Host: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Host: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Host: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Host: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Host: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Host: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Host: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Host: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Host: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Host: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Host: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Host: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Proto: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Proto: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Proto: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Proto: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Proto: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Proto: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Proto: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Proto: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Proto: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Proto: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Proto: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Proto: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Server: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Server: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Server: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Server: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Server: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Server: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Server: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Server: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Server: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Server: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Server: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded-Server: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarded: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarder-For: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarder-For: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarder-For: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarder-For: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarder-For: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarder-For: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarder-For: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarder-For: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarder-For: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarder-For: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarder-For: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Forwarder-For: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-HTTP-DestinationURL: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-HTTP-DestinationURL: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-HTTP-DestinationURL: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-HTTP-DestinationURL: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-HTTP-DestinationURL: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-HTTP-DestinationURL: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-HTTP-DestinationURL: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-HTTP-DestinationURL: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-HTTP-DestinationURL: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-HTTP-DestinationURL: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-HTTP-DestinationURL: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-HTTP-DestinationURL: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Host: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Host: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Host: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Host: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Host: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Host: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Host: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Host: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Host: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Host: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Host: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Host: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Destinationurl: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Destinationurl: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Destinationurl: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Destinationurl: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Destinationurl: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Destinationurl: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Destinationurl: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Destinationurl: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Destinationurl: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Destinationurl: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Destinationurl: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Destinationurl: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Host-Override: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Host-Override: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Host-Override: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Host-Override: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Host-Override: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Host-Override: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Host-Override: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Host-Override: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Host-Override: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Host-Override: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Host-Override: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Http-Host-Override: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-Remote-Addr: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-Remote-Addr: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-Remote-Addr: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-Remote-Addr: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-Remote-Addr: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-Remote-Addr: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-Remote-Addr: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-Remote-Addr: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-Remote-Addr: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-Remote-Addr: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-Remote-Addr: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-Remote-Addr: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-URL: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-URL: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-URL: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-URL: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-URL: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-URL: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-URL: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-URL: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-URL: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-URL: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-URL: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Original-URL: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originally-Forwarded-For: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originally-Forwarded-For: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originally-Forwarded-For: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originally-Forwarded-For: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originally-Forwarded-For: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originally-Forwarded-For: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originally-Forwarded-For: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originally-Forwarded-For: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originally-Forwarded-For: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originally-Forwarded-For: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originally-Forwarded-For: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originally-Forwarded-For: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-IP: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-IP: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-IP: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-IP: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-IP: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-IP: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-IP: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-IP: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-IP: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-IP: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-IP: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Originating-IP: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Proxy-Url: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Proxy-Url: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Proxy-Url: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Proxy-Url: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Proxy-Url: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Proxy-Url: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Proxy-Url: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Proxy-Url: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Proxy-Url: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Proxy-Url: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Proxy-Url: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Proxy-Url: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-ProxyUser-Ip: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-ProxyUser-Ip: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-ProxyUser-Ip: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-ProxyUser-Ip: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-ProxyUser-Ip: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-ProxyUser-Ip: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-ProxyUser-Ip: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-ProxyUser-Ip: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-ProxyUser-Ip: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-ProxyUser-Ip: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-ProxyUser-Ip: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-ProxyUser-Ip: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Real-Ip: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Real-Ip: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Real-Ip: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Real-Ip: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Real-Ip: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Real-Ip: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Real-Ip: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Real-Ip: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Real-Ip: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Real-Ip: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Real-Ip: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Real-Ip: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Referrer: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Referrer: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Referrer: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Referrer: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Referrer: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Referrer: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Referrer: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Referrer: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Referrer: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Referrer: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Referrer: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Referrer: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-Addr: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-Addr: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-Addr: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-Addr: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-Addr: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-Addr: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-Addr: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-Addr: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-Addr: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-Addr: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-Addr: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-Addr: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-IP: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-IP: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-IP: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-IP: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-IP: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-IP: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-IP: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-IP: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-IP: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-IP: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-IP: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Remote-IP: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Rewrite-URL: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Rewrite-URL: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Rewrite-URL: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Rewrite-URL: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Rewrite-URL: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Rewrite-URL: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Rewrite-URL: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Rewrite-URL: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Rewrite-URL: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Rewrite-URL: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Rewrite-URL: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-Rewrite-URL: null http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-WAP-Profile: * http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-WAP-Profile: 0.0.0.0 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-WAP-Profile: 0177.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-WAP-Profile: 10.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-WAP-Profile: 127.0.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-WAP-Profile: 172.17.0.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-WAP-Profile: 192.168.0.2 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-WAP-Profile: 192.168.1.1 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-WAP-Profile: 8.8.8.8 http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-WAP-Profile: localhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-WAP-Profile: norealhost http://127.0.0.1:8000/foo/bar
+[http_headers_ip] -H X-WAP-Profile: null http://127.0.0.1:8000/foo/bar
+[http_headers_port] -H X-Forwarded-Port: 443 http://127.0.0.1:8000/foo/bar
+[http_headers_port] -H X-Forwarded-Port: 4443 http://127.0.0.1:8000/foo/bar
+[http_headers_port] -H X-Forwarded-Port: 80 http://127.0.0.1:8000/foo/bar
+[http_headers_port] -H X-Forwarded-Port: 8080 http://127.0.0.1:8000/foo/bar
+[http_headers_port] -H X-Forwarded-Port: 8443 http://127.0.0.1:8000/foo/bar
+[http_headers_scheme] -H X-Forwarded-Scheme: foo http://127.0.0.1:8000/foo/bar
+[http_headers_scheme] -H X-Forwarded-Scheme: ftp http://127.0.0.1:8000/foo/bar
+[http_headers_scheme] -H X-Forwarded-Scheme: http http://127.0.0.1:8000/foo/bar
+[http_headers_scheme] -H X-Forwarded-Scheme: https http://127.0.0.1:8000/foo/bar
+[http_headers_scheme] -H X-Forwarded-Scheme: webdav http://127.0.0.1:8000/foo/bar
+[http_methods] -X CONNECT http://127.0.0.1:8000/foo/bar
+[http_methods] -X GET http://127.0.0.1:8000/foo/bar
+[http_methods] -X LOCK http://127.0.0.1:8000/foo/bar
+[http_methods] -X OPTIONS http://127.0.0.1:8000/foo/bar
+[http_methods] -X PATCH http://127.0.0.1:8000/foo/bar
+[http_methods] -X POST http://127.0.0.1:8000/foo/bar
+[http_methods] -X POUET http://127.0.0.1:8000/foo/bar
+[http_methods] -X PUT http://127.0.0.1:8000/foo/bar
+[http_methods] -X TRACE http://127.0.0.1:8000/foo/bar
+[http_methods] -X TRACK http://127.0.0.1:8000/foo/bar
+[http_methods] -X UPDATE http://127.0.0.1:8000/foo/bar
+[http_versions] --http0.9 http://127.0.0.1:8000/foo/bar
+[http_versions] --http1.0 http://127.0.0.1:8000/foo/bar
+[http_versions] --http1.1 http://127.0.0.1:8000/foo/bar
+[http_versions] --http2 http://127.0.0.1:8000/foo/bar
+[http_versions] --http2-prior-knowledge http://127.0.0.1:8000/foo/bar
+[mid_paths] http://127.0.0.1:8000/#?foo/bar
+[mid_paths] http://127.0.0.1:8000/#foo/bar
+[mid_paths] http://127.0.0.1:8000/%09%3bfoo/bar
+[mid_paths] http://127.0.0.1:8000/%09..foo/bar
+[mid_paths] http://127.0.0.1:8000/%09;foo/bar
+[mid_paths] http://127.0.0.1:8000/%09foo/bar
+[mid_paths] http://127.0.0.1:8000/%20/foo/bar
+[mid_paths] http://127.0.0.1:8000/%20foo/bar
+[mid_paths] http://127.0.0.1:8000/%23%3ffoo/bar
+[mid_paths] http://127.0.0.1:8000/%23foo/bar
+[mid_paths] http://127.0.0.1:8000/%252f%252ffoo/bar
+[mid_paths] http://127.0.0.1:8000/%252f/foo/bar
+[mid_paths] http://127.0.0.1:8000/%26foo/bar
+[mid_paths] http://127.0.0.1:8000/%2e%2e%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/%2e%2e/foo/bar
+[mid_paths] http://127.0.0.1:8000/%2e%2efoo/bar
+[mid_paths] http://127.0.0.1:8000/%2e/foo/bar
+[mid_paths] http://127.0.0.1:8000/%2efoo/bar
+[mid_paths] http://127.0.0.1:8000/%2f%20%23foo/bar
+[mid_paths] http://127.0.0.1:8000/%2f%23foo/bar
+[mid_paths] http://127.0.0.1:8000/%2f%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/%2f%3b%2f%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/%2f%3b%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/%2f%3f/foo/bar
+[mid_paths] http://127.0.0.1:8000/%2f%3ffoo/bar
+[mid_paths] http://127.0.0.1:8000/%2f/foo/bar
+[mid_paths] http://127.0.0.1:8000/%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/%3b%09foo/bar
+[mid_paths] http://127.0.0.1:8000/%3b%2f%2e%2e%2f%2e%2e%2f%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/%3b%2f%2e%2efoo/bar
+[mid_paths] http://127.0.0.1:8000/%3b%2f%2e.foo/bar
+[mid_paths] http://127.0.0.1:8000/%3b%2f..foo/bar
+[mid_paths] http://127.0.0.1:8000/%3b/%2e%2e/..%2f%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/%3b/%2e.foo/bar
+[mid_paths] http://127.0.0.1:8000/%3b/%2f%2f../foo/bar
+[mid_paths] http://127.0.0.1:8000/%3b/..foo/bar
+[mid_paths] http://127.0.0.1:8000/%3b//%2f../foo/bar
+[mid_paths] http://127.0.0.1:8000/%3bfoo/bar
+[mid_paths] http://127.0.0.1:8000/%3f%23foo/bar
+[mid_paths] http://127.0.0.1:8000/%3f%3ffoo/bar
+[mid_paths] http://127.0.0.1:8000/%3ffoo/bar
+[mid_paths] http://127.0.0.1:8000/%foo/bar
+[mid_paths] http://127.0.0.1:8000/&foo/bar
+[mid_paths] http://127.0.0.1:8000/.%2e/foo/bar
+[mid_paths] http://127.0.0.1:8000/..%00/;foo/bar
+[mid_paths] http://127.0.0.1:8000/..%00/foo/bar
+[mid_paths] http://127.0.0.1:8000/..%00;/foo/bar
+[mid_paths] http://127.0.0.1:8000/..%09foo/bar
+[mid_paths] http://127.0.0.1:8000/..%0d/;foo/bar
+[mid_paths] http://127.0.0.1:8000/..%0d/foo/bar
+[mid_paths] http://127.0.0.1:8000/..%0d;/foo/bar
+[mid_paths] http://127.0.0.1:8000/..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/..%3Bfoo/bar
+[mid_paths] http://127.0.0.1:8000/..%5c/foo/bar
+[mid_paths] http://127.0.0.1:8000/..%5cfoo/bar
+[mid_paths] http://127.0.0.1:8000/..%ff/;foo/bar
+[mid_paths] http://127.0.0.1:8000/..%ff;/foo/bar
+[mid_paths] http://127.0.0.1:8000/..%fffoo/bar
+[mid_paths] http://127.0.0.1:8000/.././foo/bar
+[mid_paths] http://127.0.0.1:8000/../foo/bar
+[mid_paths] http://127.0.0.1:8000/..;%00/foo/bar
+[mid_paths] http://127.0.0.1:8000/..;%0d/foo/bar
+[mid_paths] http://127.0.0.1:8000/..;%ff/foo/bar
+[mid_paths] http://127.0.0.1:8000/..;/foo/bar
+[mid_paths] http://127.0.0.1:8000/..;\;foo/bar
+[mid_paths] http://127.0.0.1:8000/..;\\foo/bar
+[mid_paths] http://127.0.0.1:8000/..;foo/bar
+[mid_paths] http://127.0.0.1:8000/..\;foo/bar
+[mid_paths] http://127.0.0.1:8000/..\\foo/bar
+[mid_paths] http://127.0.0.1:8000/..foo/bar
+[mid_paths] http://127.0.0.1:8000/./.foo/bar
+[mid_paths] http://127.0.0.1:8000/.//./foo/bar
+[mid_paths] http://127.0.0.1:8000/./foo/bar
+[mid_paths] http://127.0.0.1:8000/.;/foo/bar
+[mid_paths] http://127.0.0.1:8000/.htmlfoo/bar
+[mid_paths] http://127.0.0.1:8000/.jsonfoo/bar
+[mid_paths] http://127.0.0.1:8000//#?foo/bar
+[mid_paths] http://127.0.0.1:8000//#foo/bar
+[mid_paths] http://127.0.0.1:8000//%09%3bfoo/bar
+[mid_paths] http://127.0.0.1:8000//%09..foo/bar
+[mid_paths] http://127.0.0.1:8000//%09;foo/bar
+[mid_paths] http://127.0.0.1:8000//%09foo/bar
+[mid_paths] http://127.0.0.1:8000//%20#foo/bar
+[mid_paths] http://127.0.0.1:8000//%20%20/foo/bar
+[mid_paths] http://127.0.0.1:8000//%20%23foo/bar
+[mid_paths] http://127.0.0.1:8000//%20/foo/bar
+[mid_paths] http://127.0.0.1:8000//%20foo/bar
+[mid_paths] http://127.0.0.1:8000//%23%3ffoo/bar
+[mid_paths] http://127.0.0.1:8000//%23foo/bar
+[mid_paths] http://127.0.0.1:8000//%252e%252e%252f/foo/bar
+[mid_paths] http://127.0.0.1:8000//%252e%252e%253b/foo/bar
+[mid_paths] http://127.0.0.1:8000//%252e%252f/foo/bar
+[mid_paths] http://127.0.0.1:8000//%252e%253b/foo/bar
+[mid_paths] http://127.0.0.1:8000//%252e/foo/bar
+[mid_paths] http://127.0.0.1:8000//%252f%252ffoo/bar
+[mid_paths] http://127.0.0.1:8000//%252f/foo/bar
+[mid_paths] http://127.0.0.1:8000//%252ffoo/bar
+[mid_paths] http://127.0.0.1:8000//%26foo/bar
+[mid_paths] http://127.0.0.1:8000//%2e%2e%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//%2e%2e%3b/foo/bar
+[mid_paths] http://127.0.0.1:8000//%2e%2e/foo/bar
+[mid_paths] http://127.0.0.1:8000//%2e%2efoo/bar
+[mid_paths] http://127.0.0.1:8000//%2e%2f/foo/bar
+[mid_paths] http://127.0.0.1:8000//%2e%3b//foo/bar
+[mid_paths] http://127.0.0.1:8000//%2e%3b/foo/bar
+[mid_paths] http://127.0.0.1:8000//%2e//foo/bar
+[mid_paths] http://127.0.0.1:8000//%2e/foo/bar
+[mid_paths] http://127.0.0.1:8000//%2efoo/bar
+[mid_paths] http://127.0.0.1:8000//%2f%20%23foo/bar
+[mid_paths] http://127.0.0.1:8000//%2f%23foo/bar
+[mid_paths] http://127.0.0.1:8000//%2f%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//%2f%3b%2f%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//%2f%3b%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//%2f%3f/foo/bar
+[mid_paths] http://127.0.0.1:8000//%2f%3ffoo/bar
+[mid_paths] http://127.0.0.1:8000//%2f/foo/bar
+[mid_paths] http://127.0.0.1:8000//%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//%3b%09foo/bar
+[mid_paths] http://127.0.0.1:8000//%3b%2f%2e%2e%2f%2e%2e%2f%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//%3b%2f%2e%2efoo/bar
+[mid_paths] http://127.0.0.1:8000//%3b%2f%2e.foo/bar
+[mid_paths] http://127.0.0.1:8000//%3b%2f..foo/bar
+[mid_paths] http://127.0.0.1:8000//%3b/%2e%2e/..%2f%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//%3b/%2e.foo/bar
+[mid_paths] http://127.0.0.1:8000//%3b/%2f%2f../foo/bar
+[mid_paths] http://127.0.0.1:8000//%3b/..foo/bar
+[mid_paths] http://127.0.0.1:8000//%3b//%2f../foo/bar
+[mid_paths] http://127.0.0.1:8000//%3b/foo/bar
+[mid_paths] http://127.0.0.1:8000//%3bfoo/bar
+[mid_paths] http://127.0.0.1:8000//%3f%23foo/bar
+[mid_paths] http://127.0.0.1:8000//%3f%3ffoo/bar
+[mid_paths] http://127.0.0.1:8000//%3ffoo/bar
+[mid_paths] http://127.0.0.1:8000//%foo/bar
+[mid_paths] http://127.0.0.1:8000//&foo/bar
+[mid_paths] http://127.0.0.1:8000//*/foo/bar
+[mid_paths] http://127.0.0.1:8000//*foo/bar
+[mid_paths] http://127.0.0.1:8000//.%2e/foo/bar
+[mid_paths] http://127.0.0.1:8000//..%00/;foo/bar
+[mid_paths] http://127.0.0.1:8000//..%00/foo/bar
+[mid_paths] http://127.0.0.1:8000//..%00;/foo/bar
+[mid_paths] http://127.0.0.1:8000//..%09foo/bar
+[mid_paths] http://127.0.0.1:8000//..%0d/;foo/bar
+[mid_paths] http://127.0.0.1:8000//..%0d/foo/bar
+[mid_paths] http://127.0.0.1:8000//..%0d;/foo/bar
+[mid_paths] http://127.0.0.1:8000//..%2f..%2f..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//..%2f..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//..%3Bfoo/bar
+[mid_paths] http://127.0.0.1:8000//..%5c/foo/bar
+[mid_paths] http://127.0.0.1:8000//..%5cfoo/bar
+[mid_paths] http://127.0.0.1:8000//..%ff/;foo/bar
+[mid_paths] http://127.0.0.1:8000//..%ff;/foo/bar
+[mid_paths] http://127.0.0.1:8000//..%fffoo/bar
+[mid_paths] http://127.0.0.1:8000//../../..//foo/bar
+[mid_paths] http://127.0.0.1:8000//../../../foo/bar
+[mid_paths] http://127.0.0.1:8000//../..//../foo/bar
+[mid_paths] http://127.0.0.1:8000//../..//foo/bar
+[mid_paths] http://127.0.0.1:8000//../../foo/bar
+[mid_paths] http://127.0.0.1:8000//../..;/foo/bar
+[mid_paths] http://127.0.0.1:8000//.././../foo/bar
+[mid_paths] http://127.0.0.1:8000//.././foo/bar
+[mid_paths] http://127.0.0.1:8000//../.;/../foo/bar
+[mid_paths] http://127.0.0.1:8000//..//../../foo/bar
+[mid_paths] http://127.0.0.1:8000//..//../foo/bar
+[mid_paths] http://127.0.0.1:8000//..//..;/foo/bar
+[mid_paths] http://127.0.0.1:8000//..//foo/bar
+[mid_paths] http://127.0.0.1:8000//../;/../foo/bar
+[mid_paths] http://127.0.0.1:8000//../;/foo/bar
+[mid_paths] http://127.0.0.1:8000//../foo/bar
+[mid_paths] http://127.0.0.1:8000//..;%00/foo/bar
+[mid_paths] http://127.0.0.1:8000//..;%0d/foo/bar
+[mid_paths] http://127.0.0.1:8000//..;%2f..;%2f..;%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//..;%2f..;%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//..;%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//..;%ff/foo/bar
+[mid_paths] http://127.0.0.1:8000//..;/../foo/bar
+[mid_paths] http://127.0.0.1:8000//..;/..;/foo/bar
+[mid_paths] http://127.0.0.1:8000//..;//../foo/bar
+[mid_paths] http://127.0.0.1:8000//..;//..;/foo/bar
+[mid_paths] http://127.0.0.1:8000//..;//foo/bar
+[mid_paths] http://127.0.0.1:8000//..;/;/..;/foo/bar
+[mid_paths] http://127.0.0.1:8000//..;/;/foo/bar
+[mid_paths] http://127.0.0.1:8000//..;/foo/bar
+[mid_paths] http://127.0.0.1:8000//..;\;foo/bar
+[mid_paths] http://127.0.0.1:8000//..;\\foo/bar
+[mid_paths] http://127.0.0.1:8000//..;foo/bar
+[mid_paths] http://127.0.0.1:8000//..\;foo/bar
+[mid_paths] http://127.0.0.1:8000//..\\foo/bar
+[mid_paths] http://127.0.0.1:8000//..foo/bar
+[mid_paths] http://127.0.0.1:8000//./.foo/bar
+[mid_paths] http://127.0.0.1:8000//.//./foo/bar
+[mid_paths] http://127.0.0.1:8000//.//foo/bar
+[mid_paths] http://127.0.0.1:8000//./foo/bar
+[mid_paths] http://127.0.0.1:8000//.;//foo/bar
+[mid_paths] http://127.0.0.1:8000//.;/foo/bar
+[mid_paths] http://127.0.0.1:8000//.foo/bar
+[mid_paths] http://127.0.0.1:8000//.htmlfoo/bar
+[mid_paths] http://127.0.0.1:8000//.jsonfoo/bar
+[mid_paths] http://127.0.0.1:8000//.randomstringfoo/bar
+[mid_paths] http://127.0.0.1:8000///%20#foo/bar
+[mid_paths] http://127.0.0.1:8000///%20%20/foo/bar
+[mid_paths] http://127.0.0.1:8000///%20%23foo/bar
+[mid_paths] http://127.0.0.1:8000///%252e%252e%252f/foo/bar
+[mid_paths] http://127.0.0.1:8000///%252e%252e%253b/foo/bar
+[mid_paths] http://127.0.0.1:8000///%252e%252f/foo/bar
+[mid_paths] http://127.0.0.1:8000///%252e%253b/foo/bar
+[mid_paths] http://127.0.0.1:8000///%252e/foo/bar
+[mid_paths] http://127.0.0.1:8000///%252ffoo/bar
+[mid_paths] http://127.0.0.1:8000///%2e%2e%3b/foo/bar
+[mid_paths] http://127.0.0.1:8000///%2e%2e/foo/bar
+[mid_paths] http://127.0.0.1:8000///%2e%2efoo/bar
+[mid_paths] http://127.0.0.1:8000///%2e%2f/foo/bar
+[mid_paths] http://127.0.0.1:8000///%2e%3b//foo/bar
+[mid_paths] http://127.0.0.1:8000///%2e%3b/foo/bar
+[mid_paths] http://127.0.0.1:8000///%2e//foo/bar
+[mid_paths] http://127.0.0.1:8000///%2e/foo/bar
+[mid_paths] http://127.0.0.1:8000///%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000///%3b/foo/bar
+[mid_paths] http://127.0.0.1:8000///*/foo/bar
+[mid_paths] http://127.0.0.1:8000///*foo/bar
+[mid_paths] http://127.0.0.1:8000///..%2f..%2f..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000///..%2f..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000///..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000///../../..//foo/bar
+[mid_paths] http://127.0.0.1:8000///../../../foo/bar
+[mid_paths] http://127.0.0.1:8000///../..//../foo/bar
+[mid_paths] http://127.0.0.1:8000///../..//foo/bar
+[mid_paths] http://127.0.0.1:8000///../../foo/bar
+[mid_paths] http://127.0.0.1:8000///../..;/foo/bar
+[mid_paths] http://127.0.0.1:8000///.././../foo/bar
+[mid_paths] http://127.0.0.1:8000///../.;/../foo/bar
+[mid_paths] http://127.0.0.1:8000///..//../../foo/bar
+[mid_paths] http://127.0.0.1:8000///..//../foo/bar
+[mid_paths] http://127.0.0.1:8000///..//..;/foo/bar
+[mid_paths] http://127.0.0.1:8000///..//foo/bar
+[mid_paths] http://127.0.0.1:8000///../;/../foo/bar
+[mid_paths] http://127.0.0.1:8000///../;/foo/bar
+[mid_paths] http://127.0.0.1:8000///../foo/bar
+[mid_paths] http://127.0.0.1:8000///..;%2f..;%2f..;%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000///..;%2f..;%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000///..;%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000///..;/../foo/bar
+[mid_paths] http://127.0.0.1:8000///..;/..;/foo/bar
+[mid_paths] http://127.0.0.1:8000///..;//../foo/bar
+[mid_paths] http://127.0.0.1:8000///..;//..;/foo/bar
+[mid_paths] http://127.0.0.1:8000///..;//foo/bar
+[mid_paths] http://127.0.0.1:8000///..;/;/..;/foo/bar
+[mid_paths] http://127.0.0.1:8000///..;/;/foo/bar
+[mid_paths] http://127.0.0.1:8000///..;/foo/bar
+[mid_paths] http://127.0.0.1:8000///..;foo/bar
+[mid_paths] http://127.0.0.1:8000///..foo/bar
+[mid_paths] http://127.0.0.1:8000///.//foo/bar
+[mid_paths] http://127.0.0.1:8000///./foo/bar
+[mid_paths] http://127.0.0.1:8000///.;//foo/bar
+[mid_paths] http://127.0.0.1:8000///.;/foo/bar
+[mid_paths] http://127.0.0.1:8000///.foo/bar
+[mid_paths] http://127.0.0.1:8000///.randomstringfoo/bar
+[mid_paths] http://127.0.0.1:8000////../../foo/bar
+[mid_paths] http://127.0.0.1:8000////..//foo/bar
+[mid_paths] http://127.0.0.1:8000////../foo/bar
+[mid_paths] http://127.0.0.1:8000////..;//foo/bar
+[mid_paths] http://127.0.0.1:8000////..;/foo/bar
+[mid_paths] http://127.0.0.1:8000////..;foo/bar
+[mid_paths] http://127.0.0.1:8000////..foo/bar
+[mid_paths] http://127.0.0.1:8000////./foo/bar
+[mid_paths] http://127.0.0.1:8000////.;/foo/bar
+[mid_paths] http://127.0.0.1:8000////.foo/bar
+[mid_paths] http://127.0.0.1:8000/////..//foo/bar
+[mid_paths] http://127.0.0.1:8000/////../foo/bar
+[mid_paths] http://127.0.0.1:8000/////..;//foo/bar
+[mid_paths] http://127.0.0.1:8000/////..;/foo/bar
+[mid_paths] http://127.0.0.1:8000/////..;foo/bar
+[mid_paths] http://127.0.0.1:8000/////..foo/bar
+[mid_paths] http://127.0.0.1:8000//////foo/bar
+[mid_paths] http://127.0.0.1:8000/////foo/bar
+[mid_paths] http://127.0.0.1:8000////;/foo/bar
+[mid_paths] http://127.0.0.1:8000////?anythingfoo/bar
+[mid_paths] http://127.0.0.1:8000////foo/bar
+[mid_paths] http://127.0.0.1:8000///;//foo/bar
+[mid_paths] http://127.0.0.1:8000///;/foo/bar
+[mid_paths] http://127.0.0.1:8000///;x/foo/bar
+[mid_paths] http://127.0.0.1:8000///;xfoo/bar
+[mid_paths] http://127.0.0.1:8000///?anythingfoo/bar
+[mid_paths] http://127.0.0.1:8000///foo/bar
+[mid_paths] http://127.0.0.1:8000///x/..//foo/bar
+[mid_paths] http://127.0.0.1:8000///x/../;/foo/bar
+[mid_paths] http://127.0.0.1:8000///x/../foo/bar
+[mid_paths] http://127.0.0.1:8000///x/..;//foo/bar
+[mid_paths] http://127.0.0.1:8000///x/..;/;/foo/bar
+[mid_paths] http://127.0.0.1:8000///x/..;/foo/bar
+[mid_paths] http://127.0.0.1:8000///x//../foo/bar
+[mid_paths] http://127.0.0.1:8000///x//..;/foo/bar
+[mid_paths] http://127.0.0.1:8000///x/;/../foo/bar
+[mid_paths] http://127.0.0.1:8000///x/;/..;/foo/bar
+[mid_paths] http://127.0.0.1:8000//;%09..;foo/bar
+[mid_paths] http://127.0.0.1:8000//;%09..foo/bar
+[mid_paths] http://127.0.0.1:8000//;%09;foo/bar
+[mid_paths] http://127.0.0.1:8000//;%09foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f%2e%2e%2f%2e%2e%2f%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f%2e%2efoo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f%2f/../foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f..%2f%2e%2e%2f%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f..%2f..%2f%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f..%2f/..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f..%2f/../foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f..%2f/foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f../%2f..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f../%2f../foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f..//..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f..//../foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f..///;foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f..///foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f..//;/;foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f..//;/foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f../;//foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f../;/;/;foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f../;/;/foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f..;///foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f..;//;/foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f..;/;//foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f..foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f/%2f../foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f//..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f//../foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f//..;/foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f/;/../foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f/;/..;/foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f;//../foo/bar
+[mid_paths] http://127.0.0.1:8000//;%2f;/;/..;/foo/bar
+[mid_paths] http://127.0.0.1:8000//;/%2e%2e%2f%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//;/%2e%2e%2f/foo/bar
+[mid_paths] http://127.0.0.1:8000//;/%2e%2e/foo/bar
+[mid_paths] http://127.0.0.1:8000//;/%2e%2efoo/bar
+[mid_paths] http://127.0.0.1:8000//;/%2e.foo/bar
+[mid_paths] http://127.0.0.1:8000//;/%2f%2f../foo/bar
+[mid_paths] http://127.0.0.1:8000//;/%2f/..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//;/%2f/../foo/bar
+[mid_paths] http://127.0.0.1:8000//;/.%2e/%2e%2e/%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//;/.%2efoo/bar
+[mid_paths] http://127.0.0.1:8000//;/..%2f%2f../foo/bar
+[mid_paths] http://127.0.0.1:8000//;/..%2f..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//;/..%2f//foo/bar
+[mid_paths] http://127.0.0.1:8000//;/..%2f/foo/bar
+[mid_paths] http://127.0.0.1:8000//;/..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//;/../%2f/foo/bar
+[mid_paths] http://127.0.0.1:8000//;/../..//foo/bar
+[mid_paths] http://127.0.0.1:8000//;/../../foo/bar
+[mid_paths] http://127.0.0.1:8000//;/.././../foo/bar
+[mid_paths] http://127.0.0.1:8000//;/../.;/../foo/bar
+[mid_paths] http://127.0.0.1:8000//;/..//%2e%2e/foo/bar
+[mid_paths] http://127.0.0.1:8000//;/..//%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000//;/..//../foo/bar
+[mid_paths] http://127.0.0.1:8000//;/..///foo/bar
+[mid_paths] http://127.0.0.1:8000//;/..//foo/bar
+[mid_paths] http://127.0.0.1:8000//;/../;/../foo/bar
+[mid_paths] http://127.0.0.1:8000//;/../;/foo/bar
+[mid_paths] http://127.0.0.1:8000//;/../foo/bar
+[mid_paths] http://127.0.0.1:8000//;/..;foo/bar
+[mid_paths] http://127.0.0.1:8000//;/..foo/bar
+[mid_paths] http://127.0.0.1:8000//;/.;.foo/bar
+[mid_paths] http://127.0.0.1:8000//;//%2f../foo/bar
+[mid_paths] http://127.0.0.1:8000//;//../../foo/bar
+[mid_paths] http://127.0.0.1:8000//;//..foo/bar
+[mid_paths] http://127.0.0.1:8000//;///..//foo/bar
+[mid_paths] http://127.0.0.1:8000//;///../foo/bar
+[mid_paths] http://127.0.0.1:8000//;///..foo/bar
+[mid_paths] http://127.0.0.1:8000//;//foo/bar
+[mid_paths] http://127.0.0.1:8000//;/foo/bar
+[mid_paths] http://127.0.0.1:8000//;foo/bar
+[mid_paths] http://127.0.0.1:8000//;x/foo/bar
+[mid_paths] http://127.0.0.1:8000//;x;foo/bar
+[mid_paths] http://127.0.0.1:8000//;xfoo/bar
+[mid_paths] http://127.0.0.1:8000//???foo/bar
+[mid_paths] http://127.0.0.1:8000//??foo/bar
+[mid_paths] http://127.0.0.1:8000//?foo/bar
+[mid_paths] http://127.0.0.1:8000//\..\.\foo/bar
+[mid_paths] http://127.0.0.1:8000//foo/#?bar
+[mid_paths] http://127.0.0.1:8000//foo/#bar
+[mid_paths] http://127.0.0.1:8000//foo/%09%3bbar
+[mid_paths] http://127.0.0.1:8000//foo/%09..bar
+[mid_paths] http://127.0.0.1:8000//foo/%09;bar
+[mid_paths] http://127.0.0.1:8000//foo/%09bar
+[mid_paths] http://127.0.0.1:8000//foo/%20/bar
+[mid_paths] http://127.0.0.1:8000//foo/%20bar
+[mid_paths] http://127.0.0.1:8000//foo/%23%3fbar
+[mid_paths] http://127.0.0.1:8000//foo/%23bar
+[mid_paths] http://127.0.0.1:8000//foo/%252f%252fbar
+[mid_paths] http://127.0.0.1:8000//foo/%252f/bar
+[mid_paths] http://127.0.0.1:8000//foo/%26bar
+[mid_paths] http://127.0.0.1:8000//foo/%2e%2e%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/%2e%2e/bar
+[mid_paths] http://127.0.0.1:8000//foo/%2e%2ebar
+[mid_paths] http://127.0.0.1:8000//foo/%2e/bar
+[mid_paths] http://127.0.0.1:8000//foo/%2ebar
+[mid_paths] http://127.0.0.1:8000//foo/%2f%20%23bar
+[mid_paths] http://127.0.0.1:8000//foo/%2f%23bar
+[mid_paths] http://127.0.0.1:8000//foo/%2f%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/%2f%3b%2f%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/%2f%3b%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/%2f%3f/bar
+[mid_paths] http://127.0.0.1:8000//foo/%2f%3fbar
+[mid_paths] http://127.0.0.1:8000//foo/%2f/bar
+[mid_paths] http://127.0.0.1:8000//foo/%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/%3b%09bar
+[mid_paths] http://127.0.0.1:8000//foo/%3b%2f%2e%2e%2f%2e%2e%2f%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/%3b%2f%2e%2ebar
+[mid_paths] http://127.0.0.1:8000//foo/%3b%2f%2e.bar
+[mid_paths] http://127.0.0.1:8000//foo/%3b%2f..bar
+[mid_paths] http://127.0.0.1:8000//foo/%3b/%2e%2e/..%2f%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/%3b/%2e.bar
+[mid_paths] http://127.0.0.1:8000//foo/%3b/%2f%2f../bar
+[mid_paths] http://127.0.0.1:8000//foo/%3b/..bar
+[mid_paths] http://127.0.0.1:8000//foo/%3b//%2f../bar
+[mid_paths] http://127.0.0.1:8000//foo/%3bbar
+[mid_paths] http://127.0.0.1:8000//foo/%3f%23bar
+[mid_paths] http://127.0.0.1:8000//foo/%3f%3fbar
+[mid_paths] http://127.0.0.1:8000//foo/%3fbar
+[mid_paths] http://127.0.0.1:8000//foo/%bar
+[mid_paths] http://127.0.0.1:8000//foo/&bar
+[mid_paths] http://127.0.0.1:8000//foo/.%2e/bar
+[mid_paths] http://127.0.0.1:8000//foo/..%00/;bar
+[mid_paths] http://127.0.0.1:8000//foo/..%00/bar
+[mid_paths] http://127.0.0.1:8000//foo/..%00;/bar
+[mid_paths] http://127.0.0.1:8000//foo/..%09bar
+[mid_paths] http://127.0.0.1:8000//foo/..%0d/;bar
+[mid_paths] http://127.0.0.1:8000//foo/..%0d/bar
+[mid_paths] http://127.0.0.1:8000//foo/..%0d;/bar
+[mid_paths] http://127.0.0.1:8000//foo/..%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/..%3Bbar
+[mid_paths] http://127.0.0.1:8000//foo/..%5c/bar
+[mid_paths] http://127.0.0.1:8000//foo/..%5cbar
+[mid_paths] http://127.0.0.1:8000//foo/..%ff/;bar
+[mid_paths] http://127.0.0.1:8000//foo/..%ff;/bar
+[mid_paths] http://127.0.0.1:8000//foo/..%ffbar
+[mid_paths] http://127.0.0.1:8000//foo/.././bar
+[mid_paths] http://127.0.0.1:8000//foo/../bar
+[mid_paths] http://127.0.0.1:8000//foo/..;%00/bar
+[mid_paths] http://127.0.0.1:8000//foo/..;%0d/bar
+[mid_paths] http://127.0.0.1:8000//foo/..;%ff/bar
+[mid_paths] http://127.0.0.1:8000//foo/..;/bar
+[mid_paths] http://127.0.0.1:8000//foo/..;\;bar
+[mid_paths] http://127.0.0.1:8000//foo/..;\\bar
+[mid_paths] http://127.0.0.1:8000//foo/..;bar
+[mid_paths] http://127.0.0.1:8000//foo/..\;bar
+[mid_paths] http://127.0.0.1:8000//foo/..\\bar
+[mid_paths] http://127.0.0.1:8000//foo/..bar
+[mid_paths] http://127.0.0.1:8000//foo/./.bar
+[mid_paths] http://127.0.0.1:8000//foo/.//./bar
+[mid_paths] http://127.0.0.1:8000//foo/./bar
+[mid_paths] http://127.0.0.1:8000//foo/.;/bar
+[mid_paths] http://127.0.0.1:8000//foo/.htmlbar
+[mid_paths] http://127.0.0.1:8000//foo/.jsonbar
+[mid_paths] http://127.0.0.1:8000//foo//%20#bar
+[mid_paths] http://127.0.0.1:8000//foo//%20%20/bar
+[mid_paths] http://127.0.0.1:8000//foo//%20%23bar
+[mid_paths] http://127.0.0.1:8000//foo//%252e%252e%252f/bar
+[mid_paths] http://127.0.0.1:8000//foo//%252e%252e%253b/bar
+[mid_paths] http://127.0.0.1:8000//foo//%252e%252f/bar
+[mid_paths] http://127.0.0.1:8000//foo//%252e%253b/bar
+[mid_paths] http://127.0.0.1:8000//foo//%252e/bar
+[mid_paths] http://127.0.0.1:8000//foo//%252fbar
+[mid_paths] http://127.0.0.1:8000//foo//%2e%2e%3b/bar
+[mid_paths] http://127.0.0.1:8000//foo//%2e%2e/bar
+[mid_paths] http://127.0.0.1:8000//foo//%2e%2ebar
+[mid_paths] http://127.0.0.1:8000//foo//%2e%2f/bar
+[mid_paths] http://127.0.0.1:8000//foo//%2e%3b//bar
+[mid_paths] http://127.0.0.1:8000//foo//%2e%3b/bar
+[mid_paths] http://127.0.0.1:8000//foo//%2e//bar
+[mid_paths] http://127.0.0.1:8000//foo//%2e/bar
+[mid_paths] http://127.0.0.1:8000//foo//%2fbar
+[mid_paths] http://127.0.0.1:8000//foo//%3b/bar
+[mid_paths] http://127.0.0.1:8000//foo//*/bar
+[mid_paths] http://127.0.0.1:8000//foo//*bar
+[mid_paths] http://127.0.0.1:8000//foo//..%2f..%2f..%2fbar
+[mid_paths] http://127.0.0.1:8000//foo//..%2f..%2fbar
+[mid_paths] http://127.0.0.1:8000//foo//..%2fbar
+[mid_paths] http://127.0.0.1:8000//foo//../../..//bar
+[mid_paths] http://127.0.0.1:8000//foo//../../../bar
+[mid_paths] http://127.0.0.1:8000//foo//../..//../bar
+[mid_paths] http://127.0.0.1:8000//foo//../..//bar
+[mid_paths] http://127.0.0.1:8000//foo//../../bar
+[mid_paths] http://127.0.0.1:8000//foo//../..;/bar
+[mid_paths] http://127.0.0.1:8000//foo//.././../bar
+[mid_paths] http://127.0.0.1:8000//foo//../.;/../bar
+[mid_paths] http://127.0.0.1:8000//foo//..//../../bar
+[mid_paths] http://127.0.0.1:8000//foo//..//../bar
+[mid_paths] http://127.0.0.1:8000//foo//..//..;/bar
+[mid_paths] http://127.0.0.1:8000//foo//..//bar
+[mid_paths] http://127.0.0.1:8000//foo//../;/../bar
+[mid_paths] http://127.0.0.1:8000//foo//../;/bar
+[mid_paths] http://127.0.0.1:8000//foo//../bar
+[mid_paths] http://127.0.0.1:8000//foo//..;%2f..;%2f..;%2fbar
+[mid_paths] http://127.0.0.1:8000//foo//..;%2f..;%2fbar
+[mid_paths] http://127.0.0.1:8000//foo//..;%2fbar
+[mid_paths] http://127.0.0.1:8000//foo//..;/../bar
+[mid_paths] http://127.0.0.1:8000//foo//..;/..;/bar
+[mid_paths] http://127.0.0.1:8000//foo//..;//../bar
+[mid_paths] http://127.0.0.1:8000//foo//..;//..;/bar
+[mid_paths] http://127.0.0.1:8000//foo//..;//bar
+[mid_paths] http://127.0.0.1:8000//foo//..;/;/..;/bar
+[mid_paths] http://127.0.0.1:8000//foo//..;/;/bar
+[mid_paths] http://127.0.0.1:8000//foo//..;/bar
+[mid_paths] http://127.0.0.1:8000//foo//..bar
+[mid_paths] http://127.0.0.1:8000//foo//.//bar
+[mid_paths] http://127.0.0.1:8000//foo//./bar
+[mid_paths] http://127.0.0.1:8000//foo//.;//bar
+[mid_paths] http://127.0.0.1:8000//foo//.;/bar
+[mid_paths] http://127.0.0.1:8000//foo//.bar
+[mid_paths] http://127.0.0.1:8000//foo//.randomstringbar
+[mid_paths] http://127.0.0.1:8000//foo///../../bar
+[mid_paths] http://127.0.0.1:8000//foo///..;bar
+[mid_paths] http://127.0.0.1:8000//foo///..bar
+[mid_paths] http://127.0.0.1:8000//foo///./bar
+[mid_paths] http://127.0.0.1:8000//foo///.;/bar
+[mid_paths] http://127.0.0.1:8000//foo///.bar
+[mid_paths] http://127.0.0.1:8000//foo////..//bar
+[mid_paths] http://127.0.0.1:8000//foo////../bar
+[mid_paths] http://127.0.0.1:8000//foo////..;//bar
+[mid_paths] http://127.0.0.1:8000//foo////..;/bar
+[mid_paths] http://127.0.0.1:8000//foo////..;bar
+[mid_paths] http://127.0.0.1:8000//foo////..bar
+[mid_paths] http://127.0.0.1:8000//foo/////bar
+[mid_paths] http://127.0.0.1:8000//foo///;/bar
+[mid_paths] http://127.0.0.1:8000//foo///?anythingbar
+[mid_paths] http://127.0.0.1:8000//foo///bar
+[mid_paths] http://127.0.0.1:8000//foo//;//bar
+[mid_paths] http://127.0.0.1:8000//foo//;/bar
+[mid_paths] http://127.0.0.1:8000//foo//;x/bar
+[mid_paths] http://127.0.0.1:8000//foo//;xbar
+[mid_paths] http://127.0.0.1:8000//foo//bar
+[mid_paths] http://127.0.0.1:8000//foo//x/..//bar
+[mid_paths] http://127.0.0.1:8000//foo//x/../;/bar
+[mid_paths] http://127.0.0.1:8000//foo//x/../bar
+[mid_paths] http://127.0.0.1:8000//foo//x/..;//bar
+[mid_paths] http://127.0.0.1:8000//foo//x/..;/;/bar
+[mid_paths] http://127.0.0.1:8000//foo//x/..;/bar
+[mid_paths] http://127.0.0.1:8000//foo//x//../bar
+[mid_paths] http://127.0.0.1:8000//foo//x//..;/bar
+[mid_paths] http://127.0.0.1:8000//foo//x/;/../bar
+[mid_paths] http://127.0.0.1:8000//foo//x/;/..;/bar
+[mid_paths] http://127.0.0.1:8000//foo/;%09..;bar
+[mid_paths] http://127.0.0.1:8000//foo/;%09..bar
+[mid_paths] http://127.0.0.1:8000//foo/;%09;bar
+[mid_paths] http://127.0.0.1:8000//foo/;%09bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f%2e%2e%2f%2e%2e%2f%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f%2e%2ebar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f%2f/../bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f..%2f%2e%2e%2f%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f..%2f..%2f%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f..%2f/..%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f..%2f/../bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f..%2f/bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f../%2f..%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f../%2f../bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f..//..%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f..//../bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f..///;bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f..///bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f..//;/;bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f..//;/bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f../;//bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f../;/;/;bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f../;/;/bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f..;///bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f..;//;/bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f..;/;//bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f..bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f/%2f../bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f//..%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f//../bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f//..;/bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f/;/../bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f/;/..;/bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f;//../bar
+[mid_paths] http://127.0.0.1:8000//foo/;%2f;/;/..;/bar
+[mid_paths] http://127.0.0.1:8000//foo/;/%2e%2e%2f%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/;/%2e%2e%2f/bar
+[mid_paths] http://127.0.0.1:8000//foo/;/%2e%2e/bar
+[mid_paths] http://127.0.0.1:8000//foo/;/%2e%2ebar
+[mid_paths] http://127.0.0.1:8000//foo/;/%2e.bar
+[mid_paths] http://127.0.0.1:8000//foo/;/%2f%2f../bar
+[mid_paths] http://127.0.0.1:8000//foo/;/%2f/..%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/;/%2f/../bar
+[mid_paths] http://127.0.0.1:8000//foo/;/.%2e/%2e%2e/%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/;/.%2ebar
+[mid_paths] http://127.0.0.1:8000//foo/;/..%2f%2f../bar
+[mid_paths] http://127.0.0.1:8000//foo/;/..%2f..%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/;/..%2f//bar
+[mid_paths] http://127.0.0.1:8000//foo/;/..%2f/bar
+[mid_paths] http://127.0.0.1:8000//foo/;/..%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/;/../%2f/bar
+[mid_paths] http://127.0.0.1:8000//foo/;/../..//bar
+[mid_paths] http://127.0.0.1:8000//foo/;/../../bar
+[mid_paths] http://127.0.0.1:8000//foo/;/.././../bar
+[mid_paths] http://127.0.0.1:8000//foo/;/../.;/../bar
+[mid_paths] http://127.0.0.1:8000//foo/;/..//%2e%2e/bar
+[mid_paths] http://127.0.0.1:8000//foo/;/..//%2fbar
+[mid_paths] http://127.0.0.1:8000//foo/;/..//../bar
+[mid_paths] http://127.0.0.1:8000//foo/;/..///bar
+[mid_paths] http://127.0.0.1:8000//foo/;/..//bar
+[mid_paths] http://127.0.0.1:8000//foo/;/../;/../bar
+[mid_paths] http://127.0.0.1:8000//foo/;/../;/bar
+[mid_paths] http://127.0.0.1:8000//foo/;/../bar
+[mid_paths] http://127.0.0.1:8000//foo/;/..;bar
+[mid_paths] http://127.0.0.1:8000//foo/;/..bar
+[mid_paths] http://127.0.0.1:8000//foo/;/.;.bar
+[mid_paths] http://127.0.0.1:8000//foo/;//%2f../bar
+[mid_paths] http://127.0.0.1:8000//foo/;//../../bar
+[mid_paths] http://127.0.0.1:8000//foo/;//..bar
+[mid_paths] http://127.0.0.1:8000//foo/;///..//bar
+[mid_paths] http://127.0.0.1:8000//foo/;///../bar
+[mid_paths] http://127.0.0.1:8000//foo/;///..bar
+[mid_paths] http://127.0.0.1:8000//foo/;bar
+[mid_paths] http://127.0.0.1:8000//foo/;x/bar
+[mid_paths] http://127.0.0.1:8000//foo/;x;bar
+[mid_paths] http://127.0.0.1:8000//foo/;xbar
+[mid_paths] http://127.0.0.1:8000//foo/???bar
+[mid_paths] http://127.0.0.1:8000//foo/??bar
+[mid_paths] http://127.0.0.1:8000//foo/?bar
+[mid_paths] http://127.0.0.1:8000//foo/\..\.\bar
+[mid_paths] http://127.0.0.1:8000//foo/bar
+[mid_paths] http://127.0.0.1:8000//x/..//foo/bar
+[mid_paths] http://127.0.0.1:8000//x/../;/foo/bar
+[mid_paths] http://127.0.0.1:8000//x/../foo/bar
+[mid_paths] http://127.0.0.1:8000//x/..;//foo/bar
+[mid_paths] http://127.0.0.1:8000//x/..;/;/foo/bar
+[mid_paths] http://127.0.0.1:8000//x/..;/foo/bar
+[mid_paths] http://127.0.0.1:8000//x//../foo/bar
+[mid_paths] http://127.0.0.1:8000//x//..;/foo/bar
+[mid_paths] http://127.0.0.1:8000//x/;/../foo/bar
+[mid_paths] http://127.0.0.1:8000//x/;/..;/foo/bar
+[mid_paths] http://127.0.0.1:8000/;%09..;foo/bar
+[mid_paths] http://127.0.0.1:8000/;%09..foo/bar
+[mid_paths] http://127.0.0.1:8000/;%09;foo/bar
+[mid_paths] http://127.0.0.1:8000/;%09foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f%2e%2e%2f%2e%2e%2f%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f%2e%2efoo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f%2f/../foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f..%2f%2e%2e%2f%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f..%2f..%2f%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f..%2f/..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f..%2f/../foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f..%2f/foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f../%2f..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f../%2f../foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f..//..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f..//../foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f..///;foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f..///foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f..//;/;foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f..//;/foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f../;//foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f../;/;/;foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f../;/;/foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f..;///foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f..;//;/foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f..;/;//foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f..foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f/%2f../foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f//..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f//../foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f//..;/foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f/;/../foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f/;/..;/foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f;//../foo/bar
+[mid_paths] http://127.0.0.1:8000/;%2f;/;/..;/foo/bar
+[mid_paths] http://127.0.0.1:8000/;/%2e%2e%2f%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/;/%2e%2e%2f/foo/bar
+[mid_paths] http://127.0.0.1:8000/;/%2e%2e/foo/bar
+[mid_paths] http://127.0.0.1:8000/;/%2e%2efoo/bar
+[mid_paths] http://127.0.0.1:8000/;/%2e.foo/bar
+[mid_paths] http://127.0.0.1:8000/;/%2f%2f../foo/bar
+[mid_paths] http://127.0.0.1:8000/;/%2f/..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/;/%2f/../foo/bar
+[mid_paths] http://127.0.0.1:8000/;/.%2e/%2e%2e/%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/;/.%2efoo/bar
+[mid_paths] http://127.0.0.1:8000/;/..%2f%2f../foo/bar
+[mid_paths] http://127.0.0.1:8000/;/..%2f..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/;/..%2f//foo/bar
+[mid_paths] http://127.0.0.1:8000/;/..%2f/foo/bar
+[mid_paths] http://127.0.0.1:8000/;/..%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/;/../%2f/foo/bar
+[mid_paths] http://127.0.0.1:8000/;/../..//foo/bar
+[mid_paths] http://127.0.0.1:8000/;/../../foo/bar
+[mid_paths] http://127.0.0.1:8000/;/.././../foo/bar
+[mid_paths] http://127.0.0.1:8000/;/../.;/../foo/bar
+[mid_paths] http://127.0.0.1:8000/;/..//%2e%2e/foo/bar
+[mid_paths] http://127.0.0.1:8000/;/..//%2ffoo/bar
+[mid_paths] http://127.0.0.1:8000/;/..//../foo/bar
+[mid_paths] http://127.0.0.1:8000/;/..///foo/bar
+[mid_paths] http://127.0.0.1:8000/;/..//foo/bar
+[mid_paths] http://127.0.0.1:8000/;/../;/../foo/bar
+[mid_paths] http://127.0.0.1:8000/;/../;/foo/bar
+[mid_paths] http://127.0.0.1:8000/;/../foo/bar
+[mid_paths] http://127.0.0.1:8000/;/..;foo/bar
+[mid_paths] http://127.0.0.1:8000/;/..foo/bar
+[mid_paths] http://127.0.0.1:8000/;/.;.foo/bar
+[mid_paths] http://127.0.0.1:8000/;//%2f../foo/bar
+[mid_paths] http://127.0.0.1:8000/;//../../foo/bar
+[mid_paths] http://127.0.0.1:8000/;//..foo/bar
+[mid_paths] http://127.0.0.1:8000/;///..//foo/bar
+[mid_paths] http://127.0.0.1:8000/;///../foo/bar
+[mid_paths] http://127.0.0.1:8000/;///..foo/bar
+[mid_paths] http://127.0.0.1:8000/;foo/bar
+[mid_paths] http://127.0.0.1:8000/;x/foo/bar
+[mid_paths] http://127.0.0.1:8000/;x;foo/bar
+[mid_paths] http://127.0.0.1:8000/;xfoo/bar
+[mid_paths] http://127.0.0.1:8000/???foo/bar
+[mid_paths] http://127.0.0.1:8000/??foo/bar
+[mid_paths] http://127.0.0.1:8000/?foo/bar
+[mid_paths] http://127.0.0.1:8000/\..\.\foo/bar
+[mid_paths] http://127.0.0.1:8000/foo/#?bar
+[mid_paths] http://127.0.0.1:8000/foo/#bar
+[mid_paths] http://127.0.0.1:8000/foo/%09%3bbar
+[mid_paths] http://127.0.0.1:8000/foo/%09..bar
+[mid_paths] http://127.0.0.1:8000/foo/%09;bar
+[mid_paths] http://127.0.0.1:8000/foo/%09bar
+[mid_paths] http://127.0.0.1:8000/foo/%20/bar
+[mid_paths] http://127.0.0.1:8000/foo/%20bar
+[mid_paths] http://127.0.0.1:8000/foo/%23%3fbar
+[mid_paths] http://127.0.0.1:8000/foo/%23bar
+[mid_paths] http://127.0.0.1:8000/foo/%252f%252fbar
+[mid_paths] http://127.0.0.1:8000/foo/%252f/bar
+[mid_paths] http://127.0.0.1:8000/foo/%26bar
+[mid_paths] http://127.0.0.1:8000/foo/%2e%2e%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/%2e%2e/bar
+[mid_paths] http://127.0.0.1:8000/foo/%2e%2ebar
+[mid_paths] http://127.0.0.1:8000/foo/%2e/bar
+[mid_paths] http://127.0.0.1:8000/foo/%2ebar
+[mid_paths] http://127.0.0.1:8000/foo/%2f%20%23bar
+[mid_paths] http://127.0.0.1:8000/foo/%2f%23bar
+[mid_paths] http://127.0.0.1:8000/foo/%2f%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/%2f%3b%2f%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/%2f%3b%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/%2f%3f/bar
+[mid_paths] http://127.0.0.1:8000/foo/%2f%3fbar
+[mid_paths] http://127.0.0.1:8000/foo/%2f/bar
+[mid_paths] http://127.0.0.1:8000/foo/%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/%3b%09bar
+[mid_paths] http://127.0.0.1:8000/foo/%3b%2f%2e%2e%2f%2e%2e%2f%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/%3b%2f%2e%2ebar
+[mid_paths] http://127.0.0.1:8000/foo/%3b%2f%2e.bar
+[mid_paths] http://127.0.0.1:8000/foo/%3b%2f..bar
+[mid_paths] http://127.0.0.1:8000/foo/%3b/%2e%2e/..%2f%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/%3b/%2e.bar
+[mid_paths] http://127.0.0.1:8000/foo/%3b/%2f%2f../bar
+[mid_paths] http://127.0.0.1:8000/foo/%3b/..bar
+[mid_paths] http://127.0.0.1:8000/foo/%3b//%2f../bar
+[mid_paths] http://127.0.0.1:8000/foo/%3bbar
+[mid_paths] http://127.0.0.1:8000/foo/%3f%23bar
+[mid_paths] http://127.0.0.1:8000/foo/%3f%3fbar
+[mid_paths] http://127.0.0.1:8000/foo/%3fbar
+[mid_paths] http://127.0.0.1:8000/foo/%bar
+[mid_paths] http://127.0.0.1:8000/foo/&bar
+[mid_paths] http://127.0.0.1:8000/foo/.%2e/bar
+[mid_paths] http://127.0.0.1:8000/foo/..%00/;bar
+[mid_paths] http://127.0.0.1:8000/foo/..%00/bar
+[mid_paths] http://127.0.0.1:8000/foo/..%00;/bar
+[mid_paths] http://127.0.0.1:8000/foo/..%09bar
+[mid_paths] http://127.0.0.1:8000/foo/..%0d/;bar
+[mid_paths] http://127.0.0.1:8000/foo/..%0d/bar
+[mid_paths] http://127.0.0.1:8000/foo/..%0d;/bar
+[mid_paths] http://127.0.0.1:8000/foo/..%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/..%3Bbar
+[mid_paths] http://127.0.0.1:8000/foo/..%5c/bar
+[mid_paths] http://127.0.0.1:8000/foo/..%5cbar
+[mid_paths] http://127.0.0.1:8000/foo/..%ff/;bar
+[mid_paths] http://127.0.0.1:8000/foo/..%ff;/bar
+[mid_paths] http://127.0.0.1:8000/foo/..%ffbar
+[mid_paths] http://127.0.0.1:8000/foo/.././bar
+[mid_paths] http://127.0.0.1:8000/foo/../bar
+[mid_paths] http://127.0.0.1:8000/foo/..;%00/bar
+[mid_paths] http://127.0.0.1:8000/foo/..;%0d/bar
+[mid_paths] http://127.0.0.1:8000/foo/..;%ff/bar
+[mid_paths] http://127.0.0.1:8000/foo/..;/bar
+[mid_paths] http://127.0.0.1:8000/foo/..;\;bar
+[mid_paths] http://127.0.0.1:8000/foo/..;\\bar
+[mid_paths] http://127.0.0.1:8000/foo/..;bar
+[mid_paths] http://127.0.0.1:8000/foo/..\;bar
+[mid_paths] http://127.0.0.1:8000/foo/..\\bar
+[mid_paths] http://127.0.0.1:8000/foo/..bar
+[mid_paths] http://127.0.0.1:8000/foo/./.bar
+[mid_paths] http://127.0.0.1:8000/foo/.//./bar
+[mid_paths] http://127.0.0.1:8000/foo/./bar
+[mid_paths] http://127.0.0.1:8000/foo/.;/bar
+[mid_paths] http://127.0.0.1:8000/foo/.htmlbar
+[mid_paths] http://127.0.0.1:8000/foo/.jsonbar
+[mid_paths] http://127.0.0.1:8000/foo//%20#bar
+[mid_paths] http://127.0.0.1:8000/foo//%20%20/bar
+[mid_paths] http://127.0.0.1:8000/foo//%20%23bar
+[mid_paths] http://127.0.0.1:8000/foo//%252e%252e%252f/bar
+[mid_paths] http://127.0.0.1:8000/foo//%252e%252e%253b/bar
+[mid_paths] http://127.0.0.1:8000/foo//%252e%252f/bar
+[mid_paths] http://127.0.0.1:8000/foo//%252e%253b/bar
+[mid_paths] http://127.0.0.1:8000/foo//%252e/bar
+[mid_paths] http://127.0.0.1:8000/foo//%252fbar
+[mid_paths] http://127.0.0.1:8000/foo//%2e%2e%3b/bar
+[mid_paths] http://127.0.0.1:8000/foo//%2e%2e/bar
+[mid_paths] http://127.0.0.1:8000/foo//%2e%2ebar
+[mid_paths] http://127.0.0.1:8000/foo//%2e%2f/bar
+[mid_paths] http://127.0.0.1:8000/foo//%2e%3b//bar
+[mid_paths] http://127.0.0.1:8000/foo//%2e%3b/bar
+[mid_paths] http://127.0.0.1:8000/foo//%2e//bar
+[mid_paths] http://127.0.0.1:8000/foo//%2e/bar
+[mid_paths] http://127.0.0.1:8000/foo//%2fbar
+[mid_paths] http://127.0.0.1:8000/foo//%3b/bar
+[mid_paths] http://127.0.0.1:8000/foo//*/bar
+[mid_paths] http://127.0.0.1:8000/foo//*bar
+[mid_paths] http://127.0.0.1:8000/foo//..%2f..%2f..%2fbar
+[mid_paths] http://127.0.0.1:8000/foo//..%2f..%2fbar
+[mid_paths] http://127.0.0.1:8000/foo//..%2fbar
+[mid_paths] http://127.0.0.1:8000/foo//../../..//bar
+[mid_paths] http://127.0.0.1:8000/foo//../../../bar
+[mid_paths] http://127.0.0.1:8000/foo//../..//../bar
+[mid_paths] http://127.0.0.1:8000/foo//../..//bar
+[mid_paths] http://127.0.0.1:8000/foo//../../bar
+[mid_paths] http://127.0.0.1:8000/foo//../..;/bar
+[mid_paths] http://127.0.0.1:8000/foo//.././../bar
+[mid_paths] http://127.0.0.1:8000/foo//../.;/../bar
+[mid_paths] http://127.0.0.1:8000/foo//..//../../bar
+[mid_paths] http://127.0.0.1:8000/foo//..//../bar
+[mid_paths] http://127.0.0.1:8000/foo//..//..;/bar
+[mid_paths] http://127.0.0.1:8000/foo//..//bar
+[mid_paths] http://127.0.0.1:8000/foo//../;/../bar
+[mid_paths] http://127.0.0.1:8000/foo//../;/bar
+[mid_paths] http://127.0.0.1:8000/foo//../bar
+[mid_paths] http://127.0.0.1:8000/foo//..;%2f..;%2f..;%2fbar
+[mid_paths] http://127.0.0.1:8000/foo//..;%2f..;%2fbar
+[mid_paths] http://127.0.0.1:8000/foo//..;%2fbar
+[mid_paths] http://127.0.0.1:8000/foo//..;/../bar
+[mid_paths] http://127.0.0.1:8000/foo//..;/..;/bar
+[mid_paths] http://127.0.0.1:8000/foo//..;//../bar
+[mid_paths] http://127.0.0.1:8000/foo//..;//..;/bar
+[mid_paths] http://127.0.0.1:8000/foo//..;//bar
+[mid_paths] http://127.0.0.1:8000/foo//..;/;/..;/bar
+[mid_paths] http://127.0.0.1:8000/foo//..;/;/bar
+[mid_paths] http://127.0.0.1:8000/foo//..;/bar
+[mid_paths] http://127.0.0.1:8000/foo//..bar
+[mid_paths] http://127.0.0.1:8000/foo//.//bar
+[mid_paths] http://127.0.0.1:8000/foo//./bar
+[mid_paths] http://127.0.0.1:8000/foo//.;//bar
+[mid_paths] http://127.0.0.1:8000/foo//.;/bar
+[mid_paths] http://127.0.0.1:8000/foo//.bar
+[mid_paths] http://127.0.0.1:8000/foo//.randomstringbar
+[mid_paths] http://127.0.0.1:8000/foo///../../bar
+[mid_paths] http://127.0.0.1:8000/foo///..;bar
+[mid_paths] http://127.0.0.1:8000/foo///..bar
+[mid_paths] http://127.0.0.1:8000/foo///./bar
+[mid_paths] http://127.0.0.1:8000/foo///.;/bar
+[mid_paths] http://127.0.0.1:8000/foo///.bar
+[mid_paths] http://127.0.0.1:8000/foo////..//bar
+[mid_paths] http://127.0.0.1:8000/foo////../bar
+[mid_paths] http://127.0.0.1:8000/foo////..;//bar
+[mid_paths] http://127.0.0.1:8000/foo////..;/bar
+[mid_paths] http://127.0.0.1:8000/foo////..;bar
+[mid_paths] http://127.0.0.1:8000/foo////..bar
+[mid_paths] http://127.0.0.1:8000/foo/////bar
+[mid_paths] http://127.0.0.1:8000/foo///;/bar
+[mid_paths] http://127.0.0.1:8000/foo///?anythingbar
+[mid_paths] http://127.0.0.1:8000/foo///bar
+[mid_paths] http://127.0.0.1:8000/foo//;//bar
+[mid_paths] http://127.0.0.1:8000/foo//;/bar
+[mid_paths] http://127.0.0.1:8000/foo//;x/bar
+[mid_paths] http://127.0.0.1:8000/foo//;xbar
+[mid_paths] http://127.0.0.1:8000/foo//bar
+[mid_paths] http://127.0.0.1:8000/foo//x/..//bar
+[mid_paths] http://127.0.0.1:8000/foo//x/../;/bar
+[mid_paths] http://127.0.0.1:8000/foo//x/../bar
+[mid_paths] http://127.0.0.1:8000/foo//x/..;//bar
+[mid_paths] http://127.0.0.1:8000/foo//x/..;/;/bar
+[mid_paths] http://127.0.0.1:8000/foo//x/..;/bar
+[mid_paths] http://127.0.0.1:8000/foo//x//../bar
+[mid_paths] http://127.0.0.1:8000/foo//x//..;/bar
+[mid_paths] http://127.0.0.1:8000/foo//x/;/../bar
+[mid_paths] http://127.0.0.1:8000/foo//x/;/..;/bar
+[mid_paths] http://127.0.0.1:8000/foo/;%09..;bar
+[mid_paths] http://127.0.0.1:8000/foo/;%09..bar
+[mid_paths] http://127.0.0.1:8000/foo/;%09;bar
+[mid_paths] http://127.0.0.1:8000/foo/;%09bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f%2e%2e%2f%2e%2e%2f%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f%2e%2ebar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f%2f/../bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f..%2f%2e%2e%2f%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f..%2f..%2f%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f..%2f/..%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f..%2f/../bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f..%2f/bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f../%2f..%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f../%2f../bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f..//..%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f..//../bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f..///;bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f..///bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f..//;/;bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f..//;/bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f../;//bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f../;/;/;bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f../;/;/bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f..;///bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f..;//;/bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f..;/;//bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f..bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f/%2f../bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f//..%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f//../bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f//..;/bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f/;/../bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f/;/..;/bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f;//../bar
+[mid_paths] http://127.0.0.1:8000/foo/;%2f;/;/..;/bar
+[mid_paths] http://127.0.0.1:8000/foo/;/%2e%2e%2f%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/;/%2e%2e%2f/bar
+[mid_paths] http://127.0.0.1:8000/foo/;/%2e%2e/bar
+[mid_paths] http://127.0.0.1:8000/foo/;/%2e%2ebar
+[mid_paths] http://127.0.0.1:8000/foo/;/%2e.bar
+[mid_paths] http://127.0.0.1:8000/foo/;/%2f%2f../bar
+[mid_paths] http://127.0.0.1:8000/foo/;/%2f/..%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/;/%2f/../bar
+[mid_paths] http://127.0.0.1:8000/foo/;/.%2e/%2e%2e/%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/;/.%2ebar
+[mid_paths] http://127.0.0.1:8000/foo/;/..%2f%2f../bar
+[mid_paths] http://127.0.0.1:8000/foo/;/..%2f..%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/;/..%2f//bar
+[mid_paths] http://127.0.0.1:8000/foo/;/..%2f/bar
+[mid_paths] http://127.0.0.1:8000/foo/;/..%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/;/../%2f/bar
+[mid_paths] http://127.0.0.1:8000/foo/;/../..//bar
+[mid_paths] http://127.0.0.1:8000/foo/;/../../bar
+[mid_paths] http://127.0.0.1:8000/foo/;/.././../bar
+[mid_paths] http://127.0.0.1:8000/foo/;/../.;/../bar
+[mid_paths] http://127.0.0.1:8000/foo/;/..//%2e%2e/bar
+[mid_paths] http://127.0.0.1:8000/foo/;/..//%2fbar
+[mid_paths] http://127.0.0.1:8000/foo/;/..//../bar
+[mid_paths] http://127.0.0.1:8000/foo/;/..///bar
+[mid_paths] http://127.0.0.1:8000/foo/;/..//bar
+[mid_paths] http://127.0.0.1:8000/foo/;/../;/../bar
+[mid_paths] http://127.0.0.1:8000/foo/;/../;/bar
+[mid_paths] http://127.0.0.1:8000/foo/;/../bar
+[mid_paths] http://127.0.0.1:8000/foo/;/..;bar
+[mid_paths] http://127.0.0.1:8000/foo/;/..bar
+[mid_paths] http://127.0.0.1:8000/foo/;/.;.bar
+[mid_paths] http://127.0.0.1:8000/foo/;//%2f../bar
+[mid_paths] http://127.0.0.1:8000/foo/;//../../bar
+[mid_paths] http://127.0.0.1:8000/foo/;//..bar
+[mid_paths] http://127.0.0.1:8000/foo/;///..//bar
+[mid_paths] http://127.0.0.1:8000/foo/;///../bar
+[mid_paths] http://127.0.0.1:8000/foo/;///..bar
+[mid_paths] http://127.0.0.1:8000/foo/;bar
+[mid_paths] http://127.0.0.1:8000/foo/;x/bar
+[mid_paths] http://127.0.0.1:8000/foo/;x;bar
+[mid_paths] http://127.0.0.1:8000/foo/;xbar
+[mid_paths] http://127.0.0.1:8000/foo/???bar
+[mid_paths] http://127.0.0.1:8000/foo/??bar
+[mid_paths] http://127.0.0.1:8000/foo/?bar
+[mid_paths] http://127.0.0.1:8000/foo/\..\.\bar
+[original_request] http://127.0.0.1:8000/foo/bar
