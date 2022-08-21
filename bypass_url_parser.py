@@ -208,7 +208,7 @@ class Bypasser:
             self.curl_items.append(item)
 
         # [http_methods] - Custom methods
-        if "all" in self.current_bypass_modes or "http_methods" in self.current_bypass_modes:
+        if any(mode in ["all", "http_methods"] for mode in self.current_bypass_modes):
             for const_http_method in self.const_http_methods:
                 cmd = [*self.base_curl, "-X", const_http_method, target_url]
                 item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_methods", target_ip=url_public_ip,
@@ -216,34 +216,40 @@ class Bypasser:
                 if item not in self.curl_items:
                     self.curl_items.append(item)
 
+        # [http_versions] - Tests the url with all http versions supported by curl
+        if any(mode in ["all", "http_versions"] for mode in self.current_bypass_modes):
+            for http_version in CurlItem.CURL_HTTP_VERSIONS[:-1]:
+                cmd = [*self.get_curl_base(forced_http_version=http_version), target_url]
+                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_versions",
+                                target_ip=url_public_ip,
+                                debug=self.debug, ext_logger=self.logger)
+                if item not in self.curl_items:
+                    self.curl_items.append(item)
+
         # [http_headers_ip] - Custom host injection headers
-        if "all" in self.current_bypass_modes or "http_headers_ip" in self.current_bypass_modes:
+        if any(mode in ["all", "http_headers_ip"] for mode in self.current_bypass_modes):
+            commands = set()
             for const_header_host in self.const_header_hosts:
                 if self.spoof_ips:
                     # Custom IP addresses
                     for spoof_ip in self.spoof_ips:
-                        cmd = [*self.base_curl, "-H", f"{const_header_host}: {spoof_ip}", target_url]
-                        item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_ip",
-                                        target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
-                        if item not in self.curl_items:
-                            self.curl_items.append(item)
+                        commands.add(tuple([*self.base_curl, "-H", f"{const_header_host}: {spoof_ip}", target_url]))
                 if not self.spoof_ip_replace:  # False in any case if self.spoof_ips is empty
                     # Internal IP addresses
                     for const_internal_ip in self.const_internal_ips:
-                        cmd = [*self.base_curl, "-H", f"{const_header_host}: {const_internal_ip}", target_url]
-                        item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_ip",
-                                        target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
-                        if item not in self.curl_items:
-                            self.curl_items.append(item)
+                        commands.add(
+                            tuple([*self.base_curl, "-H", f"{const_header_host}: {const_internal_ip}", target_url]))
                     # Public IP address related to the url subdomain
-                    cmd = [*self.base_curl, "-H", f"{const_header_host}: {url_public_ip}", target_url]
-                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_ip",
-                                    target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
-                    if item not in self.curl_items:
-                        self.curl_items.append(item)
+                    commands.add(tuple([*self.base_curl, "-H", f"{const_header_host}: {url_public_ip}", target_url]))
+            # Add items
+            for command in commands:
+                item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_ip",
+                                target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                if item not in self.curl_items:
+                    self.curl_items.append(item)
 
         # [http_headers_scheme] - Custom scheme rewrite with X-Forwarded-Scheme
-        if "all" in self.current_bypass_modes or "http_headers_scheme" in self.current_bypass_modes:
+        if any(mode in ["all", "http_headers_scheme"] for mode in self.current_bypass_modes):
             for const_header_scheme in self.const_header_schemes:
                 for const_proto in self.const_protos:
                     cmd = [*self.base_curl, "-H", f"{const_header_scheme}: {const_proto}", target_url]
@@ -253,61 +259,46 @@ class Bypasser:
                         self.curl_items.append(item)
 
         # [http_headers_port] - Custom port rewrite
-        if "all" in self.current_bypass_modes or "http_headers_port" in self.current_bypass_modes:
+        if any(mode in ["all", "http_headers_port"] for mode in self.current_bypass_modes):
+            commands = set()
             for const_header_port in self.const_header_ports:
                 if self.spoof_ports:
                     # Custom port(s)
                     for spoof_port in self.spoof_ports:
-                        cmd = [*self.base_curl, "-H", f"{const_header_port}: {spoof_port}", target_url]
-                        item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_port",
-                                        target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
-                        if item not in self.curl_items:
-                            self.curl_items.append(item)
+                        commands.add(tuple([*self.base_curl, "-H", f"{const_header_port}: {spoof_port}", target_url]))
                 if not self.spoof_port_replace:  # False in any case if self.spoof_ports is empty
                     # Internal ports
                     for const_port in self.const_ports:
-                        cmd = [*self.base_curl, "-H", f"{const_header_port}: {const_port}", target_url]
-                        item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_port",
-                                        target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
-                        if item not in self.curl_items:
-                            self.curl_items.append(item)
+                        commands.add(tuple([*self.base_curl, "-H", f"{const_header_port}: {const_port}", target_url]))
+                # Add items
+                for command in commands:
+                    item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_port",
+                                    target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                    if item not in self.curl_items:
+                        self.curl_items.append(item)
 
         # [mid_paths] - Custom paths with extra-mid-slash
-        if "all" in self.current_bypass_modes or "mid_paths" in self.current_bypass_modes:
+        if any(mode in ["all", "mid_paths"] for mode in self.current_bypass_modes):
+            commands = set()
             for idx_slash in range(base_path.count("/")):
                 for const_path in self.const_midpaths:
                     path_post = Tools.replacenth(base_path, "/", f"/{const_path}", idx_slash)
-                    # First variant
-                    cmd = [*self.base_curl, f"{base_url}{path_post}"]
-                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="mid_paths", target_ip=url_public_ip,
-                                    debug=self.debug, ext_logger=self.logger)
-                    if item not in self.curl_items:
-                        self.curl_items.append(item)
-                    # Second variant
-                    cmd = [*self.base_curl, f"{base_url}/{path_post}"]
-                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="mid_paths", target_ip=url_public_ip,
-                                    debug=self.debug, ext_logger=self.logger)
-                    if item not in self.curl_items:
-                        self.curl_items.append(item)
+                    commands.add(tuple([*self.base_curl, f"{base_url}{path_post}"]))  # First variant
+                    commands.add(tuple([*self.base_curl, f"{base_url}/{path_post}"]))  # Second variant
                     if idx_slash <= 1:
                         continue
-
                     path_pre = Tools.replacenth(base_path, "/", f"{const_path}/", idx_slash)
-                    # Fist variant
-                    cmd = [*self.base_curl, f"{base_url}{path_pre}"]
-                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="mid_paths", target_ip=url_public_ip,
-                                    debug=self.debug, ext_logger=self.logger)
-                    if item not in self.curl_items:
-                        self.curl_items.append(item)
-                    # Second variant
-                    cmd = [*self.base_curl, f"{base_url}/{path_pre}"]
-                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="mid_paths", target_ip=url_public_ip,
-                                    debug=self.debug, ext_logger=self.logger)
-                    if item not in self.curl_items:
-                        self.curl_items.append(item)
+                    commands.add(tuple([*self.base_curl, f"{base_url}{path_pre}"]))  # Fist variant
+                    commands.add(tuple([*self.base_curl, f"{base_url}/{path_pre}"]))  # Second variant
+            # Add items
+            for command in commands:
+                item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="mid_paths",
+                                target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                if item not in self.curl_items:
+                    self.curl_items.append(item)
 
         # [end_paths] - Add suffix
-        if "all" in self.current_bypass_modes or "end_paths" in self.current_bypass_modes:
+        if any(mode in ["all", "end_paths"] for mode in self.current_bypass_modes):
             commands = set()
             separator = "" if (base_path == "/" or base_path.endswith("/")) else "/"
             for const_endpath in self.const_endpaths:
@@ -333,7 +324,7 @@ class Bypasser:
         abc_indexes = [span.start() for span in re.finditer(r"[a-zA-Z]", base_path)]
         for abc_index in abc_indexes:
             # [case_substitution] - Case-Inversion
-            if "all" in self.current_bypass_modes or "case_substitution" in self.current_bypass_modes:
+            if any(mode in ["all", "case_substitution"] for mode in self.current_bypass_modes):
                 char_case = base_path[abc_index]
                 char_case = char_case.upper() if char_case.islower() else char_case.lower()
                 cmd = [*self.base_curl, f"{base_url}{base_path[:abc_index]}{char_case}{base_path[abc_index + 1:]}"]
@@ -343,7 +334,7 @@ class Bypasser:
                     self.curl_items.append(item)
 
             # [char_encode] - Url-Encoding
-            if "all" in self.current_bypass_modes or "char_encode" in self.current_bypass_modes:
+            if any(mode in ["all", "char_encode"] for mode in self.current_bypass_modes):
                 char_urlencoded = format(ord(base_path[abc_index]), "02x")
                 cmd = [*self.base_curl,
                        f"{base_url}{base_path[:abc_index]}%{char_urlencoded}{base_path[abc_index + 1:]}"]
@@ -408,11 +399,11 @@ class Bypasser:
                     result = result.replace(os.linesep, "\n")
 
                     # Store command result in CurlItem object
-                    if not self.proxy:
-                        item.response_raw_output = result
-                    else:
+                    if self.proxy and "HTTP/1.0 200 Connection established" in result:
                         # Delete the additional response proxy header 'HTTP/1.0 200 Connection established'
                         item.response_raw_output = result.split("\n", 2)[2]
+                    else:
+                        item.response_raw_output = result
 
                     # Remove from retry list if present
                     if item in self.to_retry_items:
