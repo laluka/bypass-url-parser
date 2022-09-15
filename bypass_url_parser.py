@@ -122,6 +122,8 @@ class Bypasser:
                                                                    ext_logger=self.logger, debug=self.debug_class)
         self.const_http_methods = Tools.load_file_into_memory_list("payloads/const_http_methods.lst",
                                                                    ext_logger=self.logger, debug=self.debug_class)
+        self.const_header_methods = Tools.load_file_into_memory_list("payloads/const_header_methods.lst",
+                                                                     ext_logger=self.logger, debug=self.debug_class)
         self.const_header_schemes = Tools.load_file_into_memory_list("payloads/const_header_schemes.lst",
                                                                      ext_logger=self.logger, debug=self.debug_class)
         self.const_protos = Tools.load_file_into_memory_list("payloads/const_protos.lst",
@@ -207,7 +209,7 @@ class Bypasser:
         if item not in self.curl_items:
             self.curl_items.append(item)
 
-        # [http_methods] - Custom methods
+        # [http_methods] - Custom request methods (-X)
         if any(mode in ["all", "http_methods"] for mode in self.current_bypass_modes):
             for const_http_method in self.const_http_methods:
                 cmd = [*self.base_curl, "-X", const_http_method, target_url]
@@ -225,6 +227,16 @@ class Bypasser:
                                 debug=self.debug, ext_logger=self.logger)
                 if item not in self.curl_items:
                     self.curl_items.append(item)
+
+        # [http_headers_method] - Custom methods
+        if any(mode in ["all", "http_headers_method"] for mode in self.current_bypass_modes):
+            for const_header_method in self.const_header_methods:
+                for const_http_method in self.const_http_methods:
+                    cmd = [*self.base_curl, "-H", f"{const_header_method}: {const_http_method}", target_url]
+                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_method",
+                                    target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                    if item not in self.curl_items:
+                        self.curl_items.append(item)
 
         # [http_headers_ip] - Custom host injection headers
         if any(mode in ["all", "http_headers_ip"] for mode in self.current_bypass_modes):
