@@ -1,1 +1,6 @@
+CloudFront-Forwarded-Proto
+X-Forwarded-Proto
 X-Forwarded-Scheme
+X-Protocol-Scheme
+X-Sp-Edge-Scheme
+X-Url-Scheme
