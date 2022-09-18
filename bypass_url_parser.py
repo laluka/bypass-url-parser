@@ -262,13 +262,22 @@ class Bypasser:
 
         # [http_headers_scheme] - Custom scheme rewrite with X-Forwarded-Scheme
         if any(mode in ["all", "http_headers_scheme"] for mode in self.current_bypass_modes):
-            for const_header_scheme in self.const_header_schemes:
-                for const_proto in self.const_protos:
-                    cmd = [*self.base_curl, "-H", f"{const_header_scheme}: {const_proto}", target_url]
-                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_scheme",
-                                    target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
-                    if item not in self.curl_items:
-                        self.curl_items.append(item)
+            commands = set()
+            for const_proto in self.const_protos:
+                # Specific rule for header 'Forwarded: proto='
+                commands.add(tuple([*self.base_curl, "-H", f"Forwarded: proto={const_proto}", target_url]))
+                for const_header_scheme in self.const_header_schemes:
+                    # Standard headers ending with "-Proto" or "-Scheme"
+                    commands.add(tuple([*self.base_curl, "-H", f"{const_header_scheme}: {const_proto}", target_url]))
+            # Adding non-standard headers that take 'on' value (Ex: Microsoft)
+            for on_header in ["Front-End-Https", "X-Forwarded-HTTPS", "X-Forwarded-SSL"]:
+                commands.add(tuple([*self.base_curl, "-H", f"{on_header}: on", target_url]))
+            # Add items
+            for command in commands:
+                item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_scheme",
+                                target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                if item not in self.curl_items:
+                    self.curl_items.append(item)
 
         # [http_headers_port] - Custom port rewrite
         if any(mode in ["all", "http_headers_port"] for mode in self.current_bypass_modes):
