@@ -143,10 +143,12 @@ class Bypasser:
         self.base_curl = []
         self.user_agent_suffix = ""
         self.curl_items = []
+        self.curl_ips = []
         self.bypass_results = defaultdict(defaultdict)
         self.to_retry_items = []
         self.clean_output = ""
         self.pbar_queue = Queue(maxsize=1)
+        self.url_resolved_ip = ""
 
         # Init properties
         self.binary_name = Bypasser.DEFAULT_BINARY_NAME
@@ -168,6 +170,27 @@ class Bypasser:
         self.urls = config_dict.get("--url")
 
     # *** Protected methods *** #
+
+    def _build_curl_ips(self, resolved_ip=None):
+        """ Build internal IP list from spoof_ips, const_internal_ip and the resolved target IP address.
+        :param str resolved_ip: Public (or private) IP address related to the url subdomain
+        """
+        self.curl_ips.clear()
+        # Adds user's custom IP addresses (-s, --spoof-ip)
+        if self.spoof_ips:
+            for spoof_ip in self.spoof_ips:
+                if spoof_ip not in self.curl_ips:
+                    self.curl_ips.append(spoof_ip)
+
+        # Append mode (by default and in any case if self.spoof_ips is empty)
+        if not self.spoof_ip_replace:
+            # Internal IP addresses
+            for const_internal_ip in self.const_internal_ips:
+                if const_internal_ip not in self.curl_ips:
+                    self.curl_ips.append(const_internal_ip)
+            # Public (or private) IP address
+            if resolved_ip and resolved_ip not in self.curl_ips:
+                self.curl_ips.append(resolved_ip)
 
     def _init_debug_level(self, level):
         if level:
@@ -199,12 +222,18 @@ class Bypasser:
         # Reset curl list
         self.curl_items.clear()
 
-        # Get the public IP of this URL
-        url_public_ip = socket.gethostbyname(str(url_obj.hostname))
+        # Resolves public (or private) IP of target URL
+        try:
+            self.url_resolved_ip = socket.gethostbyname(str(url_obj.hostname))
+        except (socket.error, socket.gaierror):
+            error_msg = f"Unable to resolve the subdomain '{url_obj.hostname}'. Please check the url or your " \
+                        f"host's DNS resolvers"
+            self.logger.error(error_msg)
+            raise ValueError(error_msg)
 
         # Original request
         cmd = [*self.base_curl, target_url]
-        item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="original_request", target_ip=url_public_ip,
+        item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="original_request", target_ip=self.url_resolved_ip,
                         debug=self.debug, ext_logger=self.logger)
         if item not in self.curl_items:
             self.curl_items.append(item)
@@ -213,8 +242,8 @@ class Bypasser:
         if any(mode in ["all", "http_methods"] for mode in self.current_bypass_modes):
             for const_http_method in self.const_http_methods:
                 cmd = [*self.base_curl, "-X", const_http_method, target_url]
-                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_methods", target_ip=url_public_ip,
-                                debug=self.debug, ext_logger=self.logger)
+                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_methods",
+                                target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 if item not in self.curl_items:
                     self.curl_items.append(item)
 
@@ -223,8 +252,7 @@ class Bypasser:
             for http_version in CurlItem.CURL_HTTP_VERSIONS[:-1]:
                 cmd = [*self.get_curl_base(forced_http_version=http_version), target_url]
                 item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_versions",
-                                target_ip=url_public_ip,
-                                debug=self.debug, ext_logger=self.logger)
+                                target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 if item not in self.curl_items:
                     self.curl_items.append(item)
 
@@ -234,29 +262,31 @@ class Bypasser:
                 for const_http_method in self.const_http_methods:
                     cmd = [*self.base_curl, "-H", f"{const_header_method}: {const_http_method}", target_url]
                     item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_method",
-                                    target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                                    target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                     if item not in self.curl_items:
                         self.curl_items.append(item)
 
         # [http_headers_ip] - Custom host injection headers
         if any(mode in ["all", "http_headers_ip"] for mode in self.current_bypass_modes):
+            self._build_curl_ips(resolved_ip=self.url_resolved_ip)
             commands = set()
             for const_header_host in self.const_header_hosts:
-                if self.spoof_ips:
-                    # Custom IP addresses
-                    for spoof_ip in self.spoof_ips:
-                        commands.add(tuple([*self.base_curl, "-H", f"{const_header_host}: {spoof_ip}", target_url]))
-                if not self.spoof_ip_replace:  # False in any case if self.spoof_ips is empty
-                    # Internal IP addresses
-                    for const_internal_ip in self.const_internal_ips:
-                        commands.add(
-                            tuple([*self.base_curl, "-H", f"{const_header_host}: {const_internal_ip}", target_url]))
-                    # Public IP address related to the url subdomain
-                    commands.add(tuple([*self.base_curl, "-H", f"{const_header_host}: {url_public_ip}", target_url]))
+                # Header which takes 1 as value
+                if const_header_host == "X-AppEngine-Trusted-IP-Request":
+                    commands.add(tuple([*self.base_curl, "-H", f"{const_header_host}: 1", target_url]))
+                    continue
+                # Specific rule for header 'Forwarded: for='
+                for ip in self.curl_ips:
+                    if const_header_host == "Forwarded":
+                        commands.add(tuple([*self.base_curl, "-H", f"{const_header_host}: by={ip}", target_url]))
+                        commands.add(tuple([*self.base_curl, "-H", f"{const_header_host}: for={ip}", target_url]))
+                        commands.add(tuple([*self.base_curl, "-H", f"{const_header_host}: host={ip}", target_url]))
+                    else:
+                        commands.add(tuple([*self.base_curl, "-H", f"{const_header_host}: {ip}", target_url]))
             # Add items
             for command in commands:
                 item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_ip",
-                                target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                                target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 if item not in self.curl_items:
                     self.curl_items.append(item)
 
@@ -275,7 +305,7 @@ class Bypasser:
             # Add items
             for command in commands:
                 item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_scheme",
-                                target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                                target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 if item not in self.curl_items:
                     self.curl_items.append(item)
 
@@ -294,7 +324,7 @@ class Bypasser:
                 # Add items
                 for command in commands:
                     item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_port",
-                                    target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                                    target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                     if item not in self.curl_items:
                         self.curl_items.append(item)
 
@@ -314,7 +344,7 @@ class Bypasser:
             # Add items
             for command in commands:
                 item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="mid_paths",
-                                target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                                target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 if item not in self.curl_items:
                     self.curl_items.append(item)
 
@@ -337,7 +367,7 @@ class Bypasser:
                 # Add items
                 for command in commands:
                     item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="end_paths",
-                                    target_ip=url_public_ip, debug=self.debug, ext_logger=self.logger)
+                                    target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                     if item not in self.curl_items:
                         self.curl_items.append(item)
 
@@ -349,8 +379,8 @@ class Bypasser:
                 char_case = base_path[abc_index]
                 char_case = char_case.upper() if char_case.islower() else char_case.lower()
                 cmd = [*self.base_curl, f"{base_url}{base_path[:abc_index]}{char_case}{base_path[abc_index + 1:]}"]
-                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="case_substitution", target_ip=url_public_ip,
-                                debug=self.debug, ext_logger=self.logger)
+                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="case_substitution",
+                                target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 if item not in self.curl_items:
                     self.curl_items.append(item)
 
@@ -359,7 +389,7 @@ class Bypasser:
                 char_urlencoded = format(ord(base_path[abc_index]), "02x")
                 cmd = [*self.base_curl,
                        f"{base_url}{base_path[:abc_index]}%{char_urlencoded}{base_path[abc_index + 1:]}"]
-                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="char_encode", target_ip=url_public_ip,
+                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="char_encode", target_ip=self.url_resolved_ip,
                                 debug=self.debug, ext_logger=self.logger)
                 if item not in self.curl_items:
                     self.curl_items.append(item)
