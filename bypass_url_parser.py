@@ -1138,7 +1138,7 @@ class Bypasser:
         :param Bypasser other: Other object to compare with this
         :return: True is same object, else False
         """
-        return isinstance(other, Bypasser) and self.__attrs() == other.__attrs()
+        return isinstance(other, self.__class__) and self.__attrs() == other.__attrs()
 
     def __ne__(self, other) -> bool:
         """Define a non-equality test.
@@ -1551,7 +1551,7 @@ class CurlItem:
         :param CurlItem other: Other object to compare with this
         :return: True is same object, else False
         """
-        return isinstance(other, CurlItem) and self.__attrs() == other.__attrs()
+        return isinstance(other, self.__class__) and self.__attrs() == other.__attrs()
 
     def __ne__(self, other) -> bool:
         """Define a non-equality test.
