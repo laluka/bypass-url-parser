@@ -80,6 +80,7 @@ class Bypasser:
                     "http_headers_port", "http_headers_url", "misc"]  # Not yet all implemented, coming soon
     DEFAULT_BINARY_NAME = which("curl")
     DEFAULT_BYPASS_MODE = "all"
+    DEFAULT_FILE_ENCODING = "UTF-8"
     DEFAULT_HTTP_VERSION = "0"  # Disabled by default. Lets curl to manage its own version of HTTP by default
     DEFAULT_LOG_FILENAME = "triaged-bypass.log"
     DEFAULT_OUTPUT_DIR = f"{tempfile.TemporaryDirectory().name}-bypass-url-parser"
@@ -554,11 +555,11 @@ class Bypasser:
             # Logfile - Starting at SaveLevel.MINIMAL
             if self.save_level >= self.SaveLevel.MINIMAL:
                 log_file = f"{outdir}{Tools.SEPARATOR}{Bypasser.DEFAULT_LOG_FILENAME}"
-                with open(log_file, "wt") as f:
-                    f.write(f"Bypass results for '{url_obj.geturl()}' url:\n")
-                    f.write(f"{self.clean_output}\n")
+                with open(log_file, mode="wt", encoding=Bypasser.DEFAULT_FILE_ENCODING) as file:
+                    file.write(f"Bypass results for '{url_obj.geturl()}' url:\n")
+                    file.write(f"{self.clean_output}\n")
                     if self.save_level >= self.SaveLevel.PERTINENT and inspect_cmd:
-                        f.write(f"{inspect_cmd}")
+                        file.write(f"{inspect_cmd}")
                 if self.verbose:
                     self.logger.info(f"Program log file which contains the results saved in {log_file}")
         else:
@@ -833,7 +834,7 @@ class Bypasser:
             self._current_bypass_modes.clear()
             for mode in Tools.get_list_from_generic_arg(
                     modes_lst, arg_name="bypass_mode", stdin_support=True, comma_string_support=True,
-                    ext_logger=self.logger, debug=self.debug_class):
+                    enc_format=Bypasser.DEFAULT_FILE_ENCODING, ext_logger=self.logger, debug=self.debug_class):
                 if mode in Bypasser.BYPASS_MODES:
                     if mode not in self._current_bypass_modes:
                         self._current_bypass_modes.append(mode)
@@ -861,7 +862,7 @@ class Bypasser:
             if value:
                 for header in Tools.get_list_from_generic_arg(
                         value, arg_name="header", stdin_support=False, comma_string_support=False,
-                        ext_logger=self.logger, debug=self.debug_class):
+                        enc_format=Bypasser.DEFAULT_FILE_ENCODING, ext_logger=self.logger, debug=self.debug_class):
                     key, value = header.split(":", 1)
                     self._headers[key] = value.strip()
         except ValueError as e:
@@ -968,7 +969,7 @@ class Bypasser:
             if value:
                 for ip in Tools.get_list_from_generic_arg(
                         value, arg_name="spoofip", stdin_support=True, comma_string_support=True,
-                        ext_logger=self.logger, debug=self.debug_class):
+                        enc_format=Bypasser.DEFAULT_FILE_ENCODING, ext_logger=self.logger, debug=self.debug_class):
                     if ip not in self._spoof_ips:
                         self._spoof_ips.append(ip)
             # Cancel the possible replace_mode that could block internal ip list in [http_headers_ip]
@@ -1001,7 +1002,7 @@ class Bypasser:
             if value:
                 for port in Tools.get_list_from_generic_arg(
                         value, arg_name="spoofport", stdin_support=True, comma_string_support=True,
-                        ext_logger=self.logger, debug=self.debug_class):
+                        enc_format=Bypasser.DEFAULT_FILE_ENCODING, ext_logger=self.logger, debug=self.debug_class):
                     if int(port) not in self._spoof_ports:
                         self._spoof_ports.append(int(port))
             # Cancel the possible replace_mode that could block internal port list in [http_headers_port]
@@ -1071,7 +1072,7 @@ class Bypasser:
             if value:
                 for url in Tools.get_list_from_generic_arg(
                         value, arg_name="url", stdin_support=True, comma_string_support=True,
-                        ext_logger=self.logger, debug=self.debug_class):
+                        enc_format=Bypasser.DEFAULT_FILE_ENCODING, ext_logger=self.logger, debug=self.debug_class):
                     if not Bypasser.REGEX_URL.match(url):
                         error_msg = f"URL {url} was ignored. Must start with http(s):// and contain at least 3 slashes"
                         self.logger.warning(error_msg)
@@ -1195,8 +1196,8 @@ class CurlItem:
       - response_raw_output, response_headers, response_data, response_content_length, response_content_type,
         response_lines_count, response_redirect_url, response_server_type, response_status_code, response_title
     """
-
     CURL_HTTP_VERSIONS = ["0.9", "1.0", "1.1", "2", "2-prior-knowledge", "3"]
+    DEFAULT_FILE_ENCODING = "UTF-8"
     REGEX_STATUS_CODE = re.compile(r"HTTP.*\s+(\d+)\s+\w+", re.IGNORECASE)
     REGEX_CONTENT_LENGTH = re.compile(r"Content-Length:\s+(\d+)", re.IGNORECASE)
     REGEX_CONTENT_TYPE = re.compile(r"Content-Type:\s+(\w+/\w+)", re.IGNORECASE)
@@ -1314,8 +1315,8 @@ class CurlItem:
         out_filename = f"{output_dir}{Tools.SEPARATOR}{self.filename}"
         if self.response_raw_output and Tools.is_exist_directory(output_dir, force_create=force_output_dir_creation):
             self.logger.debug(f"Saving html pages and short output in: '{output_dir}{Tools.SEPARATOR}'")
-            with open(f"{out_filename}", "wt") as f:
-                f.write(f"{self.request_curl_cmd}\n\n{self.response_headers}\n\n{self.response_data}")
+            with open(f"{out_filename}", mode="wt", encoding=CurlItem.DEFAULT_FILE_ENCODING) as file:
+                file.write(f"{self.request_curl_cmd}\n\n{self.response_headers}\n\n{self.response_data}")
             return True
         else:
             return False
@@ -1618,7 +1619,7 @@ class Tools:
         return new_logger
 
     @staticmethod
-    def get_list_from_generic_arg(argument, arg_name="generic", enc_format="ISO-8859-1", stdin_support=True,
+    def get_list_from_generic_arg(argument, arg_name="generic", enc_format=None, stdin_support=True,
                                   comma_string_support=True, ext_logger=None, debug=False) -> list[str]:
         """ Return list from generic argument.
 
@@ -1645,10 +1646,11 @@ class Tools:
             return argument
         # Arg value is a filename (/path/file)
         elif os.path.isfile(argument):
+            encoding = enc_format if enc_format else locale.getpreferredencoding(False)
             if ext_logger and debug:
                 ext_logger.debug(f"The '{arg_name}' argument is a file")
             return [line.rstrip() for line in Tools.load_file_into_memory_list(
-                argument, enc_format=enc_format, clean_filename=False, ext_logger=ext_logger, debug=debug)]
+                argument, enc_format=encoding, clean_filename=False, ext_logger=ext_logger, debug=debug)]
         # Arg value is a string
         elif isinstance(argument, str):
             # Arg value is a string with multiple items separated by a comma ("value1, value2, ...")
