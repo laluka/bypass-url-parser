@@ -301,16 +301,20 @@ class Bypasser:
         # [http_headers_scheme] - Custom scheme rewrite with X-Forwarded-Scheme
         if any(mode in ["all", "http_headers_scheme"] for mode in self.current_bypass_modes):
             commands = set()
-            for internal_proto_scheme in self.internal_proto_schemes:
-                # Specific rule for header 'Forwarded: proto='
-                commands.add(tuple([*self.base_curl, "-H", f"Forwarded: proto={internal_proto_scheme}", target_url]))
-                for header_proto_scheme in self.header_proto_schemes:
-                    # Standard headers ending with "-Proto" or "-Scheme"
-                    commands.add(
-                        tuple([*self.base_curl, "-H", f"{header_proto_scheme}: {internal_proto_scheme}", target_url]))
-            # Adding non-standard headers that take 'on' value (Ex: Microsoft)
-            for on_header in ["Front-End-Https", "X-Forwarded-HTTPS", "X-Forwarded-SSL"]:
-                commands.add(tuple([*self.base_curl, "-H", f"{on_header}: on", target_url]))
+            for header_proto_scheme in self.header_proto_schemes:
+                # Adding non-standard headers that take 'on' value (Ex: Microsoft)
+                if header_proto_scheme in ["Front-End-Https", "X-Forwarded-HTTPS", "X-Forwarded-SSL"]:
+                    commands.add(tuple([*self.base_curl, "-H", f"{header_proto_scheme}: on", target_url]))
+                    continue
+                for internal_proto_scheme in self.internal_proto_schemes:
+                    if header_proto_scheme == "Forwarded":
+                        # Specific rule for header 'Forwarded: proto='
+                        commands.add(
+                            tuple([*self.base_curl, "-H", f"Forwarded: proto={internal_proto_scheme}", target_url]))
+                    else:
+                        # Standard headers ending with "-Proto" or "-Scheme"
+                        commands.add(tuple(
+                            [*self.base_curl, "-H", f"{header_proto_scheme}: {internal_proto_scheme}", target_url]))
             # Add items
             for command in commands:
                 item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_scheme",
