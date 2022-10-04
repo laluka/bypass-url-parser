@@ -118,27 +118,29 @@ class Bypasser:
             self.logger.debug(
                 f"Debug level: verbose={self.verbose}, debug={self.debug}, debug_class={self.debug_class}")
 
-        # Import all our bypass payloads
-        self.const_internal_ips = Tools.load_file_into_memory_list("payloads/const_internal_ips.lst",
-                                                                   ext_logger=self.logger, debug=self.debug_class)
-        self.const_http_methods = Tools.load_file_into_memory_list("payloads/const_http_methods.lst",
-                                                                   ext_logger=self.logger, debug=self.debug_class)
-        self.const_header_methods = Tools.load_file_into_memory_list("payloads/const_header_methods.lst",
-                                                                     ext_logger=self.logger, debug=self.debug_class)
-        self.const_header_schemes = Tools.load_file_into_memory_list("payloads/const_header_schemes.lst",
-                                                                     ext_logger=self.logger, debug=self.debug_class)
-        self.const_protos = Tools.load_file_into_memory_list("payloads/const_protos.lst",
-                                                             ext_logger=self.logger, debug=self.debug_class)
-        self.const_header_ports = Tools.load_file_into_memory_list("payloads/const_header_ports.lst",
-                                                                   ext_logger=self.logger, debug=self.debug_class)
-        self.const_ports = Tools.load_file_into_memory_list("payloads/const_ports.lst",
-                                                            ext_logger=self.logger, debug=self.debug_class)
-        self.const_header_hosts = Tools.load_file_into_memory_list("payloads/const_header_hosts.lst",
-                                                                   ext_logger=self.logger, debug=self.debug_class)
-        self.const_midpaths = Tools.load_file_into_memory_list("payloads/const_midpaths.lst",
-                                                               ext_logger=self.logger, debug=self.debug_class)
-        self.const_endpaths = Tools.load_file_into_memory_list("payloads/const_endpaths.lst",
-                                                               ext_logger=self.logger, debug=self.debug_class)
+        # Import HTTP headers payloads
+        self.header_http_methods = Tools.load_file_into_memory_list(
+            "payloads/header_http_methods.lst", ext_logger=self.logger, debug=self.debug_class)
+        self.header_ip_hosts = Tools.load_file_into_memory_list(
+            "payloads/header_ip_hosts.lst", ext_logger=self.logger, debug=self.debug_class)
+        self.header_ports = Tools.load_file_into_memory_list(
+            "payloads/header_ports.lst", ext_logger=self.logger, debug=self.debug_class)
+        self.header_proto_schemes = Tools.load_file_into_memory_list(
+            "payloads/header_proto_schemes.lst", ext_logger=self.logger, debug=self.debug_class)
+
+        # Import internal bypass payloads
+        self.internal_endpaths = Tools.load_file_into_memory_list(
+            "payloads/internal_endpaths.lst", ext_logger=self.logger, debug=self.debug_class)
+        self.internal_http_methods = Tools.load_file_into_memory_list(
+            "payloads/internal_http_methods.lst", ext_logger=self.logger, debug=self.debug_class)
+        self.internal_ip_hosts = Tools.load_file_into_memory_list(
+            "payloads/internal_ip_hosts.lst", ext_logger=self.logger, debug=self.debug_class)
+        self.internal_midpaths = Tools.load_file_into_memory_list(
+            "payloads/internal_midpaths.lst", ext_logger=self.logger, debug=self.debug_class)
+        self.internal_ports = Tools.load_file_into_memory_list(
+            "payloads/internal_ports.lst", ext_logger=self.logger, debug=self.debug_class)
+        self.internal_proto_schemes = Tools.load_file_into_memory_list(
+            "payloads/internal_proto_schemes.lst", ext_logger=self.logger, debug=self.debug_class)
 
         # Init object vars
         self.base_curl = []
@@ -173,7 +175,7 @@ class Bypasser:
     # *** Protected methods *** #
 
     def _build_curl_ips(self, resolved_ip=None):
-        """ Build internal IP list from spoof_ips, const_internal_ip and the resolved target IP address.
+        """ Build internal IP list from spoof_ips, internal_ip_hosts and the resolved target IP address.
         :param str resolved_ip: Public (or private) IP address related to the url subdomain
         """
         self.curl_ips.clear()
@@ -186,9 +188,9 @@ class Bypasser:
         # Append mode (by default and in any case if self.spoof_ips is empty)
         if not self.spoof_ip_replace:
             # Internal IP addresses
-            for const_internal_ip in self.const_internal_ips:
-                if const_internal_ip not in self.curl_ips:
-                    self.curl_ips.append(const_internal_ip)
+            for internal_ip in self.internal_ip_hosts:
+                if internal_ip not in self.curl_ips:
+                    self.curl_ips.append(internal_ip)
             # Public (or private) IP address
             if resolved_ip and resolved_ip not in self.curl_ips:
                 self.curl_ips.append(resolved_ip)
@@ -241,8 +243,8 @@ class Bypasser:
 
         # [http_methods] - Custom request methods (-X)
         if any(mode in ["all", "http_methods"] for mode in self.current_bypass_modes):
-            for const_http_method in self.const_http_methods:
-                cmd = [*self.base_curl, "-X", const_http_method, target_url]
+            for internal_http_method in self.internal_http_methods:
+                cmd = [*self.base_curl, "-X", internal_http_method, target_url]
                 item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_methods",
                                 target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 if item not in self.curl_items:
@@ -259,9 +261,9 @@ class Bypasser:
 
         # [http_headers_method] - Custom methods
         if any(mode in ["all", "http_headers_method"] for mode in self.current_bypass_modes):
-            for const_header_method in self.const_header_methods:
-                for const_http_method in self.const_http_methods:
-                    cmd = [*self.base_curl, "-H", f"{const_header_method}: {const_http_method}", target_url]
+            for header_http_method in self.header_http_methods:
+                for internal_http_method in self.internal_http_methods:
+                    cmd = [*self.base_curl, "-H", f"{header_http_method}: {internal_http_method}", target_url]
                     item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_method",
                                     target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                     if item not in self.curl_items:
@@ -271,19 +273,19 @@ class Bypasser:
         if any(mode in ["all", "http_headers_ip"] for mode in self.current_bypass_modes):
             self._build_curl_ips(resolved_ip=self.url_resolved_ip)
             commands = set()
-            for const_header_host in self.const_header_hosts:
+            for header_ip_host in self.header_ip_hosts:
                 # Header which takes 1 as value
-                if const_header_host == "X-AppEngine-Trusted-IP-Request":
-                    commands.add(tuple([*self.base_curl, "-H", f"{const_header_host}: 1", target_url]))
+                if header_ip_host == "X-AppEngine-Trusted-IP-Request":
+                    commands.add(tuple([*self.base_curl, "-H", f"{header_ip_host}: 1", target_url]))
                     continue
                 # Specific rule for header 'Forwarded: for='
                 for ip in self.curl_ips:
-                    if const_header_host == "Forwarded":
-                        commands.add(tuple([*self.base_curl, "-H", f"{const_header_host}: by={ip}", target_url]))
-                        commands.add(tuple([*self.base_curl, "-H", f"{const_header_host}: for={ip}", target_url]))
-                        commands.add(tuple([*self.base_curl, "-H", f"{const_header_host}: host={ip}", target_url]))
+                    if header_ip_host == "Forwarded":
+                        commands.add(tuple([*self.base_curl, "-H", f"{header_ip_host}: by={ip}", target_url]))
+                        commands.add(tuple([*self.base_curl, "-H", f"{header_ip_host}: for={ip}", target_url]))
+                        commands.add(tuple([*self.base_curl, "-H", f"{header_ip_host}: host={ip}", target_url]))
                     else:
-                        commands.add(tuple([*self.base_curl, "-H", f"{const_header_host}: {ip}", target_url]))
+                        commands.add(tuple([*self.base_curl, "-H", f"{header_ip_host}: {ip}", target_url]))
             # Add items
             for command in commands:
                 item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_ip",
@@ -294,12 +296,13 @@ class Bypasser:
         # [http_headers_scheme] - Custom scheme rewrite with X-Forwarded-Scheme
         if any(mode in ["all", "http_headers_scheme"] for mode in self.current_bypass_modes):
             commands = set()
-            for const_proto in self.const_protos:
+            for internal_proto_scheme in self.internal_proto_schemes:
                 # Specific rule for header 'Forwarded: proto='
-                commands.add(tuple([*self.base_curl, "-H", f"Forwarded: proto={const_proto}", target_url]))
-                for const_header_scheme in self.const_header_schemes:
+                commands.add(tuple([*self.base_curl, "-H", f"Forwarded: proto={internal_proto_scheme}", target_url]))
+                for header_proto_scheme in self.header_proto_schemes:
                     # Standard headers ending with "-Proto" or "-Scheme"
-                    commands.add(tuple([*self.base_curl, "-H", f"{const_header_scheme}: {const_proto}", target_url]))
+                    commands.add(
+                        tuple([*self.base_curl, "-H", f"{header_proto_scheme}: {internal_proto_scheme}", target_url]))
             # Adding non-standard headers that take 'on' value (Ex: Microsoft)
             for on_header in ["Front-End-Https", "X-Forwarded-HTTPS", "X-Forwarded-SSL"]:
                 commands.add(tuple([*self.base_curl, "-H", f"{on_header}: on", target_url]))
@@ -313,15 +316,15 @@ class Bypasser:
         # [http_headers_port] - Custom port rewrite
         if any(mode in ["all", "http_headers_port"] for mode in self.current_bypass_modes):
             commands = set()
-            for const_header_port in self.const_header_ports:
+            for header_port in self.header_ports:
                 if self.spoof_ports:
                     # Custom port(s)
                     for spoof_port in self.spoof_ports:
-                        commands.add(tuple([*self.base_curl, "-H", f"{const_header_port}: {spoof_port}", target_url]))
+                        commands.add(tuple([*self.base_curl, "-H", f"{header_port}: {spoof_port}", target_url]))
                 if not self.spoof_port_replace:  # False in any case if self.spoof_ports is empty
                     # Internal ports
-                    for const_port in self.const_ports:
-                        commands.add(tuple([*self.base_curl, "-H", f"{const_header_port}: {const_port}", target_url]))
+                    for internal_port in self.internal_ports:
+                        commands.add(tuple([*self.base_curl, "-H", f"{header_port}: {internal_port}", target_url]))
                 # Add items
                 for command in commands:
                     item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_port",
@@ -333,13 +336,13 @@ class Bypasser:
         if any(mode in ["all", "mid_paths"] for mode in self.current_bypass_modes):
             commands = set()
             for idx_slash in range(base_path.count("/")):
-                for const_path in self.const_midpaths:
-                    path_post = Tools.replacenth(base_path, "/", f"/{const_path}", idx_slash)
+                for internal_midpath in self.internal_midpaths:
+                    path_post = Tools.replacenth(base_path, "/", f"/{internal_midpath}", idx_slash)
                     commands.add(tuple([*self.base_curl, f"{base_url}{path_post}"]))  # First variant
                     commands.add(tuple([*self.base_curl, f"{base_url}/{path_post}"]))  # Second variant
                     if idx_slash <= 1:
                         continue
-                    path_pre = Tools.replacenth(base_path, "/", f"{const_path}/", idx_slash)
+                    path_pre = Tools.replacenth(base_path, "/", f"{internal_midpath}/", idx_slash)
                     commands.add(tuple([*self.base_curl, f"{base_url}{path_pre}"]))  # Fist variant
                     commands.add(tuple([*self.base_curl, f"{base_url}/{path_pre}"]))  # Second variant
             # Add items
@@ -353,18 +356,18 @@ class Bypasser:
         if any(mode in ["all", "end_paths"] for mode in self.current_bypass_modes):
             commands = set()
             separator = "" if (base_path == "/" or base_path.endswith("/")) else "/"
-            for const_endpath in self.const_endpaths:
+            for internal_endpath in self.internal_endpaths:
                 # First variant - 'url/suffix'
-                commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{separator}{const_endpath}"]))
+                commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{separator}{internal_endpath}"]))
                 # Second variant - 'url/suffix/'
-                commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{separator}{const_endpath}/"]))
+                commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{separator}{internal_endpath}/"]))
                 # Only if base_path otherwise the subdomain will be modified and for any non ^[a-zA-Z] endpath
                 if base_path != "/":
-                    if not re.search(r"^[a-zA-Z]$", const_endpath[0]):
+                    if not re.search(r"^[a-zA-Z]$", internal_endpath[0]):
                         # Third variant - Add 'suffix'
-                        commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{const_endpath}"]))
+                        commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{internal_endpath}"]))
                         # Fourth variant variant - Add 'suffix/'
-                        commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{const_endpath}/"]))
+                        commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{internal_endpath}/"]))
                 # Add items
                 for command in commands:
                     item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="end_paths",
