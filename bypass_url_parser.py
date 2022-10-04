@@ -93,7 +93,7 @@ class Bypasser:
     DEFAULT_USER_AGENT = \
         "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36"
 
-    def __init__(self, config_dict=None, verbose=False, debug=False, debug_class=False, ext_logger=None):
+    def __init__(self, config_dict=None, encoding=None, verbose=False, debug=False, debug_class=False, ext_logger=None):
         if not config_dict:
             config_dict = dict()
 
@@ -118,30 +118,6 @@ class Bypasser:
             self.logger.debug(
                 f"Debug level: verbose={self.verbose}, debug={self.debug}, debug_class={self.debug_class}")
 
-        # Import HTTP headers payloads
-        self.header_http_methods = Tools.load_file_into_memory_list(
-            "payloads/header_http_methods.lst", ext_logger=self.logger, debug=self.debug_class)
-        self.header_ip_hosts = Tools.load_file_into_memory_list(
-            "payloads/header_ip_hosts.lst", ext_logger=self.logger, debug=self.debug_class)
-        self.header_ports = Tools.load_file_into_memory_list(
-            "payloads/header_ports.lst", ext_logger=self.logger, debug=self.debug_class)
-        self.header_proto_schemes = Tools.load_file_into_memory_list(
-            "payloads/header_proto_schemes.lst", ext_logger=self.logger, debug=self.debug_class)
-
-        # Import internal bypass payloads
-        self.internal_endpaths = Tools.load_file_into_memory_list(
-            "payloads/internal_endpaths.lst", ext_logger=self.logger, debug=self.debug_class)
-        self.internal_http_methods = Tools.load_file_into_memory_list(
-            "payloads/internal_http_methods.lst", ext_logger=self.logger, debug=self.debug_class)
-        self.internal_ip_hosts = Tools.load_file_into_memory_list(
-            "payloads/internal_ip_hosts.lst", ext_logger=self.logger, debug=self.debug_class)
-        self.internal_midpaths = Tools.load_file_into_memory_list(
-            "payloads/internal_midpaths.lst", ext_logger=self.logger, debug=self.debug_class)
-        self.internal_ports = Tools.load_file_into_memory_list(
-            "payloads/internal_ports.lst", ext_logger=self.logger, debug=self.debug_class)
-        self.internal_proto_schemes = Tools.load_file_into_memory_list(
-            "payloads/internal_proto_schemes.lst", ext_logger=self.logger, debug=self.debug_class)
-
         # Init object vars
         self.base_curl = []
         self.user_agent_suffix = ""
@@ -152,6 +128,35 @@ class Bypasser:
         self.clean_output = ""
         self.pbar_queue = Queue(maxsize=1)
         self.url_resolved_ip = ""
+        self.encoding = encoding if encoding else Bypasser.DEFAULT_FILE_ENCODING
+
+        # Import HTTP headers payloads
+        self.header_http_methods = Tools.load_file_into_memory_list(
+            "payloads/header_http_methods.lst", enc_format=self.encoding, ext_logger=self.logger,
+            debug=self.debug_class)
+        self.header_ip_hosts = Tools.load_file_into_memory_list(
+            "payloads/header_ip_hosts.lst", enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class)
+        self.header_ports = Tools.load_file_into_memory_list(
+            "payloads/header_ports.lst", enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class)
+        self.header_proto_schemes = Tools.load_file_into_memory_list(
+            "payloads/header_proto_schemes.lst", enc_format=self.encoding, ext_logger=self.logger,
+            debug=self.debug_class)
+
+        # Import internal bypass payloads
+        self.internal_endpaths = Tools.load_file_into_memory_list(
+            "payloads/internal_endpaths.lst", enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class)
+        self.internal_http_methods = Tools.load_file_into_memory_list(
+            "payloads/internal_http_methods.lst", enc_format=self.encoding, ext_logger=self.logger,
+            debug=self.debug_class)
+        self.internal_ip_hosts = Tools.load_file_into_memory_list(
+            "payloads/internal_ip_hosts.lst", enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class)
+        self.internal_midpaths = Tools.load_file_into_memory_list(
+            "payloads/internal_midpaths.lst", enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class)
+        self.internal_ports = Tools.load_file_into_memory_list(
+            "payloads/internal_ports.lst", enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class)
+        self.internal_proto_schemes = Tools.load_file_into_memory_list(
+            "payloads/internal_proto_schemes.lst", enc_format=self.encoding, ext_logger=self.logger,
+            debug=self.debug_class)
 
         # Init properties
         self.binary_name = Bypasser.DEFAULT_BINARY_NAME
@@ -237,7 +242,7 @@ class Bypasser:
         # Original request
         cmd = [*self.base_curl, target_url]
         item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="original_request", target_ip=self.url_resolved_ip,
-                        debug=self.debug, ext_logger=self.logger)
+                        encoding=self.encoding, debug=self.debug, ext_logger=self.logger)
         if item not in self.curl_items:
             self.curl_items.append(item)
 
@@ -245,7 +250,7 @@ class Bypasser:
         if any(mode in ["all", "http_methods"] for mode in self.current_bypass_modes):
             for internal_http_method in self.internal_http_methods:
                 cmd = [*self.base_curl, "-X", internal_http_method, target_url]
-                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_methods",
+                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_methods", encoding=self.encoding,
                                 target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 if item not in self.curl_items:
                     self.curl_items.append(item)
@@ -254,7 +259,7 @@ class Bypasser:
         if any(mode in ["all", "http_versions"] for mode in self.current_bypass_modes):
             for http_version in CurlItem.CURL_HTTP_VERSIONS[:-1]:
                 cmd = [*self.get_curl_base(forced_http_version=http_version), target_url]
-                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_versions",
+                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_versions", encoding=self.encoding,
                                 target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 if item not in self.curl_items:
                     self.curl_items.append(item)
@@ -264,8 +269,8 @@ class Bypasser:
             for header_http_method in self.header_http_methods:
                 for internal_http_method in self.internal_http_methods:
                     cmd = [*self.base_curl, "-H", f"{header_http_method}: {internal_http_method}", target_url]
-                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_method",
-                                    target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
+                    item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_method", debug=self.debug,
+                                    target_ip=self.url_resolved_ip, encoding=self.encoding, ext_logger=self.logger)
                     if item not in self.curl_items:
                         self.curl_items.append(item)
 
@@ -288,8 +293,8 @@ class Bypasser:
                         commands.add(tuple([*self.base_curl, "-H", f"{header_ip_host}: {ip}", target_url]))
             # Add items
             for command in commands:
-                item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_ip",
-                                target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
+                item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_ip", debug=self.debug,
+                                target_ip=self.url_resolved_ip, encoding=self.encoding, ext_logger=self.logger)
                 if item not in self.curl_items:
                     self.curl_items.append(item)
 
@@ -309,7 +314,8 @@ class Bypasser:
             # Add items
             for command in commands:
                 item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_scheme",
-                                target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
+                                target_ip=self.url_resolved_ip, encoding=self.encoding, debug=self.debug,
+                                ext_logger=self.logger)
                 if item not in self.curl_items:
                     self.curl_items.append(item)
 
@@ -328,7 +334,8 @@ class Bypasser:
                 # Add items
                 for command in commands:
                     item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_port",
-                                    target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
+                                    target_ip=self.url_resolved_ip, encoding=self.encoding, debug=self.debug,
+                                    ext_logger=self.logger)
                     if item not in self.curl_items:
                         self.curl_items.append(item)
 
@@ -347,8 +354,8 @@ class Bypasser:
                     commands.add(tuple([*self.base_curl, f"{base_url}/{path_pre}"]))  # Second variant
             # Add items
             for command in commands:
-                item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="mid_paths",
-                                target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
+                item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="mid_paths", debug=self.debug,
+                                target_ip=self.url_resolved_ip, encoding=self.encoding, ext_logger=self.logger)
                 if item not in self.curl_items:
                     self.curl_items.append(item)
 
@@ -370,8 +377,8 @@ class Bypasser:
                         commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{internal_endpath}/"]))
                 # Add items
                 for command in commands:
-                    item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="end_paths",
-                                    target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
+                    item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="end_paths", debug=self.debug,
+                                    target_ip=self.url_resolved_ip, encoding=self.encoding, ext_logger=self.logger)
                     if item not in self.curl_items:
                         self.curl_items.append(item)
 
@@ -383,7 +390,7 @@ class Bypasser:
                 char_case = base_path[abc_index]
                 char_case = char_case.upper() if char_case.islower() else char_case.lower()
                 cmd = [*self.base_curl, f"{base_url}{base_path[:abc_index]}{char_case}{base_path[abc_index + 1:]}"]
-                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="case_substitution",
+                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="case_substitution", encoding=self.encoding,
                                 target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 if item not in self.curl_items:
                     self.curl_items.append(item)
@@ -393,8 +400,8 @@ class Bypasser:
                 char_urlencoded = format(ord(base_path[abc_index]), "02x")
                 cmd = [*self.base_curl,
                        f"{base_url}{base_path[:abc_index]}%{char_urlencoded}{base_path[abc_index + 1:]}"]
-                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="char_encode", target_ip=self.url_resolved_ip,
-                                debug=self.debug, ext_logger=self.logger)
+                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="char_encode", encoding=self.encoding,
+                                target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 if item not in self.curl_items:
                     self.curl_items.append(item)
 
@@ -558,7 +565,7 @@ class Bypasser:
             # Logfile - Starting at SaveLevel.MINIMAL
             if self.save_level >= self.SaveLevel.MINIMAL:
                 log_file = f"{outdir}{Tools.SEPARATOR}{Bypasser.DEFAULT_LOG_FILENAME}"
-                with open(log_file, mode="wt", encoding=Bypasser.DEFAULT_FILE_ENCODING) as file:
+                with open(log_file, mode="wt", encoding=self.encoding) as file:
                     file.write(f"Bypass results for '{url_obj.geturl()}' url:\n")
                     file.write(f"{self.clean_output}\n")
                     if self.save_level >= self.SaveLevel.PERTINENT and inspect_cmd:
@@ -837,7 +844,7 @@ class Bypasser:
             self._current_bypass_modes.clear()
             for mode in Tools.get_list_from_generic_arg(
                     modes_lst, arg_name="bypass_mode", stdin_support=True, comma_string_support=True,
-                    enc_format=Bypasser.DEFAULT_FILE_ENCODING, ext_logger=self.logger, debug=self.debug_class):
+                    enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class):
                 if mode in Bypasser.BYPASS_MODES:
                     if mode not in self._current_bypass_modes:
                         self._current_bypass_modes.append(mode)
@@ -865,7 +872,7 @@ class Bypasser:
             if value:
                 for header in Tools.get_list_from_generic_arg(
                         value, arg_name="header", stdin_support=False, comma_string_support=False,
-                        enc_format=Bypasser.DEFAULT_FILE_ENCODING, ext_logger=self.logger, debug=self.debug_class):
+                        enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class):
                     key, value = header.split(":", 1)
                     self._headers[key] = value.strip()
         except ValueError as e:
@@ -972,7 +979,7 @@ class Bypasser:
             if value:
                 for ip in Tools.get_list_from_generic_arg(
                         value, arg_name="spoofip", stdin_support=True, comma_string_support=True,
-                        enc_format=Bypasser.DEFAULT_FILE_ENCODING, ext_logger=self.logger, debug=self.debug_class):
+                        enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class):
                     if ip not in self._spoof_ips:
                         self._spoof_ips.append(ip)
             # Cancel the possible replace_mode that could block internal ip list in [http_headers_ip]
@@ -1005,7 +1012,7 @@ class Bypasser:
             if value:
                 for port in Tools.get_list_from_generic_arg(
                         value, arg_name="spoofport", stdin_support=True, comma_string_support=True,
-                        enc_format=Bypasser.DEFAULT_FILE_ENCODING, ext_logger=self.logger, debug=self.debug_class):
+                        enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class):
                     if int(port) not in self._spoof_ports:
                         self._spoof_ports.append(int(port))
             # Cancel the possible replace_mode that could block internal port list in [http_headers_port]
@@ -1075,7 +1082,7 @@ class Bypasser:
             if value:
                 for url in Tools.get_list_from_generic_arg(
                         value, arg_name="url", stdin_support=True, comma_string_support=True,
-                        enc_format=Bypasser.DEFAULT_FILE_ENCODING, ext_logger=self.logger, debug=self.debug_class):
+                        enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class):
                     if not Bypasser.REGEX_URL.match(url):
                         error_msg = f"URL {url} was ignored. Must start with http(s):// and contain at least 3 slashes"
                         self.logger.warning(error_msg)
@@ -1210,8 +1217,8 @@ class CurlItem:
     REGEX_TITLE = re.compile(r"<title>(.*)</title>", re.IGNORECASE)
     REDIRECT_URL_MAX_SIZE = 25
 
-    def __init__(self, target_url: ParseResult, curl_base, curl_cmd, bypass_mode=None, target_ip=None, debug=False,
-                 ext_logger=None):
+    def __init__(self, target_url: ParseResult, curl_base, curl_cmd, bypass_mode=None, target_ip=None,
+                 encoding=None, debug=False, ext_logger=None):
         """CurlItem object init method
 
         :param ParseResult target_url: Curl command target url object
@@ -1227,7 +1234,8 @@ class CurlItem:
         else:
             self.logger = Tools.get_new_logger(self.use_classname(), with_colors=True, debug_level=self.debug)
 
-        # Request elements #
+        # Encoding and request elements #
+        self.encoding = encoding if encoding else CurlItem.DEFAULT_FILE_ENCODING
         self.target_url = target_url
         self.target_ip = target_ip
         self.bypass_mode = bypass_mode
@@ -1318,7 +1326,7 @@ class CurlItem:
         out_filename = f"{output_dir}{Tools.SEPARATOR}{self.filename}"
         if self.response_raw_output and Tools.is_exist_directory(output_dir, force_create=force_output_dir_creation):
             self.logger.debug(f"Saving html pages and short output in: '{output_dir}{Tools.SEPARATOR}'")
-            with open(f"{out_filename}", mode="wt", encoding=CurlItem.DEFAULT_FILE_ENCODING) as file:
+            with open(f"{out_filename}", mode="wt", encoding=self.encoding) as file:
                 file.write(f"{self.request_curl_cmd}\n\n{self.response_headers}\n\n{self.response_data}")
             return True
         else:
