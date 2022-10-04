@@ -237,7 +237,7 @@ class Bypasser:
             error_msg = f"Unable to resolve the subdomain '{url_obj.hostname}'. Please check the url or your " \
                         f"host's DNS resolvers"
             self.logger.error(error_msg)
-            raise ValueError(error_msg)
+            raise ConnectionError(error_msg)
 
         # Original request
         cmd = [*self.base_curl, target_url]
@@ -734,7 +734,13 @@ class Bypasser:
             self.to_retry_items.clear()
 
             # Generate curl items and command
-            self._generate_curls(url_obj)
+            try:
+                self._generate_curls(url_obj)
+            except ConnectionError:
+                self.logger.info(f"URL '{url_obj.geturl()}' was ignored")
+                continue
+
+            # Just print payloads if self.dump_payloads
             if self.dump_payloads:
                 if self.verbose:
                     print(f"\n{self.use_classname()} has generated {len(self.curl_items)} payloads "
@@ -742,10 +748,9 @@ class Bypasser:
                 print(self.dump_bypasser_payloads(show_bypass_mode=True, show_full_cmd=self.debug))
                 continue
 
+            # Send curl commands
             if not self.verbose and not self.debug and not self.debug_class:
                 self.logger.warning(f"Trying to bypass '{url_obj.geturl()}' url ({len(self.curl_items)} payloads)...")
-
-            # Send curl commands
             self._run_curls(self.curl_items)
 
             # Retry failed curl requests
@@ -1677,7 +1682,7 @@ class Tools:
         else:
             error_msg = f"The '{arg_name}' argument type is not supported"
             if ext_logger:
-                ext_logger.critical(error_msg)
+                ext_logger.error(error_msg)
             raise ValueError(error_msg)
 
     @staticmethod
@@ -1708,17 +1713,16 @@ class Tools:
             file = open(absolute_filename, mode="rt", encoding=encoding)
             tmp_list = file.read().strip().splitlines()
         except IOError as error:
-            error_msg = f"Unable to open {absolute_filename} file: \n{error}"
             if ext_logger:
-                ext_logger.critical(error_msg)
-            raise error_msg
+                ext_logger.error(f"Unable to open {absolute_filename} file: \n{error}")
+            raise
         except LookupError as error:
             error_msg = f"Unknown file encoding format '{encoding}' to read '{absolute_filename}' file: \n{error}"
             if ext_logger:
-                ext_logger.critical(error_msg)
+                ext_logger.error(error_msg)
             if file:
                 file.close()
-            raise error_msg
+            raise
         else:
             file.close()
             return tmp_list
