@@ -1,5 +1,9 @@
 CloudFront-Forwarded-Proto
+Forwarded
+Front-End-Https
+X-Forwarded-HTTPS
 X-Forwarded-Proto
+X-Forwarded-SSL
 X-Forwarded-Scheme
 X-Protocol-Scheme
 X-Sp-Edge-Scheme
