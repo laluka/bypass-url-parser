@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# noinspection HttpUrlsUsage
 """Bypass Url Parser, made with love by @TheLaluka
 A tool that tests MANY url bypasses to reach a 40X protected page.
 
@@ -417,7 +418,7 @@ class Bypasser:
         # Not doing for now, so many curls already... :)
         return
 
-    def _progress_bar_callback(self, *args):
+    def _progress_bar_callback(self, *args: any):
         self.iteration = self.pbar_queue.get(timeout=10)  # out =>
         # Log every 50 completed requests
         if self.iteration % 50 == 0:
@@ -1158,7 +1159,7 @@ class Bypasser:
         :param Bypasser other: Other object to compare with this
         :return: True is same object, else False
         """
-        return isinstance(other, self.__class__) and self.__attrs() == other.__attrs()
+        return other.__class__ == Bypasser and self.__dict__ == other.__dict__
 
     def __ne__(self, other) -> bool:
         """Define a non-equality test.
@@ -1220,7 +1221,7 @@ class CurlItem:
     REGEX_STATUS_CODE = re.compile(r"HTTP.*\s+(\d+)\s+\w+", re.IGNORECASE)
     REGEX_CONTENT_LENGTH = re.compile(r"Content-Length:\s+(\d+)", re.IGNORECASE)
     REGEX_CONTENT_TYPE = re.compile(r"Content-Type:\s+(\w+/\w+)", re.IGNORECASE)
-    REGEX_HTTP_VERSION = re.compile(r"(?!--)http[\w\d.-]*(?<! )", re.IGNORECASE)
+    REGEX_HTTP_VERSION = re.compile(r"(?!--)http[\w.-]*(?<! )", re.IGNORECASE)
     REGEX_REDIRECT_URL = re.compile(r"Location:\s+(.*)", re.IGNORECASE)
     REGEX_SERVER_TYPE = re.compile(r"Server:\s+(.*)", re.IGNORECASE)
     REGEX_TITLE = re.compile(r"<title>(.*)</title>", re.IGNORECASE)
@@ -1566,13 +1567,13 @@ class CurlItem:
         return (self.target_url, self.target_ip, self.bypass_mode, self.curl_base_options,
                 self.request_curl_cmd, self.response_raw_output)
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: any) -> bool:
         """Equality test, always use after __hash__ when object compare with ==, or if a match occurs in iterable.
 
         :param CurlItem other: Other object to compare with this
         :return: True is same object, else False
         """
-        return isinstance(other, self.__class__) and self.__attrs() == other.__attrs()
+        return other.__class__ == CurlItem and self.__dict__ == other.__dict__
 
     def __ne__(self, other) -> bool:
         """Define a non-equality test.
