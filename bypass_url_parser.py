@@ -125,7 +125,7 @@ class Bypasser:
         self.curl_items = set()
         self.curl_ips = []
         self.bypass_results = defaultdict(defaultdict)
-        self.to_retry_items = []
+        self.to_retry_items = set()
         self.clean_output = ""
         self.pbar_queue = Queue(maxsize=1)
         self.url_resolved_ip = ""
@@ -485,17 +485,14 @@ class Bypasser:
                 item.force_http_version("1.1")
 
                 # Add modified item in retry list
-                if item not in self.to_retry_items:
-                    self.to_retry_items.append(item)
+                self.to_retry_items.add(item)
             else:
-                if item not in self.to_retry_items:
-                    self.to_retry_items.append(item)
+                self.to_retry_items.add(item)
 
         except subprocess.TimeoutExpired as e:
             if self.verbose:
                 self.logger.warning(f"command '{e.cmd}' timed out: {e.output}")
-            if item not in self.to_retry_items:
-                self.to_retry_items.append(item)
+            self.to_retry_items.add(item)
 
     def _save_results(self, url_obj):
         if self.save_level != self.SaveLevel.NONE:
