@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# noinspection HttpUrlsUsage
 """Bypass Url Parser, made with love by @TheLaluka
 A tool that tests MANY url bypasses to reach a 40X protected page.
 
@@ -121,10 +122,10 @@ class Bypasser:
         # Init object vars
         self.base_curl = []
         self.user_agent_suffix = ""
-        self.curl_items = []
+        self.curl_items = set()
         self.curl_ips = []
         self.bypass_results = defaultdict(defaultdict)
-        self.to_retry_items = []
+        self.to_retry_items = set()
         self.clean_output = ""
         self.pbar_queue = Queue(maxsize=1)
         self.url_resolved_ip = ""
@@ -243,8 +244,7 @@ class Bypasser:
         cmd = [*self.base_curl, target_url]
         item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="original_request", target_ip=self.url_resolved_ip,
                         encoding=self.encoding, debug=self.debug, ext_logger=self.logger)
-        if item not in self.curl_items:
-            self.curl_items.append(item)
+        self.curl_items.add(item)
 
         # [http_methods] - Custom request methods (-X)
         if any(mode in ["all", "http_methods"] for mode in self.current_bypass_modes):
@@ -252,8 +252,7 @@ class Bypasser:
                 cmd = [*self.base_curl, "-X", internal_http_method, target_url]
                 item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_methods", encoding=self.encoding,
                                 target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
-                if item not in self.curl_items:
-                    self.curl_items.append(item)
+                self.curl_items.add(item)
 
         # [http_versions] - Tests the url with all http versions supported by curl
         if any(mode in ["all", "http_versions"] for mode in self.current_bypass_modes):
@@ -261,8 +260,7 @@ class Bypasser:
                 cmd = [*self.get_curl_base(forced_http_version=http_version), target_url]
                 item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_versions", encoding=self.encoding,
                                 target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
-                if item not in self.curl_items:
-                    self.curl_items.append(item)
+                self.curl_items.add(item)
 
         # [http_headers_method] - Custom methods
         if any(mode in ["all", "http_headers_method"] for mode in self.current_bypass_modes):
@@ -271,8 +269,7 @@ class Bypasser:
                     cmd = [*self.base_curl, "-H", f"{header_http_method}: {internal_http_method}", target_url]
                     item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_headers_method", debug=self.debug,
                                     target_ip=self.url_resolved_ip, encoding=self.encoding, ext_logger=self.logger)
-                    if item not in self.curl_items:
-                        self.curl_items.append(item)
+                    self.curl_items.add(item)
 
         # [http_headers_ip] - Custom host injection headers
         if any(mode in ["all", "http_headers_ip"] for mode in self.current_bypass_modes):
@@ -295,8 +292,7 @@ class Bypasser:
             for command in commands:
                 item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_ip", debug=self.debug,
                                 target_ip=self.url_resolved_ip, encoding=self.encoding, ext_logger=self.logger)
-                if item not in self.curl_items:
-                    self.curl_items.append(item)
+                self.curl_items.add(item)
 
         # [http_headers_scheme] - Custom scheme rewrite with X-Forwarded-Scheme
         if any(mode in ["all", "http_headers_scheme"] for mode in self.current_bypass_modes):
@@ -320,8 +316,7 @@ class Bypasser:
                 item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_scheme",
                                 target_ip=self.url_resolved_ip, encoding=self.encoding, debug=self.debug,
                                 ext_logger=self.logger)
-                if item not in self.curl_items:
-                    self.curl_items.append(item)
+                self.curl_items.add(item)
 
         # [http_headers_port] - Custom port rewrite
         if any(mode in ["all", "http_headers_port"] for mode in self.current_bypass_modes):
@@ -340,8 +335,7 @@ class Bypasser:
                     item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_port",
                                     target_ip=self.url_resolved_ip, encoding=self.encoding, debug=self.debug,
                                     ext_logger=self.logger)
-                    if item not in self.curl_items:
-                        self.curl_items.append(item)
+                    self.curl_items.add(item)
 
         # [mid_paths] - Custom paths with extra-mid-slash
         if any(mode in ["all", "mid_paths"] for mode in self.current_bypass_modes):
@@ -360,8 +354,7 @@ class Bypasser:
             for command in commands:
                 item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="mid_paths", debug=self.debug,
                                 target_ip=self.url_resolved_ip, encoding=self.encoding, ext_logger=self.logger)
-                if item not in self.curl_items:
-                    self.curl_items.append(item)
+                self.curl_items.add(item)
 
         # [end_paths] - Add suffix
         if any(mode in ["all", "end_paths"] for mode in self.current_bypass_modes):
@@ -383,8 +376,7 @@ class Bypasser:
                 for command in commands:
                     item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="end_paths", debug=self.debug,
                                     target_ip=self.url_resolved_ip, encoding=self.encoding, ext_logger=self.logger)
-                    if item not in self.curl_items:
-                        self.curl_items.append(item)
+                    self.curl_items.add(item)
 
         # Char substitution (character-by-character) bypasses
         abc_indexes = [span.start() for span in re.finditer(r"[a-zA-Z]", base_path)]
@@ -396,8 +388,7 @@ class Bypasser:
                 cmd = [*self.base_curl, f"{base_url}{base_path[:abc_index]}{char_case}{base_path[abc_index + 1:]}"]
                 item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="case_substitution", encoding=self.encoding,
                                 target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
-                if item not in self.curl_items:
-                    self.curl_items.append(item)
+                self.curl_items.add(item)
 
             # [char_encode] - Url-Encoding
             if any(mode in ["all", "char_encode"] for mode in self.current_bypass_modes):
@@ -406,8 +397,7 @@ class Bypasser:
                        f"{base_url}{base_path[:abc_index]}%{char_urlencoded}{base_path[abc_index + 1:]}"]
                 item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="char_encode", encoding=self.encoding,
                                 target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
-                if item not in self.curl_items:
-                    self.curl_items.append(item)
+                self.curl_items.add(item)
 
         # Verbose/debug print
         if self.verbose and not self.dump_payloads:
@@ -417,7 +407,7 @@ class Bypasser:
         # Not doing for now, so many curls already... :)
         return
 
-    def _progress_bar_callback(self, *args):
+    def _progress_bar_callback(self, *args: any):
         self.iteration = self.pbar_queue.get(timeout=10)  # out =>
         # Log every 50 completed requests
         if self.iteration % 50 == 0:
@@ -427,7 +417,7 @@ class Bypasser:
     def _run_curls(self, items):
         """Call multithread curl commands.
 
-        :param list[CurlItem] items: List of item objects
+        :param set[CurlItem] items: List of item objects
         """
         # Reset progress bar
         self.total = len(items)
@@ -495,17 +485,14 @@ class Bypasser:
                 item.force_http_version("1.1")
 
                 # Add modified item in retry list
-                if item not in self.to_retry_items:
-                    self.to_retry_items.append(item)
+                self.to_retry_items.add(item)
             else:
-                if item not in self.to_retry_items:
-                    self.to_retry_items.append(item)
+                self.to_retry_items.add(item)
 
         except subprocess.TimeoutExpired as e:
             if self.verbose:
                 self.logger.warning(f"command '{e.cmd}' timed out: {e.output}")
-            if item not in self.to_retry_items:
-                self.to_retry_items.append(item)
+            self.to_retry_items.add(item)
 
     def _save_results(self, url_obj):
         if self.save_level != self.SaveLevel.NONE:
@@ -1153,12 +1140,12 @@ class Bypasser:
                 self.dump_payloads, self.urls, self.user_agent, self.verbose, self.debug, self.debug_class)
 
     def __eq__(self, other) -> bool:
-        """Equality test, always use after __hash__ when object compare with ==, or if a match occurs in iterable.
+        """Equality test between objects, returns True if both objects have the same type and same attributes.
 
         :param Bypasser other: Other object to compare with this
         :return: True is same object, else False
         """
-        return isinstance(other, self.__class__) and self.__attrs() == other.__attrs()
+        return other.__class__ == Bypasser and self.__dict__ == other.__dict__
 
     def __ne__(self, other) -> bool:
         """Define a non-equality test.
@@ -1169,11 +1156,11 @@ class Bypasser:
         return not self.__eq__(other)
 
     def __hash__(self) -> int:
-        """Always used first in iterable object compare (set, list..) if match, call __eq__().
+        """Used to get and store a unique object reference in immutable collections.
 
         :return: Object hash
         """
-        return hash(self.__attrs())
+        return hash(str(self.__dict__))
 
     def __str__(self) -> str:
         out = str()
@@ -1220,7 +1207,7 @@ class CurlItem:
     REGEX_STATUS_CODE = re.compile(r"HTTP.*\s+(\d+)\s+\w+", re.IGNORECASE)
     REGEX_CONTENT_LENGTH = re.compile(r"Content-Length:\s+(\d+)", re.IGNORECASE)
     REGEX_CONTENT_TYPE = re.compile(r"Content-Type:\s+(\w+/\w+)", re.IGNORECASE)
-    REGEX_HTTP_VERSION = re.compile(r"(?!--)http[\w\d.-]*(?<! )", re.IGNORECASE)
+    REGEX_HTTP_VERSION = re.compile(r"(?!--)http[\w.-]*(?<! )", re.IGNORECASE)
     REGEX_REDIRECT_URL = re.compile(r"Location:\s+(.*)", re.IGNORECASE)
     REGEX_SERVER_TYPE = re.compile(r"Server:\s+(.*)", re.IGNORECASE)
     REGEX_TITLE = re.compile(r"<title>(.*)</title>", re.IGNORECASE)
@@ -1566,13 +1553,13 @@ class CurlItem:
         return (self.target_url, self.target_ip, self.bypass_mode, self.curl_base_options,
                 self.request_curl_cmd, self.response_raw_output)
 
-    def __eq__(self, other) -> bool:
-        """Equality test, always use after __hash__ when object compare with ==, or if a match occurs in iterable.
+    def __eq__(self, other: any) -> bool:
+        """Equality test between objects, returns True if both objects have the same type and same attributes.
 
         :param CurlItem other: Other object to compare with this
         :return: True is same object, else False
         """
-        return isinstance(other, self.__class__) and self.__attrs() == other.__attrs()
+        return other.__class__ == CurlItem and self.__dict__ == other.__dict__
 
     def __ne__(self, other) -> bool:
         """Define a non-equality test.
@@ -1583,11 +1570,11 @@ class CurlItem:
         return not self.__eq__(other)
 
     def __hash__(self) -> int:
-        """Always used first in iterable object compare (set, list..) if match, call __eq__().
+        """Used to get and store a unique object reference in immutable collections.
 
         :return: Object hash
         """
-        return hash(self.__attrs())
+        return hash(str(self.__dict__))
 
     def __str__(self) -> str:
         out = str()
