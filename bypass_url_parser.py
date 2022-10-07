@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# noinspection HttpUrlsUsage
 """Bypass Url Parser, made with love by @TheLaluka
 A tool that tests MANY url bypasses to reach a 40X protected page.
 
@@ -290,7 +289,7 @@ class Bypasser:
                         commands.add(tuple([*self.base_curl, "-H", f"{header_ip_host}: {ip}", target_url]))
             # Add items
             for command in commands:
-                item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_ip", debug=self.debug,
+                item = CurlItem(url_obj, self.base_curl, [*command], bypass_mode="http_headers_ip", debug=self.debug,
                                 target_ip=self.url_resolved_ip, encoding=self.encoding, ext_logger=self.logger)
                 self.curl_items.add(item)
 
@@ -313,7 +312,7 @@ class Bypasser:
                             [*self.base_curl, "-H", f"{header_proto_scheme}: {internal_proto_scheme}", target_url]))
             # Add items
             for command in commands:
-                item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_scheme",
+                item = CurlItem(url_obj, self.base_curl, [*command], bypass_mode="http_headers_scheme",
                                 target_ip=self.url_resolved_ip, encoding=self.encoding, debug=self.debug,
                                 ext_logger=self.logger)
                 self.curl_items.add(item)
@@ -332,7 +331,7 @@ class Bypasser:
                         commands.add(tuple([*self.base_curl, "-H", f"{header_port}: {internal_port}", target_url]))
                 # Add items
                 for command in commands:
-                    item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_port",
+                    item = CurlItem(url_obj, self.base_curl, [*command], bypass_mode="http_headers_port",
                                     target_ip=self.url_resolved_ip, encoding=self.encoding, debug=self.debug,
                                     ext_logger=self.logger)
                     self.curl_items.add(item)
@@ -352,7 +351,7 @@ class Bypasser:
                     commands.add(tuple([*self.base_curl, f"{base_url}/{path_pre}"]))  # Second variant
             # Add items
             for command in commands:
-                item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="mid_paths", debug=self.debug,
+                item = CurlItem(url_obj, self.base_curl, [*command], bypass_mode="mid_paths", debug=self.debug,
                                 target_ip=self.url_resolved_ip, encoding=self.encoding, ext_logger=self.logger)
                 self.curl_items.add(item)
 
@@ -374,7 +373,7 @@ class Bypasser:
                         commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{internal_endpath}/"]))
                 # Add items
                 for command in commands:
-                    item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="end_paths", debug=self.debug,
+                    item = CurlItem(url_obj, self.base_curl, [*command], bypass_mode="end_paths", debug=self.debug,
                                     target_ip=self.url_resolved_ip, encoding=self.encoding, ext_logger=self.logger)
                     self.curl_items.add(item)
 
