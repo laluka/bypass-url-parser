@@ -95,7 +95,7 @@ class Bypasser:
 
     def __init__(self, config_dict=None, encoding=None, verbose=False, debug=False, debug_class=False, ext_logger=None):
         if not config_dict:
-            config_dict = dict()
+            config_dict = {}
 
         # Init verbose and/or debug level
         if config_dict and "--verbose" in config_dict.keys() and "--debug" in config_dict.keys():
@@ -861,7 +861,7 @@ class Bypasser:
     @headers.setter
     def headers(self, value):
         try:
-            self._headers = dict()
+            self._headers = {}
             if value:
                 for header in Tools.get_list_from_generic_arg(
                         value, arg_name="header", stdin_support=False, comma_string_support=False,
