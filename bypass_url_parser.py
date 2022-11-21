@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# noinspection HttpUrlsUsage
 """Bypass Url Parser, made with love by @TheLaluka
 A tool that tests MANY url bypasses to reach a 40X protected page.
 
@@ -76,9 +75,9 @@ class Bypasser:
     # Default class values
     REGEX_URL = re.compile(r"^https?://[^/]+", re.IGNORECASE)
     REGEX_PROXY_URL = re.compile(r"^https?://.*:\d{2,5}$", re.IGNORECASE)
-    BYPASS_MODES = ["all", "mid_paths", "end_paths", "http_host", "http_methods", "http_versions", "case_substitution",
+    BYPASS_MODES = {"all", "mid_paths", "end_paths", "http_host", "http_methods", "http_versions", "case_substitution",
                     "unicode", "char_encode", "http_headers_method", "http_headers_scheme", "http_headers_ip",
-                    "http_headers_port", "http_headers_url", "misc"]  # Not yet all implemented, coming soon
+                    "http_headers_port", "http_headers_url", "misc"}  # Not yet all implemented, coming soon
     DEFAULT_BINARY_NAME = which("curl")
     DEFAULT_BYPASS_MODE = "all"
     DEFAULT_FILE_ENCODING = "UTF-8"
@@ -96,7 +95,7 @@ class Bypasser:
 
     def __init__(self, config_dict=None, encoding=None, verbose=False, debug=False, debug_class=False, ext_logger=None):
         if not config_dict:
-            config_dict = dict()
+            config_dict = {}
 
         # Init verbose and/or debug level
         if config_dict and "--verbose" in config_dict.keys() and "--debug" in config_dict.keys():
@@ -142,6 +141,8 @@ class Bypasser:
         self.header_proto_schemes = Tools.load_file_into_memory_list(
             "payloads/header_proto_schemes.lst", enc_format=self.encoding, ext_logger=self.logger,
             debug=self.debug_class)
+        self.header_urls = Tools.load_file_into_memory_list(
+            "payloads/header_urls.lst", enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class)
 
         # Import internal bypass payloads
         self.internal_endpaths = Tools.load_file_into_memory_list(
@@ -247,7 +248,7 @@ class Bypasser:
         self.curl_items.add(item)
 
         # [http_methods] - Custom request methods (-X)
-        if any(mode in ["all", "http_methods"] for mode in self.current_bypass_modes):
+        if any(mode in {"all", "http_methods"} for mode in self.current_bypass_modes):
             for internal_http_method in self.internal_http_methods:
                 cmd = [*self.base_curl, "-X", internal_http_method, target_url]
                 item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_methods", encoding=self.encoding,
@@ -255,15 +256,15 @@ class Bypasser:
                 self.curl_items.add(item)
 
         # [http_versions] - Tests the url with all http versions supported by curl
-        if any(mode in ["all", "http_versions"] for mode in self.current_bypass_modes):
-            for http_version in CurlItem.CURL_HTTP_VERSIONS[:-1]:
+        if any(mode in {"all", "http_versions"} for mode in self.current_bypass_modes):
+            for http_version in CurlItem.CURL_HTTP_VERSIONS:
                 cmd = [*self.get_curl_base(forced_http_version=http_version), target_url]
                 item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_versions", encoding=self.encoding,
                                 target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 self.curl_items.add(item)
 
         # [http_headers_method] - Custom methods
-        if any(mode in ["all", "http_headers_method"] for mode in self.current_bypass_modes):
+        if any(mode in {"all", "http_headers_method"} for mode in self.current_bypass_modes):
             for header_http_method in self.header_http_methods:
                 for internal_http_method in self.internal_http_methods:
                     cmd = [*self.base_curl, "-H", f"{header_http_method}: {internal_http_method}", target_url]
@@ -272,7 +273,7 @@ class Bypasser:
                     self.curl_items.add(item)
 
         # [http_headers_ip] - Custom host injection headers
-        if any(mode in ["all", "http_headers_ip"] for mode in self.current_bypass_modes):
+        if any(mode in {"all", "http_headers_ip"} for mode in self.current_bypass_modes):
             self._build_curl_ips(resolved_ip=self.url_resolved_ip)
             commands = set()
             for header_ip_host in self.header_ip_hosts:
@@ -290,16 +291,16 @@ class Bypasser:
                         commands.add(tuple([*self.base_curl, "-H", f"{header_ip_host}: {ip}", target_url]))
             # Add items
             for command in commands:
-                item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_ip", debug=self.debug,
+                item = CurlItem(url_obj, self.base_curl, [*command], bypass_mode="http_headers_ip", debug=self.debug,
                                 target_ip=self.url_resolved_ip, encoding=self.encoding, ext_logger=self.logger)
                 self.curl_items.add(item)
 
         # [http_headers_scheme] - Custom scheme rewrite with X-Forwarded-Scheme
-        if any(mode in ["all", "http_headers_scheme"] for mode in self.current_bypass_modes):
+        if any(mode in {"all", "http_headers_scheme"} for mode in self.current_bypass_modes):
             commands = set()
             for header_proto_scheme in self.header_proto_schemes:
                 # Adding non-standard headers that take 'on' value (Ex: Microsoft)
-                if header_proto_scheme in ["Front-End-Https", "X-Forwarded-HTTPS", "X-Forwarded-SSL"]:
+                if header_proto_scheme in {"Front-End-Https", "X-Forwarded-HTTPS", "X-Forwarded-SSL"}:
                     commands.add(tuple([*self.base_curl, "-H", f"{header_proto_scheme}: on", target_url]))
                     continue
                 for internal_proto_scheme in self.internal_proto_schemes:
@@ -313,13 +314,13 @@ class Bypasser:
                             [*self.base_curl, "-H", f"{header_proto_scheme}: {internal_proto_scheme}", target_url]))
             # Add items
             for command in commands:
-                item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_scheme",
+                item = CurlItem(url_obj, self.base_curl, [*command], bypass_mode="http_headers_scheme",
                                 target_ip=self.url_resolved_ip, encoding=self.encoding, debug=self.debug,
                                 ext_logger=self.logger)
                 self.curl_items.add(item)
 
         # [http_headers_port] - Custom port rewrite
-        if any(mode in ["all", "http_headers_port"] for mode in self.current_bypass_modes):
+        if any(mode in {"all", "http_headers_port"} for mode in self.current_bypass_modes):
             commands = set()
             for header_port in self.header_ports:
                 if self.spoof_ports:
@@ -332,13 +333,37 @@ class Bypasser:
                         commands.add(tuple([*self.base_curl, "-H", f"{header_port}: {internal_port}", target_url]))
                 # Add items
                 for command in commands:
-                    item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="http_headers_port",
+                    item = CurlItem(url_obj, self.base_curl, [*command], bypass_mode="http_headers_port",
                                     target_ip=self.url_resolved_ip, encoding=self.encoding, debug=self.debug,
                                     ext_logger=self.logger)
                     self.curl_items.add(item)
 
+        # [http_headers_url] - Custom urls injection headers
+        if any(mode in {"all", "http_headers_url"} for mode in self.current_bypass_modes):
+            commands = set()
+            current_path = Path(base_path)
+            for header_url in self.header_urls:
+                # First variant: Targets the base_url and moves original path to the headers
+                commands.add(tuple([*self.base_curl, "-H", f"{header_url}: {base_path}", f"{base_url}/"]))
+                # Second variant: Targets the base_url and moves target_url to the headers (only for some headers)
+                if any(part in header_url.lower() for part in {"url", "request", "file"}):
+                    commands.add(tuple([*self.base_curl, "-H", f"{header_url}: {target_url}", f"{base_url}/"]))
+                # Third variant: Keeps the original target_url and go up the parent paths in headers
+                for parent in current_path.parents:
+                    parent_path = str(parent).replace('\\', '/')
+                    commands.add(tuple([*self.base_curl, "-H", f"{header_url}: {parent_path}", target_url]))
+                    # Fourth variant: Same as third but with complete url (only for some headers)
+                    if any(part in header_url.lower() for part in {"url", "refer"}):
+                        commands.add(
+                            tuple([*self.base_curl, "-H", f"{header_url}: {base_url}{parent_path}", target_url]))
+            # Add items
+            for command in commands:
+                item = CurlItem(url_obj, self.base_curl, [*command], bypass_mode="http_headers_url", debug=self.debug,
+                                target_ip=self.url_resolved_ip, encoding=self.encoding, ext_logger=self.logger)
+                self.curl_items.add(item)
+
         # [mid_paths] - Custom paths with extra-mid-slash
-        if any(mode in ["all", "mid_paths"] for mode in self.current_bypass_modes):
+        if any(mode in {"all", "mid_paths"} for mode in self.current_bypass_modes):
             commands = set()
             for idx_slash in range(base_path.count("/")):
                 for internal_midpath in self.internal_midpaths:
@@ -352,12 +377,12 @@ class Bypasser:
                     commands.add(tuple([*self.base_curl, f"{base_url}/{path_pre}"]))  # Second variant
             # Add items
             for command in commands:
-                item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="mid_paths", debug=self.debug,
+                item = CurlItem(url_obj, self.base_curl, [*command], bypass_mode="mid_paths", debug=self.debug,
                                 target_ip=self.url_resolved_ip, encoding=self.encoding, ext_logger=self.logger)
                 self.curl_items.add(item)
 
         # [end_paths] - Add suffix
-        if any(mode in ["all", "end_paths"] for mode in self.current_bypass_modes):
+        if any(mode in {"all", "end_paths"} for mode in self.current_bypass_modes):
             commands = set()
             separator = "" if (base_path == "/" or base_path.endswith("/")) else "/"
             for internal_endpath in self.internal_endpaths:
@@ -374,7 +399,7 @@ class Bypasser:
                         commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{internal_endpath}/"]))
                 # Add items
                 for command in commands:
-                    item = CurlItem(url_obj, self.base_curl, list(command), bypass_mode="end_paths", debug=self.debug,
+                    item = CurlItem(url_obj, self.base_curl, [*command], bypass_mode="end_paths", debug=self.debug,
                                     target_ip=self.url_resolved_ip, encoding=self.encoding, ext_logger=self.logger)
                     self.curl_items.add(item)
 
@@ -382,7 +407,7 @@ class Bypasser:
         abc_indexes = [span.start() for span in re.finditer(r"[a-zA-Z]", base_path)]
         for abc_index in abc_indexes:
             # [case_substitution] - Case-Inversion
-            if any(mode in ["all", "case_substitution"] for mode in self.current_bypass_modes):
+            if any(mode in {"all", "case_substitution"} for mode in self.current_bypass_modes):
                 char_case = base_path[abc_index]
                 char_case = char_case.upper() if char_case.islower() else char_case.lower()
                 cmd = [*self.base_curl, f"{base_url}{base_path[:abc_index]}{char_case}{base_path[abc_index + 1:]}"]
@@ -391,7 +416,7 @@ class Bypasser:
                 self.curl_items.add(item)
 
             # [char_encode] - Url-Encoding
-            if any(mode in ["all", "char_encode"] for mode in self.current_bypass_modes):
+            if any(mode in {"all", "char_encode"} for mode in self.current_bypass_modes):
                 char_urlencoded = format(ord(base_path[abc_index]), "02x")
                 cmd = [*self.base_curl,
                        f"{base_url}{base_path[:abc_index]}%{char_urlencoded}{base_path[abc_index + 1:]}"]
@@ -829,26 +854,24 @@ class Bypasser:
             self._binary_name = binary
 
     @property
-    def current_bypass_modes(self) -> list[str]:
+    def current_bypass_modes(self) -> set[str]:
         return self._current_bypass_modes
 
     @current_bypass_modes.setter
     def current_bypass_modes(self, modes_lst):
-        self._current_bypass_modes = []
-        self._current_bypass_modes.append(Bypasser.DEFAULT_BYPASS_MODE)
-        if modes_lst:
-            self._current_bypass_modes.clear()
+        self._current_bypass_modes = set()
+        if not modes_lst:
+            self._current_bypass_modes.add(Bypasser.DEFAULT_BYPASS_MODE)
+        else:
             for mode in Tools.get_list_from_generic_arg(
                     modes_lst, arg_name="bypass_mode", stdin_support=True, comma_string_support=True,
                     enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class):
                 if mode in Bypasser.BYPASS_MODES:
-                    if mode not in self._current_bypass_modes:
-                        self._current_bypass_modes.append(mode)
+                    self._current_bypass_modes.add(mode)
                 else:
                     self.logger.warning(f"Unknown bypass mode {mode} was ignored. Must be in {Bypasser.BYPASS_MODES}")
             if "all" in self._current_bypass_modes:
-                self._current_bypass_modes.clear()
-                self._current_bypass_modes.append("all")
+                self._current_bypass_modes = {"all"}
                 if self.debug_class:
                     self.logger.debug("'all' was found in custom bypass mode list. Only this value will be kept")
             # If all BYPASS_MODES was ignored
@@ -864,7 +887,7 @@ class Bypasser:
     @headers.setter
     def headers(self, value):
         try:
-            self._headers = dict()
+            self._headers = {}
             if value:
                 for header in Tools.get_list_from_generic_arg(
                         value, arg_name="header", stdin_support=False, comma_string_support=False,
@@ -906,7 +929,7 @@ class Bypasser:
         """Set HTTP version used in curl base command.
 
         Reference: https://everything.curl.dev/http/versions
-        CurlItem.CURL_HTTP_VERSIONS: ["0.9", "1.0", "1.1", "2", "2-prior-knowledge", "3"]
+        CurlItem.CURL_HTTP_VERSIONS: {"0.9", "1.0", "1.1", "2", "2-prior-knowledge"}
 
         Set to "0" to disable the HTTP version argument in curl and let it handle requests with its default version
 
@@ -1202,7 +1225,7 @@ class CurlItem:
       - response_raw_output, response_headers, response_data, response_content_length, response_content_type,
         response_lines_count, response_redirect_url, response_server_type, response_status_code, response_title
     """
-    CURL_HTTP_VERSIONS = ["0.9", "1.0", "1.1", "2", "2-prior-knowledge", "3"]
+    CURL_HTTP_VERSIONS = {"0.9", "1.0", "1.1", "2", "2-prior-knowledge"}
     DEFAULT_FILE_ENCODING = "UTF-8"
     REGEX_STATUS_CODE = re.compile(r"HTTP.*\s+(\d+)\s+\w+", re.IGNORECASE)
     REGEX_CONTENT_LENGTH = re.compile(r"Content-Length:\s+(\d+)", re.IGNORECASE)
