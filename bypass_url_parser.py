@@ -1233,7 +1233,7 @@ class CurlItem:
     REGEX_HTTP_VERSION = re.compile(r"(?!--)http[\w.-]*(?<! )", re.IGNORECASE)
     REGEX_REDIRECT_URL = re.compile(r"Location:\s+(.*)", re.IGNORECASE)
     REGEX_SERVER_TYPE = re.compile(r"Server:\s+(.*)", re.IGNORECASE)
-    REGEX_TITLE = re.compile(r"<title>(.*)</title>", re.IGNORECASE)
+    REGEX_TITLE = re.compile(r"<title>(.*?)</title>", re.IGNORECASE)
     REDIRECT_URL_MAX_SIZE = 25
 
     def __init__(self, target_url: ParseResult, curl_base, curl_cmd, bypass_mode=None, target_ip=None,
