@@ -55,6 +55,7 @@ from collections import defaultdict
 from enum import IntEnum
 from pathlib import Path
 from queue import Queue
+from shlex import join as shlex_join
 from shutil import which
 from urllib.parse import ParseResult, urlparse
 
@@ -465,7 +466,7 @@ class Bypasser:
         :param CurlItem item: Item object
         """
         if self.debug:
-            self.logger.info(f"Current: {item.request_curl_cmd}")
+            self.logger.info(f"Current: {shlex_join(item.request_curl_cmd)}")
         try:
             process = subprocess.Popen(item.request_curl_cmd, text=True, shell=False, stderr=subprocess.STDOUT,
                                        stdout=subprocess.PIPE)
@@ -723,7 +724,7 @@ class Bypasser:
                 raise ValueError(error_msg)
 
         if debug:
-            self.logger.debug(f"Base curl command: {' '.join(base_curl)}")
+            self.logger.debug(f"Base curl command: {' '.join(shlex_join(base_curl))}")
 
         return base_curl
 
@@ -1346,7 +1347,7 @@ class CurlItem:
         if self.response_raw_output and Tools.is_exist_directory(output_dir, force_create=force_output_dir_creation):
             self.logger.debug(f"Saving html pages and short output in: '{output_dir}{Tools.SEPARATOR}'")
             with open(f"{out_filename}", mode="wt", encoding=self.encoding) as file:
-                file.write(f"{self.request_curl_cmd}\n\n{self.response_headers}\n\n{self.response_data}")
+                file.write(f"{shlex_join(self.request_curl_cmd)}\n\n{self.response_headers}\n\n{self.response_data}")
             return True
         else:
             return False
