@@ -80,8 +80,9 @@ class Bypasser:
     # Default class values
     REGEX_URL = re.compile(r"^https?://[^/]+", re.IGNORECASE)
     REGEX_PROXY_URL = re.compile(r"^https?://.*:\d{2,5}$", re.IGNORECASE)
-    REGEX_REQ_METHOD = re.compile(r"^(\w*)\s.*\sHTTP/\d\.?\d?$", re.IGNORECASE | re.MULTILINE)
-    REGEX_REQ_TARGET = re.compile(r"^\w*\s(.*)\sHTTP/\d\.?\d?$", re.IGNORECASE | re.MULTILINE)
+    REGEX_REQ_METHOD = re.compile(r"^(\w+)\s.*\sHTTP/\d\.?\d?$", re.IGNORECASE | re.MULTILINE)
+    REGEX_REQ_TARGET = re.compile(r"^\w+\s(.*)\sHTTP/\d\.?\d?$", re.IGNORECASE | re.MULTILINE)
+    REGEX_REQ_HTTP_VERSION = re.compile(r"^\w+\s.*\sHTTP/(\d|\d\.\d)$", re.IGNORECASE | re.MULTILINE)
     REGEX_REQ_HOST = re.compile(r"^Host:\s(.*)$", re.IGNORECASE | re.MULTILINE)
     REGEX_REQ_CONTENT_TYPE = re.compile(r"^Content-Type:\s(\w+/\w+);?.*$", re.IGNORECASE | re.MULTILINE)
     BYPASS_MODES = {"all", "mid_paths", "end_paths", "http_host", "http_methods", "http_versions", "case_substitution",
@@ -655,6 +656,9 @@ class Bypasser:
                     if key not in self.headers and not forbidden_header.search(key):
                         self.headers[key] = value.strip()
 
+                # Define HTTP version
+                self.http_version = str(Bypasser.REGEX_REQ_HTTP_VERSION.search(self.request_headers).group(1))
+
                 # Define scheme & URL
                 request_target = Bypasser.REGEX_REQ_TARGET.search(self.request_headers).group(1)
                 base_host = Bypasser.REGEX_REQ_HOST.search(self.request_headers).group(1)
@@ -662,6 +666,7 @@ class Bypasser:
                     self.urls = f"https://{base_host}{request_target}"
                 else:
                     self.urls = f"http://{base_host}{request_target}"
+
             except AttributeError:
                 error_msg = f"Please check that the raw request contains a valid HTTP method and a host " \
                             f"header:\n{self.request_headers}"
