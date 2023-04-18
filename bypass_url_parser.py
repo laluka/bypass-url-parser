@@ -508,7 +508,7 @@ class Bypasser:
                     if item in self.to_retry_items:
                         self.to_retry_items.remove(item)
                 else:
-                    error_msg = f"Command {item.request_curl_cmd} succeeds but returns no result"
+                    error_msg = f'Command "{shlex_join(item.request_curl_cmd)}" succeeds but returns no result'
                     self.logger.error(error_msg)
                     raise ValueError(error_msg)
             # Raise a detailed CalledProcessError when the return code != 0
@@ -516,12 +516,13 @@ class Bypasser:
                 raise subprocess.CalledProcessError(process.returncode, item.request_curl_cmd, output=result)
 
         except subprocess.CalledProcessError as e:
-            if self.verbose:
-                self.logger.warning(f"command '{e.cmd}' returned on-zero error code {e.returncode}: {e.output}")
+            if self.debug:
+                self.logger.warning(f'Command "{shlex_join(e.cmd)}" returned on-zero error code {e.returncode}: '
+                                    f'{e.output}')
             # curl: (92) HTTP/2 stream 0 was not closed cleanly: PROTOCOL_ERROR (err 1)
             if e.returncode == 92:
                 # With recent curl versions, can occur with HTTP/2 and the CONNECT method
-                if self.verbose:
+                if self.debug:
                     self.logger.warning("Curl HTTP/2 with HTTP/1.1 upgrade failed. Force HTTP/1.1 for this "
                                         "request and add to retry list")
                 # Force or add HTTP version 1.1 in item curl command
@@ -533,8 +534,8 @@ class Bypasser:
                 self.to_retry_items.add(item)
 
         except subprocess.TimeoutExpired as e:
-            if self.verbose:
-                self.logger.warning(f"command '{e.cmd}' timed out: {e.output}")
+            if self.debug:
+                self.logger.warning(f'Command "{shlex_join(e.cmd)}" timed out: {e.output}')
             self.to_retry_items.add(item)
 
     def _save_results(self, url_obj):
