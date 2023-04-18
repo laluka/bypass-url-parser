@@ -38,6 +38,7 @@ Misc options:
 Examples:
     ./bypass_url_parser.py -u "http://127.0.0.1/juicy_403_endpoint/" -s 8.8.8.8 -d
     ./bypass_url_parser.py -u /path/urls -t 30 -T 5 -H "Cookie: me_iz=admin" -H "User-agent: test"
+    ./bypass_url_parser.py -R /path/request_file --request-tls -m "mid_paths, end_paths"
 """
 
 from __future__ import annotations
@@ -1880,7 +1881,7 @@ class Tools:
         encoding = enc_format if enc_format else locale.getpreferredencoding(False)
         # Transform relative path to absolute
         if not clean_filename:
-            absolute_filename = os.path.join(os.path.realpath(os.path.dirname(filename)), os.path.basename(filename))
+            absolute_filename = os.path.join(os.path.dirname(os.path.realpath(__file__)), filename)
             if ext_logger and debug and absolute_filename != filename:
                 ext_logger.debug(f"Filename {filename} modified to {absolute_filename}")
         else:
