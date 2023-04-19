@@ -144,33 +144,40 @@ class Bypasser:
 
         # Import HTTP headers payloads
         self.header_http_methods = Tools.load_file_into_memory_list(
-            "payloads/header_http_methods.lst", enc_format=self.encoding, ext_logger=self.logger,
-            debug=self.debug_class)
+            "payloads/header_http_methods.lst", enc_format=self.encoding, clean_filename=False, external_file=False,
+            return_str=False, ext_logger=self.logger, debug=self.debug_class)
         self.header_ip_hosts = Tools.load_file_into_memory_list(
-            "payloads/header_ip_hosts.lst", enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class)
+            "payloads/header_ip_hosts.lst", enc_format=self.encoding, clean_filename=False, external_file=False,
+            return_str=False, ext_logger=self.logger, debug=self.debug_class)
         self.header_ports = Tools.load_file_into_memory_list(
-            "payloads/header_ports.lst", enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class)
+            "payloads/header_ports.lst", enc_format=self.encoding, clean_filename=False, external_file=False,
+            return_str=False, ext_logger=self.logger, debug=self.debug_class)
         self.header_proto_schemes = Tools.load_file_into_memory_list(
-            "payloads/header_proto_schemes.lst", enc_format=self.encoding, ext_logger=self.logger,
-            debug=self.debug_class)
+            "payloads/header_proto_schemes.lst", enc_format=self.encoding, clean_filename=False, external_file=False,
+            return_str=False, ext_logger=self.logger, debug=self.debug_class)
         self.header_urls = Tools.load_file_into_memory_list(
-            "payloads/header_urls.lst", enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class)
+            "payloads/header_urls.lst", enc_format=self.encoding, clean_filename=False, external_file=False,
+            return_str=False, ext_logger=self.logger, debug=self.debug_class)
 
         # Import internal bypass payloads
         self.internal_endpaths = Tools.load_file_into_memory_list(
-            "payloads/internal_endpaths.lst", enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class)
+            "payloads/internal_endpaths.lst", enc_format=self.encoding, clean_filename=False, external_file=False,
+            return_str=False, ext_logger=self.logger, debug=self.debug_class)
         self.internal_http_methods = Tools.load_file_into_memory_list(
-            "payloads/internal_http_methods.lst", enc_format=self.encoding, ext_logger=self.logger,
-            debug=self.debug_class)
+            "payloads/internal_http_methods.lst", enc_format=self.encoding, clean_filename=False, external_file=False,
+            return_str=False, ext_logger=self.logger, debug=self.debug_class)
         self.internal_ip_hosts = Tools.load_file_into_memory_list(
-            "payloads/internal_ip_hosts.lst", enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class)
+            "payloads/internal_ip_hosts.lst", enc_format=self.encoding, clean_filename=False, external_file=False,
+            return_str=False, ext_logger=self.logger, debug=self.debug_class)
         self.internal_midpaths = Tools.load_file_into_memory_list(
-            "payloads/internal_midpaths.lst", enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class)
+            "payloads/internal_midpaths.lst", enc_format=self.encoding, clean_filename=False, external_file=False,
+            return_str=False, ext_logger=self.logger, debug=self.debug_class)
         self.internal_ports = Tools.load_file_into_memory_list(
-            "payloads/internal_ports.lst", enc_format=self.encoding, ext_logger=self.logger, debug=self.debug_class)
+            "payloads/internal_ports.lst", enc_format=self.encoding, clean_filename=False, external_file=False,
+            return_str=False, ext_logger=self.logger, debug=self.debug_class)
         self.internal_proto_schemes = Tools.load_file_into_memory_list(
-            "payloads/internal_proto_schemes.lst", enc_format=self.encoding, ext_logger=self.logger,
-            debug=self.debug_class)
+            "payloads/internal_proto_schemes.lst", enc_format=self.encoding, clean_filename=False, external_file=False,
+            return_str=False, ext_logger=self.logger, debug=self.debug_class)
 
         # Init properties
         self.binary_name = Bypasser.DEFAULT_BINARY_NAME
@@ -191,9 +198,9 @@ class Bypasser:
         self.retry_number = config_dict.get("--retry")
         self.request_tls = config_dict.get("--request-tls")
         if config_dict.get("--request"):
-            self.request_raw = \
-                Tools.load_file_into_memory_list(config_dict.get("--request"), enc_format=self.encoding,
-                                                 return_str=True, ext_logger=self.logger, debug=self.debug_class)
+            self.request_raw = Tools.load_file_into_memory_list(
+                config_dict.get("--request"), enc_format=self.encoding, clean_filename=False, external_file=True,
+                return_str=True, ext_logger=self.logger, debug=self.debug_class)
         else:
             self.request_raw = None
             self.urls = config_dict.get("--url")
@@ -1849,7 +1856,8 @@ class Tools:
             if ext_logger and debug:
                 ext_logger.debug(f"The '{arg_name}' argument is a file")
             return [line.rstrip() for line in Tools.load_file_into_memory_list(
-                argument, enc_format=encoding, clean_filename=False, ext_logger=ext_logger, debug=debug)]
+                argument, enc_format=encoding, clean_filename=False, external_file=True, return_str=False,
+                ext_logger=ext_logger, debug=debug)]
         # Arg value is a string
         elif isinstance(argument, str):
             # Arg value is a string with multiple items separated by a comma ("value1, value2, ...")
@@ -1869,8 +1877,8 @@ class Tools:
             raise ValueError(error_msg)
 
     @staticmethod
-    def load_file_into_memory_list(filename, enc_format=None, clean_filename=False, return_str=False, debug=False,
-                                   ext_logger=None) -> list[str] | str:
+    def load_file_into_memory_list(filename, enc_format=None, clean_filename=False, external_file=False,
+                                   return_str=False, debug=False, ext_logger=None) -> list[str] | str:
         """Load whole file into a list (or a string) in memory.
 
         Note: Fast for small files, do not use with huge file...
@@ -1878,6 +1886,7 @@ class Tools:
         :param str filename: Fast filename from args example: .\test.txt or "../../test.txt"
         :param str enc_format: Encoding format to read file. Default (locale.getpreferredencoding) (Optional)
         :param bool clean_filename: Is filename previously cleaned (transform_relative_filename) ? Default (False)
+        :param bool external_file: If not clean_filename, don't use project root dir for absolute file name resolution
         :param bool return_str: Is true, this method return a string instead of a list
         :param bool debug: Show debug info from "transform_relative_filename" (Optional)
         :param logger ext_logger: Specify your own logger for debug (default: None) (Optional)
@@ -1887,7 +1896,14 @@ class Tools:
         encoding = enc_format if enc_format else locale.getpreferredencoding(False)
         # Transform relative path to absolute
         if not clean_filename:
-            absolute_filename = os.path.join(os.path.dirname(os.path.realpath(__file__)), filename)
+            if external_file:
+                # Absolute filename resolution based on the external file directory
+                absolute_filename = \
+                    os.path.join(os.path.realpath(os.path.dirname(filename)), os.path.basename(filename))
+            else:
+                # Absolute filename resolution of files located in project dir. Allow to call the tool from anywhere,
+                # even with a symbolic link
+                absolute_filename = os.path.join(os.path.dirname(os.path.realpath(__file__)), filename)
             if ext_logger and debug and absolute_filename != filename:
                 ext_logger.debug(f"Filename {filename} modified to {absolute_filename}")
         else:
