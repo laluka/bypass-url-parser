@@ -15,7 +15,7 @@ Program options:
     -m, --mode <mode>         Bypass modes. See 'Bypasser.BYPASS_MODES' in code [Default: all]
     -o, --outdir <outdir>     Output directory for results
     -x, --proxy <proxy_url>   Set a proxy in the format http://proxy_ip:port.
-    -S, --save-level <level>  Save results level. From 0 (DISABLE) to 3 (FULL) [Default: 1]
+    -S, --save-level <level>  Save results level. From 0 (DISABLE) to 3 (FULL) [Default: 2]
     -s, --spoofip <ip>        IP(s) to inject in ip-specific headers
     -p, --spoofport <port>    Port(s) to inject in port-specific headers
     -r, --retry <num>         Retry attempts of failed requests. Set 0 to disable all retry tentatives [Default: 3]
@@ -97,7 +97,7 @@ class Bypasser:
     DEFAULT_REQUEST_TLS = False  # Use HTTP protocol by default for requests load with the --request option
     DEFAULT_REQUEST_METHOD = "GET"
     DEFAULT_RETRY_NUMBER = 3
-    DEFAULT_SAVE_LEVEL = SaveLevel.MINIMAL
+    DEFAULT_SAVE_LEVEL = SaveLevel.PERTINENT
     DEFAULT_SPOOF_IP_REPLACE = False
     DEFAULT_SPOOF_PORT_REPLACE = False
     DEFAULT_TIMEOUT = 5
@@ -1005,6 +1005,10 @@ class Bypasser:
             if value:
                 # Transform if needed relative path to absolute
                 self._output_dir = os.path.join(os.path.realpath(os.path.dirname(value)), os.path.basename(value))
+            if Tools.is_exist_directory(self._output_dir, force_create=False):
+                error_msg = f"The output directory already exists: {self._output_dir}"
+                self.logger.error(error_msg)
+                raise ValueError(error_msg)
         except Exception as e:
             error_msg = f"Custom output_dir parsing error: {e}"
             self.logger.error(error_msg)
@@ -1844,7 +1848,7 @@ class Tools:
         if stdin_support and argument == "-":
             if ext_logger and debug:
                 ext_logger.debug(f"Read '{arg_name}' argument as a list from stdin")
-            return sys.stdin.read().splitlines()
+            return sys.stdin.read().strip().splitlines()
         # Arg value is already a list, useful for library mode. Just return
         if isinstance(argument, list):
             if ext_logger and debug:
