@@ -18,7 +18,7 @@ Program options:
     -S, --save-level <level>  Save results level. From 0 (DISABLE) to 3 (FULL) [Default: 2]
     -s, --spoofip <ip>        IP(s) to inject in ip-specific headers
     -p, --spoofport <port>    Port(s) to inject in port-specific headers
-    -r, --retry <num>         Retry attempts of failed requests. Set 0 to disable all retry tentatives [Default: 3]
+    -r, --retry <num>         Retry attempts of failed requests. Set 0 to disable all retry tentatives [Default: 1]
     -t, --threads <threads>   Scan with N parallel threads [Default: 1]
     -T, --timeout <timeout>   Request times out after N seconds [Default: 5]
 
@@ -66,7 +66,7 @@ from shlex import join as shlex_join
 from shutil import which
 from urllib.parse import ParseResult, urlparse
 
-VERSION = "0.2.0"
+VERSION = "0.3.0"
 logger = logging.getLogger("bup")
 
 
@@ -93,10 +93,11 @@ class Bypasser:
     DEFAULT_FILE_ENCODING = "UTF-8"
     DEFAULT_HTTP_VERSION = "0"  # Disabled by default. Lets curl to manage its own version of HTTP by default
     DEFAULT_LOG_FILENAME = "triaged-bypass.log"
+    DEFAULT_JSON_FILENAME = "triaged-bypass.json"
     DEFAULT_OUTPUT_DIR = f"{tempfile.TemporaryDirectory().name}-bypass-url-parser"
     DEFAULT_REQUEST_TLS = False  # Use HTTP protocol by default for requests load with the --request option
     DEFAULT_REQUEST_METHOD = "GET"
-    DEFAULT_RETRY_NUMBER = 3
+    DEFAULT_RETRY_NUMBER = 1
     DEFAULT_SAVE_LEVEL = SaveLevel.PERTINENT
     DEFAULT_SPOOF_IP_REPLACE = False
     DEFAULT_SPOOF_PORT_REPLACE = False
@@ -548,6 +549,11 @@ class Bypasser:
 
     def _save_results(self, url_obj):
         if self.save_level != self.SaveLevel.NONE:
+            json_items = {
+                "url": url_obj.geturl(),
+                "bypass_modes": ', '.join(self.current_bypass_modes),
+                "results": []
+            }
             # Output_directory definition and creation
             outdir = self.output_dir
             try:
@@ -572,6 +578,9 @@ class Bypasser:
                     if item not in self.to_retry_items:
                         if not item.save(outdir, force_output_dir_creation=False):
                             self.logger.warning(f"Error when saving {outdir}{Tools.SEPARATOR}{item.filename} file.")
+                        else:
+                            # Add curl item json representation
+                            json_items["results"].append(json.loads(item.to_json()))
                 if self.verbose:
                     self.logger.info(f"All curl responses were saved in the '{outdir}{Tools.SEPARATOR}' directory")
 
@@ -579,9 +588,13 @@ class Bypasser:
             elif self.save_level >= self.SaveLevel.PERTINENT:
                 if self.bypass_results[url_obj]:
                     for url, item_lst in self.bypass_results[url_obj].items():
+                        # Save pertinent curl items as individual HTML file
                         if not item_lst[0].save(outdir, force_output_dir_creation=False):
                             self.logger.warning(
                                 f"Error when saving {outdir}{Tools.SEPARATOR}{item_lst[0].filename} file.")
+                        else:
+                            # Add curl item json representation
+                            json_items["results"].append(json.loads(item_lst[0].to_json()))
                     if self.verbose:
                         self.logger.info(f"Only relevant curl responses (results) were saved in the "
                                          f"'{outdir}{Tools.SEPARATOR}' directory")
@@ -615,6 +628,13 @@ class Bypasser:
                         file.write(f"{inspect_cmd}")
                 if self.verbose:
                     self.logger.info(f"Program log file which contains the results saved in {log_file}")
+
+            # Json logfile - Starting at SaveLevel.PERTINENT
+            if self.save_level >= self.SaveLevel.PERTINENT:
+                json_file = f"{outdir}{Tools.SEPARATOR}{Bypasser.DEFAULT_JSON_FILENAME}"
+                with open(json_file, mode="wt", encoding=self.encoding) as file:
+                    logger.info(f"Save JSON results for '{url_obj.geturl()}' in {json_file}")
+                    file.write(json.dumps(json_items, indent=2))
         else:
             if self.debug_class:
                 self.logger.debug("No saving any output: SaveLevel.NONE")
@@ -1530,6 +1550,25 @@ class CurlItem:
             return True
         else:
             return False
+
+    def to_json(self) -> str:
+        # Return json representation of curl item
+        return json.dumps(
+            {
+                "request_curl_cmd": shlex_join(self.request_curl_cmd),
+                "request_curl_payload": self.request_curl_payload,
+                "response_headers": self.response_headers,
+                "response_data": self.response_data,
+                "response_status_code": self.response_status_code,
+                "response_content_type": self.response_content_type,
+                "response_content_length": self.response_content_length,
+                "response_lines_count": self.response_lines_count,
+                "response_words_count": self.response_words_count,
+                "response_title": self.response_title,
+                "response_server_type": self.response_server_type,
+                "response_redirect_url": self.response_redirect_url,
+                "response_html_filename": self.filename
+            })
 
     # *** Properties *** #
 

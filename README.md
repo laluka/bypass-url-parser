@@ -68,7 +68,7 @@ Examples:
 2022-08-09 14:52:54 lalu-perso bup[361559] INFO Retry (1/3) the '16' failed curl commands with 10 threads and 10s timeout
 2022-08-09 14:52:54 lalu-perso bup[361559] INFO Retry (2/3) the '16' failed curl commands with 5 threads and 20s timeout
 2022-08-09 14:52:54 lalu-perso bup[361559] INFO Retry (3/3) the '16' failed curl commands with 1 threads and 30s timeout
-2022-08-09 14:52:55 lalu-perso bup[361559] INFO 
+2022-08-09 14:52:55 lalu-perso bup[361559] INFO
 [#####] [bypass_method] [payload] => [status_code] [content_type] [content_length] [lines_count] [word_counts] [title] [server] [redirect_url]
 [GROUP (1587)] [original_request] [http://127.0.0.1:8000/foo/bar] => [404] [text/html] [469] [14] [95] [Error response] [SimpleHTTP/0.6 Python/3.8.10] []
 [GROUP (10)] [http_methods] [-X CONNECT http://127.0.0.1:8000/foo/bar] => [501] [text/html] [500] [14] [96] [Error response] [SimpleHTTP/0.6 Python/3.8.10] []
@@ -96,6 +96,8 @@ virtualenv -p python3 .py3
 source .py3/bin/activate
 pip install -r requirements.txt
 ./bypass_url_parser.py -u http://thinkloveshare.com/juicy_403_endpoint/
+cat /tmp/tmpRANDOM-bypass-url-parser/triaged-bypass.json  | jq -r '.results[].request_curl_cmd'
+cat /tmp/tmpRANDOM-bypass-url-parser/triaged-bypass.json  | jq -r '.results[].response_data'
 ```
 
 ### DOCKER
@@ -144,7 +146,7 @@ For now, the following bypass mode(s) are supported:
 all, mid_paths, end_paths, case_substitution, char_encode, http_methods, http_versions, http_headers_method, http_headers_scheme, http_headers_ip, http_headers_port, http_headers_url
 ```
 
-Example: 
+Example:
 
 ```bash
 ./bypass_url_parser.py -u /path/urls -m "case_substitution, char_encode, http_headers_scheme"
@@ -184,7 +186,7 @@ The saving levels are:
 - `2` (PERTINENT): Save the program log file and pertinent (results) curl responses in separate html files;
 - `3` (FULL): Save the program log file and all curl responses in separate html files.
 
-Example: 
+Example:
 
 ```bash
 ./bypass_url_parser.py -S 0
@@ -204,8 +206,7 @@ tree /tmp/bypass-res2/
 
 ```bash
 # Code Cleanup
-isort --py 37 *.py
-autopep8 -a --max-line-length 120 -i *.py
+pre-commit run --all-files
 # Ensure no regression is pushed
 ./bypass_url_parser.py -S 0 -v -u http://127.0.0.1:8000/foo/bar --dump-payloads > "tests-history/bup-payloads-$(date +'%Y-%m-%d').lst"
 # Compare /tmp/bup-payloads-YYYY-MM-DD.lst and the latest tests-history/bup-payloads-YYYY-MM-DD.lst
