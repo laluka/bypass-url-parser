@@ -210,8 +210,9 @@ pre-commit run --all-files
 # Ensure no regression is pushed
 ./bypass_url_parser.py -S 0 -v -u http://127.0.0.1:8000/foo/bar --dump-payloads > "tests-history/bup-payloads-$(date +'%Y-%m-%d').lst"
 # Compare /tmp/bup-payloads-YYYY-MM-DD.lst and the latest tests-history/bup-payloads-YYYY-MM-DD.lst
-git diff --no-index tests-history/bup-payloads-[OLD].lst tests-history/bup-payloads-[NEW].lst
-# TODO create ls/sort/diff bash command for maintainers
+git diff --no-index $(find tests-history -type f | sort -n | tail -n 2)
+# Push your changes
+git add .
 git commit -m "My cool feature or bugfix"
 git tag -a vX.Y.Z "$COMMIT_HASH" -m "New release: vX.Y.Z"
 git push --tags
