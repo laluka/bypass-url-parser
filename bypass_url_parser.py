@@ -43,9 +43,6 @@ Examples:
 
 from __future__ import annotations
 
-from collections import defaultdict
-
-import coloredlogs
 import concurrent.futures
 import hashlib
 import json
@@ -58,13 +55,16 @@ import socket
 import subprocess
 import sys
 import tempfile
-from docopt import docopt
+from collections import defaultdict
 from enum import IntEnum
 from pathlib import Path
 from queue import Queue
 from shlex import join as shlex_join
 from shutil import which
 from urllib.parse import ParseResult, urlparse
+
+import coloredlogs
+from docopt import docopt
 
 VERSION = "0.3.0"
 logger = logging.getLogger("bup")

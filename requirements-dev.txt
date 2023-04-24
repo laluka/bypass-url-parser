@@ -1,7 +1,9 @@
+autopep8==1.6.0
 coloredlogs==15.0.1
 docopt==0.6.2
 ipdb==0.13.9
-autopep8==1.6.0
+ipython>=8.10.0
 isort==5.10.1
-setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability
-ipython>=8.10.0 # not directly required, pinned by Snyk to avoid a vulnerability
+pre-commit==3.2.2
+setuptools>=65.5.1
+rich==13.3.4
