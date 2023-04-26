@@ -94,7 +94,6 @@ X-Host
 X-Host-IP
 X-Host-Override
 X-Http-Host-Override
-X-Http-Method-Override
 X-IP
 X-IP-Addr
 X-IP-Address
