@@ -170,7 +170,7 @@ Example:
 
 ### Results saving
 
-By default, if target url is unique, the tool saves a copy of the results in `/tmp/tmpXXX-bypass-url-parser/triaged-bypass.log` log file.
+By default, if target url is unique, the tool saves a copy of the results in `/tmp/tmpXXX-bypass-url-parser/` directory.
 
 ***Notes:** If multiple target urls are passed to `-u`, results are prefixed with the url as directory (`/tmp/tmpXXX-bypass-url-parser/http-target-com-8080-api-users/`).*
 
@@ -182,24 +182,178 @@ There are two arguments to customize this behavior:
 The saving levels are:
 
 - `0` (NONE): Disable output saving and output directory creation;
-- `1` (MINIMAL): Only save the program log file which contains the results (Default);
-- `2` (PERTINENT): Save the program log file and pertinent (results) curl responses in separate html files;
-- `3` (FULL): Save the program log file and all curl responses in separate html files.
+- `1` (MINIMAL): Only save the program log file which contains the results: `triaged-bypass.log`;
+- `2` (PERTINENT): Save the program log file `triaged-bypass.log` and **pertinent (results)** curl responses in `triaged-bypass.json` file and separate html files (Default);
+- `3` (FULL): Save the program log file `triaged-bypass.log` and **all** curl responses in `triaged-bypass.json` file and separate html files.
 
-Example:
+#### Example:
 
 ```bash
 ./bypass_url_parser.py -S 0
-./bypass_url_parser.py -o /tmp/bypass-res
-./bypass_url_parser.py -o /tmp/bypass-res2 -S 2 -u http://thinkloveshare.com/juicy_403_endpoint/
+./bypass_url_parser.py -S 1 -o /tmp/bypass-res
+./bypass_url_parser.py -S 2 -o /tmp/bypass-res2 -H "User-Agent: curl 7.74.0" -u http://thinkloveshare.com/juicy_403_endpoint/
 tree /tmp/bypass-res2/
-├── bypass-14193b8d2e14ec60d52405f46c5d35f3.html
-├── bypass-782550777a661b7bef046b5d899b403a.html
-├── bypass-e06268bcef8506053feed2646af4e773.html
-├── bypass-ebdf6466c5ef82ab08a7b97324662bf0.html
+├── bypass-2469eecf6c38b5817d2248e911ad4382.html
+├── bypass-6f7cce7caf0a0a4b440859fa189d496d.html
+├── bypass-80f4ab5d32b4e74c20630c7e67f2e42f.html
+├── bypass-93079abffe63d34f79ac4a511cd6b5e6.html
+├── bypass-945822230d58d1ad4680d5dfbc470ecb.html
+├── bypass-e6118c315eea0e5b2ebc4fcafe0559c0.html
+├── triaged-bypass.json
 └── triaged-bypass.log
 
-0 directories, 5 files
+0 directories, 8 files
+```
+#### Results export:
+
+Starting from `MINIMAL` level, the results displayed by the program are saved in the `triaged-bypass.log` file.
+
+#### JSON export:
+
+With `PERTINENT` and `FULL` saving levels, the program additionally exports all results in the `triaged-bypass.json` file:
+
+```json
+{
+  "url": "http://thinkloveshare.com/juicy_403_endpoint/",
+  "bypass_modes": "all",
+  "results": [
+    {
+      "request_curl_cmd": "/usr/bin/curl -sS -kgi -H 'User-Agent: curl 7.74.0' --path-as-is -H 'X-BlueCoat-Via: localhos[...SNIP...]
+      "request_curl_payload": "-H X-BlueCoat-Via: localhost http://thinkloveshare.com/juicy_403_endpoint/",
+      "response_headers": "HTTP/1.1 301 Moved Permanently\nConnection: keep-alive\nContent-Length: 162\nServer: GitHub.c[...SNIP...]
+      "response_data": "<html>\n<head><title>301 Moved Permanently</title></head>\n<body>\n<center><h1>301 Moved Permane[...SNIP...]
+      "response_status_code": 301,
+      "response_content_type": "text/html",
+      "response_content_length": 162,
+      "response_lines_count": 7,
+      "response_words_count": 4,
+      "response_title": "301 Moved Permanently",
+      "response_server_type": "GitHub.com",
+      "response_redirect_url": "https://thinkloveshare.com/juicy_403_endpoint/",
+      "response_html_filename": "bypass-e6118c315eea0e5b2ebc4fcafe0559c0.html"
+    },
+    {
+      "request_curl_cmd": "/usr/bin/curl -sS -kgi -H 'User-Agent: curl 7.74.0' --path-as-is -X PROPFIND http://thinklove[...SNIP...]
+      "request_curl_payload": "-X PROPFIND http://thinkloveshare.com/juicy_403_endpoint/",
+      "response_headers": "HTTP/1.1 405 Method Not Allowed\nConnection: close\nContent-Length: 131\nServer: Varnish\nRet[...SNIP...]
+      "response_data": "<html>\n<head><title>405 Not Allowed</title></head>\n<body bgcolor=\"white\">\n<center><h1>405 N[...SNIP...]
+      "response_status_code": 405,
+      "response_content_type": "",
+      "response_content_length": 131,
+      "response_lines_count": 5,
+      "response_words_count": 5,
+      "response_title": "405 Not Allowed",
+      "response_server_type": "Varnish",
+      "response_redirect_url": "",
+      "response_html_filename": "bypass-945822230d58d1ad4680d5dfbc470ecb.html"
+    },
+    {...SNIP...},
+    {
+      "request_curl_cmd": "/usr/bin/curl -sS -kgi -H 'User-Agent: curl 7.74.0' --path-as-is 'http://thinkloveshare.com/j[...SNIP...]
+      "request_curl_payload": "http://thinkloveshare.com/juicy_403_endpoint/\u00b0//",
+      "response_headers": "HTTP/1.1 400 Bad request\nConnection: keep-alive\nContent-Length: 90\nCache-Control: no-cache[...SNIP...]
+      "response_data": "<html><body><h1>400 Bad request</h1>\nYour browser sent an invalid request.\n</body></html>\n", [...SNIP...]
+      "response_status_code": 400,
+      "response_content_type": "text/html",
+      "response_content_length": 90,
+      "response_lines_count": 3,
+      "response_words_count": 7,
+      "response_title": "",
+      "response_server_type": "",
+      "response_redirect_url": "",
+      "response_html_filename": "bypass-2469eecf6c38b5817d2248e911ad4382.html"
+    }
+  ]
+}
+```
+
+Making them easier to handle with `jq`:
+
+```bash
+$ jq -r '.results[] | [.request_curl_payload, .response_status_code, .response_content_type, .response_content_length] | join("|")' /tmp/bypass-res2/triaged-bypass.json
+
+-H X-BlueCoat-Via: localhost http://thinkloveshare.com/juicy_403_endpoint/|301|text/html|162
+-X PROPFIND http://thinkloveshare.com/juicy_403_endpoint/|405||131
+http://thinkloveshare.com/%3b%2f%2e%2e%2f%2e%2e%2f%2fjuicy_403_endpoint/|400|text/html|9121
+-H Host: 8.8.8.8 http://thinkloveshare.com/juicy_403_endpoint/|404|text/html|9115
+-X CONNECT http://thinkloveshare.com/juicy_403_endpoint/|400|text/plain|15
+http://thinkloveshare.com/juicy_403_endpoint/°//|400|text/html|90
+```
+
+#### HTML files:
+
+With `PERTINENT` and `FULL` saving levels, curl commands and full HTTP responses are also stored in pseudo `.html` files:
+
+```bash
+$ echo /tmp/bypass-res2/*.html | xargs batcat
+───────┬───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+       │ File: /tmp/bypass-res2/bypass-2469eecf6c38b5817d2248e911ad4382.html
+───────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1   │ /usr/bin/curl -sS -kgi -H 'User-Agent: curl 7.74.0' --path-as-is 'http://thinkloveshare.com/juicy_403_endpoint/°//'
+   2   │
+   3   │ HTTP/1.1 400 Bad request
+   4   │ Connection: keep-alive
+   5   │ Content-Length: 90
+   6   │ Cache-Control: no-cache
+   7   │ Content-Type: text/html
+   8   │ Accept-Ranges: bytes
+   9   │ Date: Tue, 25 Apr 2023 23:51:38 GMT
+  10   │ Via: 1.1 varnish
+  11   │ X-Served-By: cache-par-lfpg1960025-PAR
+  12   │ X-Cache: MISS
+  13   │ X-Cache-Hits: 0
+  14   │ X-Timer: S1682466698.230664,VS0,VE10
+  15   │ Vary: Accept-Encoding
+  16   │ X-Fastly-Request-ID: b6bbb82302420db4f101a316dca39cc283a4fd44
+  17   │
+  18   │ <html><body><h1>400 Bad request</h1>
+  19   │ Your browser sent an invalid request.
+  20   │ </body></html>
+───────┴───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+───────┬───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+       │ File: /tmp/bypass-res2/bypass-6f7cce7caf0a0a4b440859fa189d496d.html
+───────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1   │ /usr/bin/curl -sS -kgi -H 'User-Agent: curl 7.74.0' --path-as-is -X CONNECT http://thinkloveshare.com/juicy_403_endpoint/
+   2   │
+   3   │ HTTP/1.1 400 Bad Request
+   4   │ Connection: close
+   5   │ Content-Length: 15
+   6   │ content-type: text/plain; charset=utf-8
+   7   │ x-served-by: cache-par-lfpg1960083
+   8   │
+   9   │ invalid request
+───────┴───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+───────┬───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+       │ File: /tmp/bypass-res2/bypass-80f4ab5d32b4e74c20630c7e67f2e42f.html
+───────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1   │ /usr/bin/curl -sS -kgi -H 'User-Agent: curl 7.74.0' --path-as-is http://thinkloveshare.com/%3b%2f%2e%2e%2f%2e%2e%2f%2fjuicy_403_endpoint/
+   2   │
+   3   │ HTTP/1.1 400 Bad Request
+   4   │ Connection: keep-alive
+   5   │ Content-Length: 9121
+   6   │ Server: GitHub.com
+   7   │ Content-Type: text/html; charset=utf-8
+   8   │ ETag: "64417b9f-23a1"
+   9   │ Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; img-src data:; connect-src 'self'
+  10   │ X-GitHub-Request-Id: 598E:F13E:26EE27D:284F5D2:64486731
+  11   │ Accept-Ranges: bytes
+  12   │ Date: Tue, 25 Apr 2023 23:50:11 GMT
+  13   │ Via: 1.1 varnish
+  14   │ X-Served-By: cache-par-lfpg1960046-PAR
+  15   │ X-Cache: MISS
+  16   │ X-Cache-Hits: 0
+  17   │ X-Timer: S1682466611.396077,VS0,VE101
+  18   │ Vary: Accept-Encoding
+  19   │ X-Fastly-Request-ID: 30bd6af5892c40da130ee49bbeacd147a1a6b3c3
+  20   │
+  21   │ <!DOCTYPE html>
+  22   │ <html>
+  23   │   <head>
+  24   │     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  25   │     <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; connect-src 'self'">
+  26   │     <title>Bad request &middot; GitHub Pages</title>
+  27   │     <style type="text/css" media="screen">
+[...SNIP...]
 ```
 
 ## Non-Regression tests & Code Cleanup
