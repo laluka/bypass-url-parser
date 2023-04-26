@@ -252,7 +252,7 @@ With `PERTINENT` and `FULL` saving levels, the program additionally exports all 
       "request_curl_cmd": "/usr/bin/curl -sS -kgi -H 'User-Agent: curl 7.74.0' --path-as-is 'http://thinkloveshare.com/j[...SNIP...]",
       "request_curl_payload": "http://thinkloveshare.com/juicy_403_endpoint/\u00b0//",
       "response_headers": "HTTP/1.1 400 Bad request\nConnection: keep-alive\nContent-Length: 90\nCache-Control: no-cache[...SNIP...]",
-      "response_data": "<html><body><h1>400 Bad request</h1>\nYour browser sent an invalid request.\n</body></html>\n", [...SNIP...]",
+      "response_data": "<html><body><h1>400 Bad request</h1>\nYour browser sent an invalid request.\n</body></html>\n",
       "response_status_code": 400,
       "response_content_type": "text/html",
       "response_content_length": 90,
