@@ -218,10 +218,10 @@ With `PERTINENT` and `FULL` saving levels, the program additionally exports all 
   "bypass_modes": "all",
   "results": [
     {
-      "request_curl_cmd": "/usr/bin/curl -sS -kgi -H 'User-Agent: curl 7.74.0' --path-as-is -H 'X-BlueCoat-Via: localhos[...SNIP...]
+      "request_curl_cmd": "/usr/bin/curl -sS -kgi -H 'User-Agent: curl 7.74.0' --path-as-is -H 'X-BlueCoat-Via: localhos[...SNIP...]",
       "request_curl_payload": "-H X-BlueCoat-Via: localhost http://thinkloveshare.com/juicy_403_endpoint/",
-      "response_headers": "HTTP/1.1 301 Moved Permanently\nConnection: keep-alive\nContent-Length: 162\nServer: GitHub.c[...SNIP...]
-      "response_data": "<html>\n<head><title>301 Moved Permanently</title></head>\n<body>\n<center><h1>301 Moved Permane[...SNIP...]
+      "response_headers": "HTTP/1.1 301 Moved Permanently\nConnection: keep-alive\nContent-Length: 162\nServer: GitHub.c[...SNIP...]",
+      "response_data": "<html>\n<head><title>301 Moved Permanently</title></head>\n<body>\n<center><h1>301 Moved Permane[...SNIP...]",
       "response_status_code": 301,
       "response_content_type": "text/html",
       "response_content_length": 162,
@@ -233,10 +233,10 @@ With `PERTINENT` and `FULL` saving levels, the program additionally exports all 
       "response_html_filename": "bypass-e6118c315eea0e5b2ebc4fcafe0559c0.html"
     },
     {
-      "request_curl_cmd": "/usr/bin/curl -sS -kgi -H 'User-Agent: curl 7.74.0' --path-as-is -X PROPFIND http://thinklove[...SNIP...]
+      "request_curl_cmd": "/usr/bin/curl -sS -kgi -H 'User-Agent: curl 7.74.0' --path-as-is -X PROPFIND http://thinklove[...SNIP...]",
       "request_curl_payload": "-X PROPFIND http://thinkloveshare.com/juicy_403_endpoint/",
-      "response_headers": "HTTP/1.1 405 Method Not Allowed\nConnection: close\nContent-Length: 131\nServer: Varnish\nRet[...SNIP...]
-      "response_data": "<html>\n<head><title>405 Not Allowed</title></head>\n<body bgcolor=\"white\">\n<center><h1>405 N[...SNIP...]
+      "response_headers": "HTTP/1.1 405 Method Not Allowed\nConnection: close\nContent-Length: 131\nServer: Varnish\nRet[...SNIP...]",
+      "response_data": "<html>\n<head><title>405 Not Allowed</title></head>\n<body bgcolor=\"white\">\n<center><h1>405 N[...SNIP...]",
       "response_status_code": 405,
       "response_content_type": "",
       "response_content_length": 131,
@@ -247,12 +247,12 @@ With `PERTINENT` and `FULL` saving levels, the program additionally exports all 
       "response_redirect_url": "",
       "response_html_filename": "bypass-945822230d58d1ad4680d5dfbc470ecb.html"
     },
-    {...SNIP...},
+    {  "...": "[...SNIP...]"},
     {
-      "request_curl_cmd": "/usr/bin/curl -sS -kgi -H 'User-Agent: curl 7.74.0' --path-as-is 'http://thinkloveshare.com/j[...SNIP...]
+      "request_curl_cmd": "/usr/bin/curl -sS -kgi -H 'User-Agent: curl 7.74.0' --path-as-is 'http://thinkloveshare.com/j[...SNIP...]",
       "request_curl_payload": "http://thinkloveshare.com/juicy_403_endpoint/\u00b0//",
-      "response_headers": "HTTP/1.1 400 Bad request\nConnection: keep-alive\nContent-Length: 90\nCache-Control: no-cache[...SNIP...]
-      "response_data": "<html><body><h1>400 Bad request</h1>\nYour browser sent an invalid request.\n</body></html>\n", [...SNIP...]
+      "response_headers": "HTTP/1.1 400 Bad request\nConnection: keep-alive\nContent-Length: 90\nCache-Control: no-cache[...SNIP...]",
+      "response_data": "<html><body><h1>400 Bad request</h1>\nYour browser sent an invalid request.\n</body></html>\n", [...SNIP...]",
       "response_status_code": 400,
       "response_content_type": "text/html",
       "response_content_length": 90,
