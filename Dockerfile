@@ -1,4 +1,4 @@
-FROM python:3.12.0a4-slim-bullseye
+FROM python:3.12.0b3-slim-bullseye
 WORKDIR /bup
 COPY . /bup
 RUN pip install --no-cache-dir -r requirements.txt
