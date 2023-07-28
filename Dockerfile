@@ -3,4 +3,4 @@ WORKDIR /bup
 COPY . /bup
 RUN pip install --no-cache-dir -r requirements.txt
 RUN apt-get update && apt-get install -y curl
-ENTRYPOINT [ "python", "bypass-url-parser.py" ]
+ENTRYPOINT [ "python", "bypass_url_parser.py" ]
