@@ -956,7 +956,7 @@ class Bypasser:
         else:
             binary = Bypasser.DEFAULT_BINARY_NAME
         # Check presence of curl binary
-        if not (os.path.isfile(binary) or os.path.islink(binary)):
+        if binary is None or not (os.path.isfile(binary) or os.path.islink(binary)):
             error_msg = "Program curl not found, install it and ensure it's within your PATH"
             self.logger.error(error_msg)
             raise FileNotFoundError(error_msg)
