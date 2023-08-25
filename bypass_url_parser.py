@@ -1427,7 +1427,7 @@ class CurlItem:
     """
     CURL_HTTP_VERSIONS = {"0.9", "1.0", "1.1", "2", "2-prior-knowledge"}
     DEFAULT_FILE_ENCODING = "UTF-8"
-    REGEX_STATUS_CODE = re.compile(r"HTTP.*\s+(\d+)\s+\w+", re.IGNORECASE)
+    REGEX_STATUS_CODE = re.compile(r"HTTP.*\s+(\d+)\s+", re.IGNORECASE)
     REGEX_CONTENT_LENGTH = re.compile(r"Content-Length:\s+(\d+)", re.IGNORECASE)
     REGEX_CONTENT_TYPE = re.compile(r"Content-Type:\s+(\w+/\w+)", re.IGNORECASE)
     REGEX_HTTP_VERSION = re.compile(r"(?!--)http[\w.-]*(?<! )", re.IGNORECASE)
