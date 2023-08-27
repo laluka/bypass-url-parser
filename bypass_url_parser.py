@@ -956,7 +956,7 @@ class Bypasser:
         else:
             binary = Bypasser.DEFAULT_BINARY_NAME
         # Check presence of curl binary
-        if not (os.path.isfile(binary) or os.path.islink(binary)):
+        if binary is None or not (os.path.isfile(binary) or os.path.islink(binary)):
             error_msg = "Program curl not found, install it and ensure it's within your PATH"
             self.logger.error(error_msg)
             raise FileNotFoundError(error_msg)
@@ -1427,7 +1427,7 @@ class CurlItem:
     """
     CURL_HTTP_VERSIONS = {"0.9", "1.0", "1.1", "2", "2-prior-knowledge"}
     DEFAULT_FILE_ENCODING = "UTF-8"
-    REGEX_STATUS_CODE = re.compile(r"HTTP.*\s+(\d+)\s+\w+", re.IGNORECASE)
+    REGEX_STATUS_CODE = re.compile(r"HTTP.*\s+(\d+)\s+", re.IGNORECASE)
     REGEX_CONTENT_LENGTH = re.compile(r"Content-Length:\s+(\d+)", re.IGNORECASE)
     REGEX_CONTENT_TYPE = re.compile(r"Content-Type:\s+(\w+/\w+)", re.IGNORECASE)
     REGEX_HTTP_VERSION = re.compile(r"(?!--)http[\w.-]*(?<! )", re.IGNORECASE)
