@@ -495,7 +495,7 @@ class Bypasser:
             self.logger.info(f"Current: {shlex_join(item.request_curl_cmd)}")
         try:
             process = subprocess.Popen(item.request_curl_cmd, text=True, shell=False, stderr=subprocess.STDOUT,
-                                       stdout=subprocess.PIPE)
+                                       stdout=subprocess.PIPE, encoding='utf-8')
 
             # Get command results
             result = process.communicate(timeout=self.timeout)[0]
