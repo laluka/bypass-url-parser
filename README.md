@@ -133,6 +133,7 @@ echo 'http://thinkloveshare.com/test' | ./bypass_url_parser.py -u -
 ### Target definition
 
 A target must be defined for the tool to work. 2 options:
+
 - `-u, --url`: URL(s), in GET
 - `-R, --request`: Request file. The protocol can't be guessed from file, so `http` by default or `https` if `--request-tls` option is present.
 
@@ -186,7 +187,7 @@ The saving levels are:
 - `2` (PERTINENT): Save the program log file `triaged-bypass.log` and **pertinent (results)** curl responses in `triaged-bypass.json` file and separate html files (Default);
 - `3` (FULL): Save the program log file `triaged-bypass.log` and **all** curl responses in `triaged-bypass.json` file and separate html files.
 
-#### Example:
+#### Example
 
 ```bash
 ./bypass_url_parser.py -S 0
@@ -204,11 +205,12 @@ tree /tmp/bypass-res2/
 
 0 directories, 8 files
 ```
-#### Results export:
+
+#### Results export
 
 Starting from `MINIMAL` level, the results displayed by the program are saved in the `triaged-bypass.log` file.
 
-#### JSON export:
+#### JSON export
 
 With `PERTINENT` and `FULL` saving levels, the program additionally exports all results in the `triaged-bypass.json` file:
 
@@ -280,8 +282,7 @@ http://thinkloveshare.com/%3b%2f%2e%2e%2f%2e%2e%2f%2fjuicy_403_endpoint/|400|tex
 http://thinkloveshare.com/juicy_403_endpoint/°//|400|text/html|90
 ```
 
-#### HTML files:
-
+#### HTML files
 With `PERTINENT` and `FULL` saving levels, curl commands and full HTTP responses are also stored in pseudo `.html` files:
 
 ```bash
