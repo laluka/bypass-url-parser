@@ -66,7 +66,7 @@ from urllib.parse import ParseResult, urlparse
 import coloredlogs
 from docopt import docopt
 
-VERSION = "0.3.0"
+VERSION = "0.3.1"
 logger = logging.getLogger("bup")
 
 
