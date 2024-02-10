@@ -1,0 +1,76 @@
+[project]
+name = "bypass-url-parser"
+dynamic = ["version"]
+description = "Default template for PDM package"
+authors = [
+    {name = "Laluka", email = "loukajc@gmail.com"},
+]
+dependencies = [
+    "coloredlogs==15.0.1",
+    "docopt==0.6.2",
+]
+requires-python = ">=3.11"
+keywords = ["security",]
+readme = "README.md"
+license = {text = "MIT"}
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Information Technology",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Typing :: Typed",
+  "Topic :: Security",
+  "Operating System :: OS Independent",
+  "Environment :: Console",
+]
+
+[project.urls]
+Repository = "https://github.com/laluka/bypass-url-parser"
+Changelog = "https://github.com/laluka/bypass-url-parser/releases"
+
+
+
+
+[project.scripts]
+"bypass-url-parser" = "bypass_url_parser:main"
+"bup" = "bypass_url_parser:main"
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm]
+distribution = true
+plugins = ["sync-pre-commit-lock", "pdm-autoexport"]
+
+[tool.pdm.version]
+source = "scm"
+write_to = "bypass_url_parser/_version.py"
+write_template = "__version__ = \"{}\"\n"
+
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "coloredlogs==15.0.1",
+    "docopt==0.6.2",
+    "ipdb==0.13.9",
+    "ipython>=8.10.0",
+    "pre-commit==3.2.2",
+    "rich==13.3.4",
+    "isort>=5.13.2",
+    "mypy>=1.8.0",
+    "types-docopt>=0.6.11.4",
+    "autopep8>=2.0.4",
+]
+
+[[tool.pdm.autoexport]]
+filename = "requirements.txt"
+groups = ["default"]
+
+[[tool.pdm.autoexport]]
+filename = "requirements-dev.txt"
+groups = ["dev"]
