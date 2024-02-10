@@ -74,3 +74,10 @@ groups = ["default"]
 [[tool.pdm.autoexport]]
 filename = "requirements-dev.txt"
 groups = ["dev"]
+
+
+[tool.autopep8]
+max_line_length = 120
+in-place = true
+recursive = true
+aggresive = 1
