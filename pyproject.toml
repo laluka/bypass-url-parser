@@ -9,22 +9,22 @@ authors = [
 ]
 dependencies = ["coloredlogs==15.0.1", "docopt==0.6.2"]
 requires-python = ">=3.11"
-keywords = ["security",]
+keywords = ["security"]
 readme = "README.md"
-license = {text = "MIT"}
+license = { text = "AGPL-3.0-or-later" }
 classifiers = [
-  "Development Status :: 4 - Beta",
-  "Intended Audience :: Information Technology",
-  "License :: OSI Approved :: MIT License",
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: 3.13",
-  "Typing :: Typed",
-  "Topic :: Security",
-  "Operating System :: OS Independent",
-  "Environment :: Console",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+    "Topic :: Security",
+    "Operating System :: OS Independent",
+    "Environment :: Console",
 ]
 
 [project.urls]
