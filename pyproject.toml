@@ -3,12 +3,11 @@ name = "bypass-url-parser"
 dynamic = ["version"]
 description = "Default template for PDM package"
 authors = [
-    {name = "Laluka", email = "loukajc@gmail.com"},
+    { name = "Laluka", email = "loukajc@gmail.com" },
+    { name = "jtof_fap", email = "jtof_fap@insecurity.fr" },
+    { name = "Gabriel Dugny", email = "pypi@dugny.me" },
 ]
-dependencies = [
-    "coloredlogs==15.0.1",
-    "docopt==0.6.2",
-]
+dependencies = ["coloredlogs==15.0.1", "docopt==0.6.2"]
 requires-python = ">=3.11"
 keywords = ["security",]
 readme = "README.md"
@@ -31,9 +30,6 @@ classifiers = [
 [project.urls]
 Repository = "https://github.com/laluka/bypass-url-parser"
 Changelog = "https://github.com/laluka/bypass-url-parser/releases"
-
-
-
 
 [project.scripts]
 "bypass-url-parser" = "bypass_url_parser:main"
@@ -74,7 +70,6 @@ groups = ["default"]
 [[tool.pdm.autoexport]]
 filename = "requirements-dev.txt"
 groups = ["dev"]
-
 
 [tool.autopep8]
 max_line_length = 120
