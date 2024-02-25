@@ -112,7 +112,7 @@ sudo apt install -y bat curl virtualenv python3
 # Tool
 virtualenv -p python3 .py3
 source .py3/bin/activate
-pip install -r requirements.txt
+pip install .
 bypass-url-parser -u http://thinkloveshare.com/juicy_403_endpoint/
 cat /tmp/tmpRANDOM-bypass-url-parser/triaged-bypass.json  | jq -r '.results[].request_curl_cmd'
 cat /tmp/tmpRANDOM-bypass-url-parser/triaged-bypass.json  | jq -r '.results[].response_data'
