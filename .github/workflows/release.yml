@@ -175,7 +175,7 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository}}
           tags: |
-            type=pep440,enable=true,priority=900,prefix=,suffix=,pattern=,value=
+            type=pep440,pattern={{version}}
 
       - name: "Build and push Docker image"
         uses: docker/build-push-action@v5
