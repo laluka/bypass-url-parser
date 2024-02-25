@@ -1,3 +1,7 @@
 .py3
 __pycache__
 .direnv
+dist
+src/bypass_url_parser/_version.py
+.pdm-python
+.pdm-build

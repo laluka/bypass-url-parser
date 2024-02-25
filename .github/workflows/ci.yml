@@ -1,0 +1,66 @@
+---
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Python CI
+
+# yamllint disable-line rule:truthy
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  CI-Python:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDEVMODE: 1
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pdm-project/setup-pdm@v4
+        name: Setup PDM
+        with:
+          cache: true
+          python-version: ${{ matrix.python-version }}             # Version range or exact version of a Python version to use, the same as actions/setup-python
+          architecture: x64                # The target architecture (x86, x64) of the Python interpreter. the same as actions/setup-python
+          allow-python-prereleases: true  # Allow prerelease versions of Python to be installed. For example if only 3.12-dev is available, 3.12 will fall back to 3.12-dev
+
+      - name: Install dependencies
+        run: pdm install
+
+      # - name: Test with tox (pytest)
+      #   run: |
+      #     pdm run tox --version
+      #     pyversion="${{ matrix.python-version }}"
+      #     pdm run tox -f py${pyversion/./}
+
+      # - name: Test with pytest-cov
+      #   run: |
+      #     pdm run test-cov
+
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     file: ./coverage.xml
+      #     flags: unittests
+
+      # - name: Type check with mypy
+      #   run: |
+      #     pdm run lint-mypy
+
+      # - name: Lint with ruff
+      #   run: |
+      #     pdm run lint-ruff --output-format=github --exit-non-zero-on-fix
+
+      - name: Build with pdm
+        run: |
+          pdm build
+          # Do not upload to PyPI, here we only want to check that the build works

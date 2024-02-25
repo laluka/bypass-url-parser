@@ -1,0 +1,33 @@
+---
+name: Update Python dependencies with PDM
+
+on:
+  schedule:
+    - cron: "0 12 * * SAT"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update dependencies with PDM
+        uses: pdm-project/update-deps-action@main
+        with:
+          # The personal access token, default: ${{ github.token }}
+          token: ${{ github.token }}
+          # The commit message"
+          commit-message: "chore(deps): Update pdm.lock"
+          # The PR title
+          pr-title: "chore(deps): Update Python dependencies with PDM"
+          # The update strategy, can be 'reuse', 'eager' or 'all'
+          update-strategy: all
+          # Whether to install PDM plugins before update
+          install-plugins: "true"
+          # Whether commit message contains signed-off-by
+          sign-off-commit: "true"

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 from bypass_url_parser import Bypasser
 
 # Init Bypasser (Without external logger. In this case, the library set his own logger)
