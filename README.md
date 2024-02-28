@@ -121,12 +121,7 @@ cat /tmp/tmpRANDOM-bypass-url-parser/triaged-bypass.json  | jq -r '.results[].re
 ### DOCKER
 
 ```bash
-docker build -t thelaluka/bypass-url-parser:latest .
-docker run --rm -it --net=host -v "$PWD:/host" thelaluka/bypass-url-parser:latest -u http://127.0.0.1:8000/dummy
-docker run --rm -it --net=host -v "$PWD:/host" thelaluka/bypass-url-parser:latest -u /host/urls.lst
-# TODO later, tag & push releases to dockerhub :)
-# -t thelaluka/bypass-url-parser:0.2.0
-# docker push thelaluka/bypass-url-parser:latest
+docker run --rm -it ghcr.io/laluka/bypass-url-parser:latest --help
 ```
 
 ## More about supported arguments
