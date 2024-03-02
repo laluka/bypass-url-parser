@@ -5,7 +5,8 @@ ENV \
   PIP_NO_CACHE_DIR=1 \
   PIP_DISABLE_PIP_VERSION_CHECK=1
 
-RUN apt-get update && apt-get install -y curl
+RUN apt-get update && apt-get install -y curl bat && \
+  ln -sf /usr/bin/batcat /usr/local/bin/bat
 
 # Install dependencies first to leverage Docker layer caching.
 RUN --mount=type=bind,source=requirements.txt,target=/tmp/requirements.txt \

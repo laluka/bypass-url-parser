@@ -1963,9 +1963,10 @@ class Tools:
             else:
                 # Absolute filename resolution of files located in project dir. Allow to call the tool from anywhere,
                 # even with a symbolic link
-                from pkg_resources import resource_filename
+                from importlib import resources
                 try:
-                    absolute_filename = resource_filename(__name__, filename)
+                    with resources.path(__name__, filename) as p:
+                        absolute_filename = p
                 except Exception:
                     absolute_filename = os.path.join(os.path.dirname(os.path.realpath(__file__)), filename)
             if ext_logger and debug and absolute_filename != filename:
