@@ -395,11 +395,35 @@ git push --tags
 # If X or Y is bumped, create new release on github
 ```
 
+## Github Action Release
+
+- Visit https://github.com/laluka/bypass-url-parser/actions/workflows/release.yml
+- Run Workflow with a version such as `0.4.1` or `0.4.1-a` for alpha tests
+- Test the alpha version with the below script, once done, repeat without `-a`
+
+```bash
+cd /tmp
+export TESTED_VERSION=0.4.1a
+pipx install "bypass-url-parser==$TESTED_VERSION"
+bup --version && bup -u https://thinkloveshare.com/ -t 50 -m http_headers_scheme
+pipx uninstall bypass-url-parser
+bup --version # Should fail
+
+pip install "bypass-url-parser==$TESTED_VERSION"
+bup --version && bup -u https://thinkloveshare.com/ -t 50 -m http_headers_scheme
+pip uninstall bypass-url-parser
+bup --version # Should fail
+
+for version in {8..13}; do
+  docker run --rm -it "python:3.$version" bash -c "pip install bypass-url-parser==$TESTED_VERSION && bup --version && bup -u https://thinkloveshare.com/ -t 50 -m http_headers_scheme"
+done
+```
+
 ## Contributors
 
 - Initial release by [@TheLaluka](https://twitter.com/TheLaluka)
 - Huge refactoring & lib-mode with thanks to [@jtop_fap](https://twitter.com/jtop_fap)
-
+- Support for `Docker` & `Pypi` builds with the kind work of [@DugnyG](https://twitter.com/DugnyG)
 
 ## License
 
