@@ -112,10 +112,15 @@ sudo apt install -y bat curl virtualenv python3
 # Tool
 virtualenv -p python3 .py3
 source .py3/bin/activate
-pip install .
-bypass-url-parser -u http://thinkloveshare.com/juicy_403_endpoint/
+PDM_BUILD_SCM_VERSION="$(git describe --abbrev=0)-dev" pip install .
+bypass-url-parser -u https://thinkloveshare.com/juicy_403_endpoint/
 cat /tmp/tmpRANDOM-bypass-url-parser/triaged-bypass.json  | jq -r '.results[].request_curl_cmd'
 cat /tmp/tmpRANDOM-bypass-url-parser/triaged-bypass.json  | jq -r '.results[].response_data'
+
+# To test that all supported versions can boot
+for version in {8..13}; do
+  docker run --rm -it -v "$PWD":/host -w /host "python:3.$version" bash -c 'git config --global --add safe.directory /host && PDM_BUILD_SCM_VERSION="$(git describe --abbrev=0)-dev" pip install . && bup -u https://thinkloveshare.com/ -t 50 -m http_headers_scheme'
+done
 ```
 
 ### DOCKER
