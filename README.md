@@ -126,7 +126,9 @@ done
 ### DOCKER
 
 ```bash
-docker run --rm -it ghcr.io/laluka/bypass-url-parser:latest --help
+docker run --rm -it -v "$PWD:/host" -w /host ghcr.io/laluka/bypass-url-parser:latest bash -il
+# Then bup -h, keep the docker open as the output is saved by default in /tmp
+# Or specify the output to the current directory, and consult them later! :)
 ```
 
 ## More about supported arguments
