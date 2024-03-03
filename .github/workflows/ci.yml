@@ -35,11 +35,11 @@ jobs:
       - name: Install dependencies
         run: pdm install
 
-      # - name: Test with tox (pytest)
-      #   run: |
-      #     pdm run tox --version
-      #     pyversion="${{ matrix.python-version }}"
-      #     pdm run tox -f py${pyversion/./}
+      - name: Test with tox (pytest)
+        run: |
+          pdm run tox --version
+          pyversion="${{ matrix.python-version }}"
+          pdm run tox -f py${pyversion/./}
 
       # - name: Test with pytest-cov
       #   run: |
@@ -56,9 +56,9 @@ jobs:
       #   run: |
       #     pdm run lint-mypy
 
-      # - name: Lint with ruff
-      #   run: |
-      #     pdm run lint-ruff --output-format=github --exit-non-zero-on-fix
+      - name: Lint with ruff
+        run: |
+          pdm run lint-ruff --output-format=github --exit-non-zero-on-fix
 
       - name: Build with pdm
         run: |

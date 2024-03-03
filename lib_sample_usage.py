@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 from bypass_url_parser import Bypasser
 
 # Init Bypasser (Without external logger. In this case, the library set his own logger)
@@ -7,12 +9,14 @@ exporter = Bypasser(verbose=False, debug=False, debug_class=False, ext_logger=No
 # Set object properties (see complete list in Bypasser.__init__())
 exporter.threads = 10
 exporter.timeout = 3
-# exporter.current_bypass_modes = "http_methods, http_headers_scheme, case_substitution, char_encode"
-exporter.current_bypass_modes = "all"
+exporter.current_bypass_modes = (
+    "http_methods, http_headers_scheme, case_substitution, char_encode"
+)
+# exporter.current_bypass_modes = "all"
 exporter.save_level = Bypasser.SaveLevel.NONE  # Disable results saving
 
 # Set target(s)
-target_urls = list()
+target_urls: list[str] = list()
 # target_urls.append("http://thinkloveshare.com/juicy_403_endpoint/")
 target_urls.append("http://127.0.0.1:8000/foo")
 
