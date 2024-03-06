@@ -46,6 +46,9 @@ build-backend = "pdm.backend"
 distribution = true
 plugins = ["sync-pre-commit-lock", "pdm-autoexport"]
 
+[tool.pdm.scripts]
+"lint-ruff" = "ruff check ."
+
 [tool.pdm.version]
 source = "scm"
 write_to = "bypass_url_parser/_version.py"
@@ -64,6 +67,10 @@ dev = [
     "mypy>=1.8.0",
     "types-docopt>=0.6.11.4",
     "autopep8>=2.0.4",
+    "ruff>=0.3.0",
+    "tox-pdm>=0.7.2",
+    "tox>=4.13.0",
+    "pytest>=8.0.2",
 ]
 
 [[tool.pdm.autoexport]]
@@ -79,3 +86,11 @@ max_line_length = 120
 in-place = true
 recursive = true
 aggresive = 1
+
+[tool.mypy]
+files = ["src"]
+python_version = "3.8"
+
+[[tool.mypy.overrides]]
+module = "coloredlogs"
+ignore_missing_imports = true

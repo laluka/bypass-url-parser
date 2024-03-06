@@ -5,3 +5,4 @@ dist
 src/bypass_url_parser/_version.py
 .pdm-python
 .pdm-build
+.tox
