@@ -589,10 +589,11 @@ class Bypasser:
                             self.logger.warning(f"Error when saving {outdir}{Tools.SEPARATOR}{item.filename} file.")
                         else:
                             # Add curl item json representation
-                            item_str = item.to_json()
-                            json_items["results"].append(json.loads(item_str))
+                            data = json.loads(item.to_json())
+                            json_items["results"].append(data)
                             if self.jsonl:
-                                print(item_str)
+                                data['url'] = url
+                                print(json.dumps(data))
                 if self.verbose:
                     self.logger.info(f"All curl responses were saved in the '{outdir}{Tools.SEPARATOR}' directory")
 
@@ -606,10 +607,11 @@ class Bypasser:
                                 f"Error when saving {outdir}{Tools.SEPARATOR}{item_lst[0].filename} file.")
                         else:
                             # Add curl item json representation
-                            item_str = item_lst[0].to_json()
-                            json_items["results"].append(json.loads(item_str))
+                            data = json.loads(item_lst[0].to_json())
+                            json_items["results"].append(data)
                             if self.jsonl:
-                                print(item_str)
+                                data['url'] = url
+                                print(json.dumps(data))
                     if self.verbose:
                         self.logger.info(f"Only relevant curl responses (results) were saved in the "
                                          f"'{outdir}{Tools.SEPARATOR}' directory")
