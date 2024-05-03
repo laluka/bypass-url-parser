@@ -600,7 +600,7 @@ class Bypasser:
             # SaveLevel.PERTINENT - Save only results items (single and first element of each group)
             elif self.save_level >= self.SaveLevel.PERTINENT:
                 if self.bypass_results[url_obj]:
-                    for url, item_lst in self.bypass_results[url_obj].items():
+                    for _, item_lst in self.bypass_results[url_obj].items():
                         # Save pertinent curl items as individual HTML file
                         if not item_lst[0].save(outdir, force_output_dir_creation=False):
                             self.logger.warning(
