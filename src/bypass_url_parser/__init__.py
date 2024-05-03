@@ -5,7 +5,7 @@ A tool that tests MANY url bypasses to reach a 40X protected page.
 Usage:
     bypass-url-parser (-u <URL> | -R <file>) [-m <mode>] [-o <outdir>] [-S <level>] [ (-H <header>)...] [-r <num>]
                            [-s <ip>] [--spoofip-replace] [-p <port>] [--spoofport-replace] [--request-tls]
-                           [--dump-payloads] [-t <threads>] [-T <timeout>] [-x <proxy_url>] [-v | -d | -dd]
+                           [--dump-payloads] [-t <threads>] [-T <timeout>] [-x <proxy_url>] [-v | -d | -dd | -j]
 
 Program options:
     -u, --url <URL>           URL (path is optional) to run bypasses against
@@ -13,6 +13,7 @@ Program options:
     -H, --header <header>     Header(s) to use, format: "Cookie: can_i_haz=fire"
     -m, --mode <mode>         Bypass modes. See 'Bypasser.BYPASS_MODES' in code [Default: all]
     -o, --outdir <outdir>     Output directory for results
+    -j, --json                Output results in JSON lines format (real-time)
     -x, --proxy <proxy_url>   Set a proxy in the format http://proxy_ip:port.
     -S, --save-level <level>  Save results level. From 0 (DISABLE) to 3 (FULL) [Default: 2]
     -s, --spoofip <ip>        IP(s) to inject in ip-specific headers
@@ -134,6 +135,9 @@ class Bypasser:
         if self.debug_class:
             self.logger.debug(
                 f"Debug level: verbose={self.verbose}, debug={self.debug}, debug_class={self.debug_class}")
+
+        # JSON lines mode
+        self.jsonl = config_dict.get('--json')
 
         # Init object vars
         self.base_curl = []
@@ -553,8 +557,9 @@ class Bypasser:
 
     def _save_results(self, url_obj):
         if self.save_level != self.SaveLevel.NONE:
+            url = url_obj.geturl()
             json_items = {
-                "url": url_obj.geturl(),
+                "url": url,
                 "bypass_modes": ', '.join(self.current_bypass_modes),
                 "results": []
             }
@@ -584,7 +589,10 @@ class Bypasser:
                             self.logger.warning(f"Error when saving {outdir}{Tools.SEPARATOR}{item.filename} file.")
                         else:
                             # Add curl item json representation
-                            json_items["results"].append(json.loads(item.to_json()))
+                            item_str = item.to_json()
+                            json_items["results"].append(json.loads(item_str))
+                            if self.jsonl:
+                                print(item_str)
                 if self.verbose:
                     self.logger.info(f"All curl responses were saved in the '{outdir}{Tools.SEPARATOR}' directory")
 
@@ -598,7 +606,10 @@ class Bypasser:
                                 f"Error when saving {outdir}{Tools.SEPARATOR}{item_lst[0].filename} file.")
                         else:
                             # Add curl item json representation
-                            json_items["results"].append(json.loads(item_lst[0].to_json()))
+                            item_str = item_lst[0].to_json()
+                            json_items["results"].append(json.loads(item_str))
+                            if self.jsonl:
+                                print(item_str)
                     if self.verbose:
                         self.logger.info(f"Only relevant curl responses (results) were saved in the "
                                          f"'{outdir}{Tools.SEPARATOR}' directory")
@@ -874,8 +885,8 @@ class Bypasser:
             if self.dump_payloads:
                 if self.verbose:
                     print(f"\n{self.use_classname()} has generated {len(self.curl_items)} payloads "
-                          f"for '{url_obj.geturl()}' url:")
-                print(self.dump_bypasser_payloads(show_bypass_mode=True, show_full_cmd=self.debug))
+                          f"for '{url_obj.geturl()}' url:", file=sys.stderr)
+                print(self.dump_bypasser_payloads(show_bypass_mode=True, show_full_cmd=self.debug), file=sys.stderr)
                 continue
 
             # Send curl commands
