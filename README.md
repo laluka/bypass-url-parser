@@ -190,7 +190,7 @@ bypass-url-parser -u /path/urls -p "3000, 9443, 10443"
 With the `--jsonl` option, it's possible to print the results on `stdout` in `JSON-Lines` format. The standard tool's output and results are displayed with a logger on `stderr`, so it is possible to pipe the `JSON-Line` output format with other tools:
 
 ```bash
-cat /path/urls | bypass-url-parser -u - -S 0 -m char_encode -t 10 --jsonl 2>/dev/null | jq .
+bypass-url-parser -u "https://thinkloveshare.com/juicy_403_endpoint/" -t 20 -S 0 -m case_substitution,char_encode --jsonl | jq
 ```
 
 ***Notes:** With `-S 2` ou `-S 3`, the JSON-Lines output also includes the path and the name of saved html files.*
