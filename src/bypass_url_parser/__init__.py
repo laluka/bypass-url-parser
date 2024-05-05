@@ -501,7 +501,7 @@ class Bypasser:
             self.logger.info(f"Current: {shlex_join(item.request_curl_cmd)}")
         try:
             process = subprocess.Popen(item.request_curl_cmd, text=True, shell=False, stderr=subprocess.STDOUT,
-                                       stdout=subprocess.PIPE, encoding='utf-8')
+                                       stdout=subprocess.PIPE, encoding=self.encoding)
 
             # Get command results
             result = process.communicate(timeout=self.timeout)[0]
@@ -1714,7 +1714,7 @@ class CurlItem:
         if self.response_raw_output:
             try:
                 match_content_length = CurlItem.REGEX_CONTENT_LENGTH.search(self.response_headers)
-                return int(match_content_length.group(1).rstrip()) if match_content_length else ""
+                return int(match_content_length.group(1).rstrip()) if match_content_length else len(self.response_data)
             except Exception as e:
                 error_msg = f"Unable to return response content_length, please check the format and " \
                             f"redefine the 'response_raw_output' property {e}"
