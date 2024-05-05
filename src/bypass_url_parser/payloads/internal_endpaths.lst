@@ -44,6 +44,6 @@ true
 .js
 .css
 .gif
-.jpe?g
-.png
-.xls
+,.js
+,.css
+,.gif
