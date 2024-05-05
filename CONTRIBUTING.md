@@ -12,6 +12,8 @@ export PATH="$HOME/.local/share/mise/shims:$PATH"
 pdm run tox run-parallel
 # Ensure no regression is pushed
 bypass-url-parser -S 0 -v -u http://127.0.0.1:8000/foo/bar --dump-payloads > "tests-history/bup-payloads-$(date +'%Y-%m-%d').lst"
+# If bup installed globally, use
+python src/bypass_url_parser/__init__.py -S 0 -v -u http://127.0.0.1:8000/foo/bar --dump-payloads > "tests-history/bup-payloads-$(date +'%Y-%m-%d').lst"
 # Compare /tmp/bup-payloads-YYYY-MM-DD.lst and the latest tests-history/bup-payloads-YYYY-MM-DD.lst
 git diff --no-index $(find tests-history -type f | sort -n | tail -n 2)
 # Push your changes

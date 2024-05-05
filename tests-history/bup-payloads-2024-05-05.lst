@@ -1,5 +1,5 @@
 
-Bypasser has generated 3750 payloads for 'http://127.0.0.1:8000/foo/bar' url:
+Bypasser has generated 3778 payloads for 'http://127.0.0.1:8000/foo/bar' url:
 [case_substitution] http://127.0.0.1:8000/Foo/bar
 [case_substitution] http://127.0.0.1:8000/fOo/bar
 [case_substitution] http://127.0.0.1:8000/foO/bar
@@ -48,10 +48,20 @@ Bypasser has generated 3750 payloads for 'http://127.0.0.1:8000/foo/bar' url:
 [end_paths] http://127.0.0.1:8000/foo/bar..\;/
 [end_paths] http://127.0.0.1:8000/foo/bar./
 [end_paths] http://127.0.0.1:8000/foo/bar.//
+[end_paths] http://127.0.0.1:8000/foo/bar.css
+[end_paths] http://127.0.0.1:8000/foo/bar.css/
+[end_paths] http://127.0.0.1:8000/foo/bar.gif
+[end_paths] http://127.0.0.1:8000/foo/bar.gif/
 [end_paths] http://127.0.0.1:8000/foo/bar.html
 [end_paths] http://127.0.0.1:8000/foo/bar.html/
+[end_paths] http://127.0.0.1:8000/foo/bar.jpe?g
+[end_paths] http://127.0.0.1:8000/foo/bar.jpe?g/
+[end_paths] http://127.0.0.1:8000/foo/bar.js
+[end_paths] http://127.0.0.1:8000/foo/bar.js/
 [end_paths] http://127.0.0.1:8000/foo/bar.json
 [end_paths] http://127.0.0.1:8000/foo/bar.json/
+[end_paths] http://127.0.0.1:8000/foo/bar.png
+[end_paths] http://127.0.0.1:8000/foo/bar.png/
 [end_paths] http://127.0.0.1:8000/foo/bar.random
 [end_paths] http://127.0.0.1:8000/foo/bar.random/
 [end_paths] http://127.0.0.1:8000/foo/bar.svc
@@ -60,6 +70,8 @@ Bypasser has generated 3750 payloads for 'http://127.0.0.1:8000/foo/bar' url:
 [end_paths] http://127.0.0.1:8000/foo/bar.svc?wsdl/
 [end_paths] http://127.0.0.1:8000/foo/bar.wsdl
 [end_paths] http://127.0.0.1:8000/foo/bar.wsdl/
+[end_paths] http://127.0.0.1:8000/foo/bar.xls
+[end_paths] http://127.0.0.1:8000/foo/bar.xls/
 [end_paths] http://127.0.0.1:8000/foo/bar/
 [end_paths] http://127.0.0.1:8000/foo/bar/#
 [end_paths] http://127.0.0.1:8000/foo/bar/#/
@@ -97,10 +109,20 @@ Bypasser has generated 3750 payloads for 'http://127.0.0.1:8000/foo/bar' url:
 [end_paths] http://127.0.0.1:8000/foo/bar/..\;/
 [end_paths] http://127.0.0.1:8000/foo/bar/./
 [end_paths] http://127.0.0.1:8000/foo/bar/.//
+[end_paths] http://127.0.0.1:8000/foo/bar/.css
+[end_paths] http://127.0.0.1:8000/foo/bar/.css/
+[end_paths] http://127.0.0.1:8000/foo/bar/.gif
+[end_paths] http://127.0.0.1:8000/foo/bar/.gif/
 [end_paths] http://127.0.0.1:8000/foo/bar/.html
 [end_paths] http://127.0.0.1:8000/foo/bar/.html/
+[end_paths] http://127.0.0.1:8000/foo/bar/.jpe?g
+[end_paths] http://127.0.0.1:8000/foo/bar/.jpe?g/
+[end_paths] http://127.0.0.1:8000/foo/bar/.js
+[end_paths] http://127.0.0.1:8000/foo/bar/.js/
 [end_paths] http://127.0.0.1:8000/foo/bar/.json
 [end_paths] http://127.0.0.1:8000/foo/bar/.json/
+[end_paths] http://127.0.0.1:8000/foo/bar/.png
+[end_paths] http://127.0.0.1:8000/foo/bar/.png/
 [end_paths] http://127.0.0.1:8000/foo/bar/.random
 [end_paths] http://127.0.0.1:8000/foo/bar/.random/
 [end_paths] http://127.0.0.1:8000/foo/bar/.svc
@@ -109,6 +131,8 @@ Bypasser has generated 3750 payloads for 'http://127.0.0.1:8000/foo/bar' url:
 [end_paths] http://127.0.0.1:8000/foo/bar/.svc?wsdl/
 [end_paths] http://127.0.0.1:8000/foo/bar/.wsdl
 [end_paths] http://127.0.0.1:8000/foo/bar/.wsdl/
+[end_paths] http://127.0.0.1:8000/foo/bar/.xls
+[end_paths] http://127.0.0.1:8000/foo/bar/.xls/
 [end_paths] http://127.0.0.1:8000/foo/bar//
 [end_paths] http://127.0.0.1:8000/foo/bar///
 [end_paths] http://127.0.0.1:8000/foo/bar////
@@ -2386,6 +2410,7 @@ Bypasser has generated 3750 payloads for 'http://127.0.0.1:8000/foo/bar' url:
 [mid_paths] http://127.0.0.1:8000/%u002e;foo/bar
 [mid_paths] http://127.0.0.1:8000/%u002efoo/bar
 [mid_paths] http://127.0.0.1:8000/&foo/bar
+[mid_paths] http://127.0.0.1:8000/,foo/bar
 [mid_paths] http://127.0.0.1:8000/.%00/foo/bar
 [mid_paths] http://127.0.0.1:8000/.%00foo/bar
 [mid_paths] http://127.0.0.1:8000/.%2e/foo/bar
@@ -2552,6 +2577,7 @@ Bypasser has generated 3750 payloads for 'http://127.0.0.1:8000/foo/bar' url:
 [mid_paths] http://127.0.0.1:8000//&foo/bar
 [mid_paths] http://127.0.0.1:8000//*/foo/bar
 [mid_paths] http://127.0.0.1:8000//*foo/bar
+[mid_paths] http://127.0.0.1:8000//,foo/bar
 [mid_paths] http://127.0.0.1:8000//.%00/foo/bar
 [mid_paths] http://127.0.0.1:8000//.%00foo/bar
 [mid_paths] http://127.0.0.1:8000//.%2e/foo/bar
@@ -2961,6 +2987,7 @@ Bypasser has generated 3750 payloads for 'http://127.0.0.1:8000/foo/bar' url:
 [mid_paths] http://127.0.0.1:8000//foo/%u002e;bar
 [mid_paths] http://127.0.0.1:8000//foo/%u002ebar
 [mid_paths] http://127.0.0.1:8000//foo/&bar
+[mid_paths] http://127.0.0.1:8000//foo/,bar
 [mid_paths] http://127.0.0.1:8000//foo/.%00/bar
 [mid_paths] http://127.0.0.1:8000//foo/.%00bar
 [mid_paths] http://127.0.0.1:8000//foo/.%2e/bar
@@ -3461,6 +3488,7 @@ Bypasser has generated 3750 payloads for 'http://127.0.0.1:8000/foo/bar' url:
 [mid_paths] http://127.0.0.1:8000/foo/%u002e;bar
 [mid_paths] http://127.0.0.1:8000/foo/%u002ebar
 [mid_paths] http://127.0.0.1:8000/foo/&bar
+[mid_paths] http://127.0.0.1:8000/foo/,bar
 [mid_paths] http://127.0.0.1:8000/foo/.%00/bar
 [mid_paths] http://127.0.0.1:8000/foo/.%00bar
 [mid_paths] http://127.0.0.1:8000/foo/.%2e/bar

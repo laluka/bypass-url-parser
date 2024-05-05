@@ -114,6 +114,9 @@ sudo apt install -y bat curl virtualenv python3
 virtualenv -p python3 .py3
 source .py3/bin/activate
 PDM_BUILD_SCM_VERSION="$(git describe --abbrev=0)-dev" pip install .
+# If bup installed globally, use
+python src/bypass_url_parser/__init__.py -u https://thinkloveshare.com/juicy_403_endpoint/
+# Else this should work
 bypass-url-parser -u https://thinkloveshare.com/juicy_403_endpoint/
 cat /tmp/tmpRANDOM-bypass-url-parser/triaged-bypass.json  | jq -r '.results[].request_curl_cmd'
 cat /tmp/tmpRANDOM-bypass-url-parser/triaged-bypass.json  | jq -r '.results[].response_data'
