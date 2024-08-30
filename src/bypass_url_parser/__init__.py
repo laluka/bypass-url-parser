@@ -897,7 +897,8 @@ class Bypasser:
                 if self.verbose:
                     print(f"\n{self.use_classname()} has generated {len(self.curl_items)} payloads "
                           f"for '{url_obj.geturl()}' url:")
-                print(self.dump_bypasser_payloads(show_bypass_mode=True, show_full_cmd=self.debug))
+                sys.stdout.buffer.write(
+                    self.dump_bypasser_payloads(show_bypass_mode=True, show_full_cmd=self.debug).encode(self.encoding))
                 continue
 
             # Send curl commands
