@@ -163,7 +163,7 @@ If `-m, --mode` is specified, you can select the desired bypass mode to run a sp
 For now, the following bypass mode(s) are supported:
 
 ```
-all, mid_paths, end_paths, case_substitution, char_encode, http_methods, http_versions, http_headers_method, http_headers_scheme, http_headers_ip, http_headers_port, http_headers_url
+all, mid_paths, end_paths, case_substitution, char_encode, http_methods, http_versions, http_headers_method, http_headers_scheme, http_headers_ip, http_headers_port, http_headers_url, user_agent
 ```
 
 Example:
