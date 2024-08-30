@@ -9,6 +9,7 @@ Cluster-IP
 Connection
 Contact
 Destination
+Disguised-Host
 Fastly-Client-IP
 Forwarded
 Forwarded-For
@@ -51,9 +52,12 @@ True-Client
 True-Client-IP
 Via
 WL-Proxy-Client-IP
+Was-Default-Hostname
 X-AppEngine-Trusted-IP-Request
 X-Appengine-User-IP
 X-Arbitrary
+X-Azure-ClientIP
+X-Azure-SocketIP
 X-Backend-Host
 X-Backend-Server
 X-BlueCoat-Via
