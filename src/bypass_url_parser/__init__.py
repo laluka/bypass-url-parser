@@ -92,7 +92,7 @@ class Bypasser:
     REGEX_REQ_CONTENT_TYPE = re.compile(r"^Content-Type:\s(\w+/\w+);?.*$", re.IGNORECASE | re.MULTILINE)
     BYPASS_MODES = {"all", "mid_paths", "end_paths", "http_host", "http_methods", "http_versions", "case_substitution",
                     "unicode", "char_encode", "http_headers_method", "http_headers_scheme", "http_headers_ip",
-                    "http_headers_port", "http_headers_url", "misc"}  # Not yet all implemented, coming soon
+                    "http_headers_port", "http_headers_url", "user_agent", "misc"}  # Not yet all implemented
     DEFAULT_BINARY_NAME = which("curl")
     DEFAULT_BYPASS_MODE = "all"
     DEFAULT_FILE_ENCODING = "UTF-8"
@@ -183,6 +183,9 @@ class Bypasser:
             return_str=False, ext_logger=self.logger, debug=self.debug_class)
         self.internal_proto_schemes = Tools.load_file_into_memory_list(
             "payloads/internal_proto_schemes.lst", enc_format=self.encoding, clean_filename=False, external_file=False,
+            return_str=False, ext_logger=self.logger, debug=self.debug_class)
+        self.internal_user_agents = Tools.load_file_into_memory_list(
+            "payloads/internal_user_agents.lst", enc_format=self.encoding, clean_filename=False, external_file=False,
             return_str=False, ext_logger=self.logger, debug=self.debug_class)
 
         # Init properties
@@ -293,6 +296,15 @@ class Bypasser:
             for http_version in CurlItem.CURL_HTTP_VERSIONS:
                 cmd = [*self.get_curl_base(forced_http_version=http_version), target_url]
                 item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="http_versions", encoding=self.encoding,
+                                target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
+                self.curl_items.add(item)
+
+        # [user_agent] - Custom user agents
+        if any(mode in {"all", "user_agent"} for mode in self.current_bypass_modes):
+            for internal_ua in self.internal_user_agents:
+                curl_base = self.get_curl_base(forced_user_agent=internal_ua)
+                cmd = [*curl_base, target_url]
+                item = CurlItem(url_obj, curl_base, cmd, bypass_mode="user_agent", encoding=self.encoding,
                                 target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 self.curl_items.add(item)
 
@@ -885,7 +897,8 @@ class Bypasser:
                 if self.verbose:
                     print(f"\n{self.use_classname()} has generated {len(self.curl_items)} payloads "
                           f"for '{url_obj.geturl()}' url:")
-                print(self.dump_bypasser_payloads(show_bypass_mode=True, show_full_cmd=self.debug))
+                sys.stdout.buffer.write(
+                    self.dump_bypasser_payloads(show_bypass_mode=True, show_full_cmd=self.debug).encode(self.encoding))
                 continue
 
             # Send curl commands
