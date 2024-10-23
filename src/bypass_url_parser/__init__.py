@@ -476,6 +476,13 @@ class Bypasser:
                                 target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 self.curl_items.add(item)
 
+                # New [char_encode] - Triple URL-Encoding by encoding once more
+                triple_encoded_path = single_encoded_path.replace(f"%{char_urlencoded}", f"%2525{char_urlencoded}")
+                cmd = [*self.base_curl, triple_encoded_path]
+                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="char_encode_triple", encoding=self.encoding,
+                                target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
+                self.curl_items.add(item)
+
         # Verbose/debug print
         if self.verbose and not self.dump_payloads:
             self.logger.info(f"Payloads to test: {len(self.curl_items)}")
