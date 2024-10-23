@@ -463,9 +463,23 @@ class Bypasser:
             # [char_encode] - Url-Encoding
             if any(mode in {"all", "char_encode"} for mode in self.current_bypass_modes):
                 char_urlencoded = format(ord(base_path[abc_index]), "02x")
-                cmd = [*self.base_curl,
-                       f"{base_url}{base_path[:abc_index]}%{char_urlencoded}{base_path[abc_index + 1:]}"]
+                single_encoded_path = f"{base_url}{base_path[:abc_index]}%{char_urlencoded}{base_path[abc_index + 1:]}"
+                cmd = [*self.base_curl, single_encoded_path]
                 item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="char_encode", encoding=self.encoding,
+                                target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
+                self.curl_items.add(item)
+
+                # New [char_encode] - Double URL-Encoding by encoding once more
+                double_encoded_path = single_encoded_path.replace(f"%{char_urlencoded}", f"%25{char_urlencoded}")
+                cmd = [*self.base_curl, double_encoded_path]
+                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="char_encode_double", encoding=self.encoding,
+                                target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
+                self.curl_items.add(item)
+
+                # New [char_encode] - Triple URL-Encoding by encoding once more
+                triple_encoded_path = single_encoded_path.replace(f"%{char_urlencoded}", f"%2525{char_urlencoded}")
+                cmd = [*self.base_curl, triple_encoded_path]
+                item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="char_encode_triple", encoding=self.encoding,
                                 target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 self.curl_items.add(item)
 
