@@ -538,12 +538,23 @@ class Bypasser:
                     # Notes: subprocess.Popen with text=True => universal_newlines=True so maybe useless
                     result = result.replace(os.linesep, "\n")
 
-                    # Store command result in CurlItem object
-                    if self.proxy and "HTTP/1.0 200 Connection established" in result:
-                        # Delete the additional response proxy header 'HTTP/1.0 200 Connection established'
-                        item.response_raw_output = result.split("\n", 2)[2]
-                    else:
-                        item.response_raw_output = result
+                    # Ensure no false-positives when using proxy
+                    if self.proxy:
+                        # Look for any HTTP response after CONNECT, supporting both HTTP/1.x and HTTP/2
+                        response_parts = re.split(
+                            r"(?:HTTP/1\.1 200 Connection established.*?\r?\n\r?\n)(HTTP/(?:[12](?:\.[01])?)\s+\d{3})", 
+                            result, 
+                            flags=re.DOTALL
+                        )
+                        if len(response_parts) > 1:
+                            item.response_raw_output = response_parts[1] + response_parts[2]
+                        else:
+                            # Fallback pattern - look for any HTTP response
+                            match = re.search(r"(HTTP/(?:[12](?:\.[01])?)\s+\d{3}.*$)", result, re.DOTALL)
+                            if match:
+                                item.response_raw_output = match.group(1)
+                            else:
+                                item.response_raw_output = result
 
                     # Remove from retry list if present
                     if item in self.to_retry_items:
