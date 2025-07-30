@@ -2,6 +2,7 @@
 """Bypass Url Parser, made with love by @TheLaluka
 A tool that tests MANY url bypasses to reach a 40X protected page.
 
+
 Usage:
     bypass-url-parser (-u <URL> | -R <file>) [-m <mode>] [-o <outdir>] [-S <level>] [ (-H <header>)...] [-r <num>]
                       [-s <ip>] [--spoofip-replace] [-p <port>] [--spoofport-replace] [-t <threads>] [-T <timeout>]
@@ -63,6 +64,8 @@ from shlex import join as shlex_join
 from shutil import which
 from typing import Any, overload
 from urllib.parse import ParseResult, urlparse
+from colorama import Fore, Style, init as _cinit
+_cinit(autoreset=True)
 
 import coloredlogs
 from docopt import docopt
@@ -1589,6 +1592,17 @@ class CurlItem:
         :param bool trunk_redirect_url: If True, truncate the size of redirection url
         :return: Formatted curl item response. Ex: [403] [text/html] [548] [13] [68] [403 Forbidden] []
         """
+
+        # Pick a colour once per call
+        if 200 <= self.response_status_code < 300:
+            sc_token = f"{Fore.GREEN}{self.response_status_code}{Style.RESET_ALL}"
+        elif 300 <= self.response_status_code < 400:
+            sc_token = f"{Fore.BLUE}{self.response_status_code}{Style.RESET_ALL}"
+        elif 400 <= self.response_status_code < 500:
+            sc_token = f"{Fore.YELLOW}{self.response_status_code}{Style.RESET_ALL}"
+        else:
+            sc_token = f"{Fore.RED}{self.response_status_code}{Style.RESET_ALL}"
+
         # Limit the size of the redirect URL (optional)
         redirect_url = self.response_redirect_url
         if redirect_url and trunk_redirect_url:
@@ -1596,12 +1610,12 @@ class CurlItem:
 
         # Use it for full response output (content_length and full redirect_url)
         if with_content_length:
-            return f"[{self.response_status_code}] [{self.response_content_type}] [{self.response_content_length}] " \
+            return f"[{sc_token}] [{self.response_status_code}] [{self.response_content_type}] [{self.response_content_length}] " \
                    f"[{self.response_lines_count}] [{self.response_words_count}] [{self.response_title}] " \
                    f"[{self.response_server_type}] [{self.response_redirect_url}]"
         # Use it for response aggregating (no content_length and trunked redirect_url)
         else:
-            return f"[{self.response_status_code}] [{self.response_content_type}] [{self.response_lines_count}] " \
+            return f"[{sc_token}] [{self.response_status_code}] [{self.response_content_type}] [{self.response_lines_count}] " \
                    f"[{self.response_words_count}] [{self.response_title}] [{self.response_server_type}] " \
                    f"[{redirect_url}]"
 

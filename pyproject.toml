@@ -71,6 +71,7 @@ dev = [
     "tox-pdm>=0.7.2",
     "tox>=4.13.0",
     "pytest>=8.0.2",
+    "colorama>=0.4.6"
 ]
 
 [[tool.pdm.autoexport]]
