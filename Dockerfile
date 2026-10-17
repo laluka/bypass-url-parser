@@ -1,12 +1,13 @@
-FROM python:3.13.0a2-slim-bullseye
+FROM python:3.13-slim
 
 # Sane defaults for pip
 ENV \
   PIP_NO_CACHE_DIR=1 \
   PIP_DISABLE_PIP_VERSION_CHECK=1
 
-RUN apt-get update && apt-get install -y curl bat && \
-  ln -sf /usr/bin/batcat /usr/local/bin/bat
+RUN apt-get update && apt-get install -y --no-install-recommends curl bat && \
+  ln -sf /usr/bin/batcat /usr/local/bin/bat && \
+  rm -rf /var/lib/apt/lists/*
 
 # Install dependencies first to leverage Docker layer caching.
 RUN --mount=type=bind,source=requirements.txt,target=/tmp/requirements.txt \
