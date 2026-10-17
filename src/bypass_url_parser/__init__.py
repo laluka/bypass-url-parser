@@ -64,11 +64,11 @@ from shlex import join as shlex_join
 from shutil import which
 from typing import Any, overload
 from urllib.parse import ParseResult, urlparse
-from colorama import Fore, Style, init as _cinit
-_cinit(autoreset=True)
-
 import coloredlogs
+from colorama import Fore, Style, just_fix_windows_console
 from docopt import docopt
+
+just_fix_windows_console()
 
 try:
     from bypass_url_parser._version import __version__
@@ -705,7 +705,12 @@ class Bypasser:
                     print(self.clean_output, flush=True)
                 else:
                     # Normal output in logger (stderr)
-                    self.logger.info(f"\n{self.clean_output}")
+                    terminal_output = self.clean_output
+                    if Tools.supports_colors(sys.stderr):
+                        terminal_output = Bypasser.get_results_from_grouped_items(
+                            url_obj, grouped_curl_items, header_line=True, with_filename=with_filename,
+                            jsonl_format=False, with_colors=True)
+                    self.logger.info(f"\n{terminal_output}")
 
         return grouped_curl_items
 
@@ -946,7 +951,8 @@ class Bypasser:
     @staticmethod
     def get_results_from_grouped_items(url_obj: ParseResult, grouped_curl_items: defaultdict[list], header_line=True,
                                        with_filename=True, filter_sc=None, jsonl_format=False, jsonl_output_dir="",
-                                       jsonl_multiple_urls=False, ext_logger=None, verbose=False) -> str:
+                                       jsonl_multiple_urls=False, ext_logger=None, verbose=False,
+                                       with_colors=False) -> str:
         """Ungroup and return string from aggregated curl items.
 
         When the Bypasser is used as a library, this method is useful to retrieve the aggregated results in a string,
@@ -962,6 +968,7 @@ class Bypasser:
         :param bool jsonl_multiple_urls: Adds URL to 'jsonl_output_dir' (when len(self.url) > 1 in Bypasser).
         :param logger ext_logger: Specify your own logger for verbose output (default: None) (Optional)
         :param bool verbose: Show verbose information for this method
+        :param bool with_colors: Color status codes in human-readable output
         :return: Aggregated results
         """
         clean_output = ""
@@ -982,16 +989,19 @@ class Bypasser:
                         if item_lst[0].response_status_code not in filter_status_codes:
                             if with_filename:
                                 clean_output += \
-                                    f"[SINGLE] {item_lst[0].get_formatted_item()} ({item_lst[0].filename})\n"
+                                    f"[SINGLE] {item_lst[0].get_formatted_item(with_colors=with_colors)} " \
+                                    f"({item_lst[0].filename})\n"
                             else:
-                                clean_output += f"[SINGLE] {item_lst[0].get_formatted_item()}\n"
+                                clean_output += f"[SINGLE] {item_lst[0].get_formatted_item(with_colors=with_colors)}\n"
                     else:
                         if item_lst[0].response_status_code not in filter_status_codes:
                             if with_filename:
-                                clean_output += f"[GROUP ({item_count})] {item_lst[0].get_formatted_item()} " \
+                                clean_output += f"[GROUP ({item_count})] " \
+                                                f"{item_lst[0].get_formatted_item(with_colors=with_colors)} " \
                                                 f"({item_lst[0].filename})\n"
                             else:
-                                clean_output += f"[GROUP ({item_count})] {item_lst[0].get_formatted_item()}\n"
+                                clean_output += f"[GROUP ({item_count})] " \
+                                                f"{item_lst[0].get_formatted_item(with_colors=with_colors)}\n"
                 else:
                     if item_lst[0].response_status_code not in filter_status_codes:
                         if with_filename:
@@ -1560,14 +1570,15 @@ class CurlItem:
         return f"[#####] [bypass_method] [payload] {separator} [status_code] [content_type] [content_length] " \
                f"[lines_count] [word_counts] [title] [server] [redirect_url]"
 
-    def get_formatted_item(self, separator="=>") -> str:
+    def get_formatted_item(self, separator="=>", with_colors=False) -> str:
         """Return formatted curl item as string.
 
         Ex: [http_methods] [-X 'TRACE'] => [405] [text/html] [524] [12] [70] [405 Not Allowed] [nginx] []
 
         :return: Formatted curl item response.
         """
-        return f"{self.get_formatted_payload()} {separator} {self.get_formatted_response(with_content_length=True)}"
+        return f"{self.get_formatted_payload()} {separator} " \
+               f"{self.get_formatted_response(with_content_length=True, with_colors=with_colors)}"
 
     def get_formatted_payload(self) -> str:
         """Return formatted curl item payload as string.
@@ -1576,7 +1587,7 @@ class CurlItem:
         """
         return f"[{self.bypass_mode}] [{self.request_curl_payload}]"
 
-    def get_formatted_response(self, with_content_length=False, trunk_redirect_url=True) -> str:
+    def get_formatted_response(self, with_content_length=False, trunk_redirect_url=True, with_colors=False) -> str:
         """Return formatted curl item response as string
 
         Format:
@@ -1590,18 +1601,22 @@ class CurlItem:
 
         :param bool with_content_length: If False, remove content-length from response
         :param bool trunk_redirect_url: If True, truncate the size of redirection url
+        :param bool with_colors: Color the status code according to its response class
         :return: Formatted curl item response. Ex: [403] [text/html] [548] [13] [68] [403 Forbidden] []
         """
 
-        # Pick a colour once per call
-        if 200 <= self.response_status_code < 300:
-            sc_token = f"{Fore.GREEN}{self.response_status_code}{Style.RESET_ALL}"
-        elif 300 <= self.response_status_code < 400:
-            sc_token = f"{Fore.BLUE}{self.response_status_code}{Style.RESET_ALL}"
-        elif 400 <= self.response_status_code < 500:
-            sc_token = f"{Fore.YELLOW}{self.response_status_code}{Style.RESET_ALL}"
-        else:
-            sc_token = f"{Fore.RED}{self.response_status_code}{Style.RESET_ALL}"
+        status_code = self.response_status_code
+        status_code_token = str(status_code)
+        if with_colors:
+            if 200 <= status_code < 300:
+                color = Fore.GREEN
+            elif 300 <= status_code < 400:
+                color = Fore.BLUE
+            elif 400 <= status_code < 500:
+                color = Fore.YELLOW
+            else:
+                color = Fore.RED
+            status_code_token = f"{color}{status_code}{Style.RESET_ALL}"
 
         # Limit the size of the redirect URL (optional)
         redirect_url = self.response_redirect_url
@@ -1610,12 +1625,12 @@ class CurlItem:
 
         # Use it for full response output (content_length and full redirect_url)
         if with_content_length:
-            return f"[{sc_token}] [{self.response_status_code}] [{self.response_content_type}] [{self.response_content_length}] " \
+            return f"[{status_code_token}] [{self.response_content_type}] [{self.response_content_length}] " \
                    f"[{self.response_lines_count}] [{self.response_words_count}] [{self.response_title}] " \
                    f"[{self.response_server_type}] [{self.response_redirect_url}]"
         # Use it for response aggregating (no content_length and trunked redirect_url)
         else:
-            return f"[{sc_token}] [{self.response_status_code}] [{self.response_content_type}] [{self.response_lines_count}] " \
+            return f"[{status_code_token}] [{self.response_content_type}] [{self.response_lines_count}] " \
                    f"[{self.response_words_count}] [{self.response_title}] [{self.response_server_type}] " \
                    f"[{redirect_url}]"
 
@@ -1944,6 +1959,14 @@ class Tools:
     IS_WINDOWS = platform.system() == "Windows"
     IS_LINUX = platform.system() == "Linux"
     SEPARATOR = "\\" if IS_WINDOWS else "/"
+
+    @staticmethod
+    def supports_colors(stream=None) -> bool:
+        """Return whether a stream is an interactive terminal that supports colors."""
+        if os.environ.get("NO_COLOR") is not None or os.environ.get("TERM") == "dumb":
+            return False
+        stream = stream if stream is not None else sys.stderr
+        return bool(hasattr(stream, "isatty") and stream.isatty())
 
     @staticmethod
     def replacenth(string, sub, wanted, n) -> str:

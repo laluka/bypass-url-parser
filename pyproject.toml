@@ -7,7 +7,7 @@ authors = [
     { name = "jtof_fap", email = "jtof_fap@insecurity.fr" },
     { name = "Gabriel Dugny", email = "pypi@dugny.me" },
 ]
-dependencies = ["coloredlogs==15.0.1", "docopt==0.6.2"]
+dependencies = ["colorama>=0.4.6", "coloredlogs==15.0.1", "docopt==0.6.2"]
 requires-python = ">=3.8"
 keywords = ["security"]
 readme = "README.md"
@@ -71,7 +71,6 @@ dev = [
     "tox-pdm>=0.7.2",
     "tox>=4.13.0",
     "pytest>=8.0.2",
-    "colorama>=0.4.6"
 ]
 
 [[tool.pdm.autoexport]]
