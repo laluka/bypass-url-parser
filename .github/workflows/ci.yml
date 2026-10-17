@@ -35,6 +35,8 @@ jobs:
         run: |
           if [[ "${{ matrix.python-version }}" == "3.8" ]]; then
             python -m pip install "pdm==2.20.1"
+          elif [[ "${{ matrix.python-version }}" == "3.9" ]]; then
+            python -m pip install "pdm==2.26.9"
           else
             python -m pip install "pdm==2.29.2"
           fi
