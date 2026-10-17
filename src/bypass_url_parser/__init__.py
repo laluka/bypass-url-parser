@@ -221,6 +221,16 @@ class Bypasser:
 
     # *** Protected methods *** #
 
+    @staticmethod
+    def _build_inspect_command(outdir: str, filenames: list[str]) -> str:
+        """Build the platform-specific command used to inspect saved responses."""
+        if not filenames or Tools.IS_WINDOWS:
+            return ""
+
+        bat_binary = "batcat" if Tools.IS_LINUX else "bat"
+        file_paths = [f"{outdir}{Tools.SEPARATOR}{filename}" for filename in filenames]
+        return shlex_join([bat_binary, *file_paths])
+
     def _build_curl_ips(self, resolved_ip=None):
         """ Build internal IP list from spoof_ips, internal_ip_hosts and the resolved target IP address.
         :param str resolved_ip: Public (or private) IP address related to the url subdomain
@@ -646,22 +656,19 @@ class Bypasser:
                 else:
                     self.logger.warning("No output to save")
 
-            # Batcat - Starting at SaveLevel.PERTINENT, IOW no html files, no batcat command
+            # Bat/batcat - Starting at SaveLevel.PERTINENT, when HTML files are available
             inspect_cmd = ""
-            if self.save_level >= self.SaveLevel.PERTINENT and Tools.IS_LINUX:
+            if self.save_level >= self.SaveLevel.PERTINENT:
                 # Get first item filename of each group
                 filename_lst = []
                 for out_key, item_lst in self.bypass_results[url_obj].items():
                     filename = item_lst[0].filename
                     if filename not in filename_lst:
                         filename_lst.append(filename)
-                # Build and output batcat command
-                if len(self.clean_output) > 1:
-                    inspect_cmd = f"echo {outdir}{Tools.SEPARATOR}{{{','.join(filename_lst)}}} | xargs batcat"
-                else:
-                    inspect_cmd = f"echo {outdir}{Tools.SEPARATOR}{filename_lst} | xargs batcat"
 
-                self.logger.info(f"Also, inspect them manually with batcat:\n{inspect_cmd}")
+                inspect_cmd = self._build_inspect_command(outdir, filename_lst)
+                if inspect_cmd:
+                    self.logger.info(f"Also, inspect saved responses with bat:\n{inspect_cmd}")
 
             # Logfile - Starting at SaveLevel.MINIMAL
             if self.save_level >= self.SaveLevel.MINIMAL:

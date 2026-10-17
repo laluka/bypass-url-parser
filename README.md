@@ -324,7 +324,8 @@ http://thinkloveshare.com/juicy_403_endpoint/°//|400|text/html|90
 With `PERTINENT` and `FULL` saving levels, curl commands and full HTTP responses are also stored in pseudo `.html` files:
 
 ```bash
-$ echo /tmp/bypass-res2/*.html | xargs batcat
+$ batcat /tmp/bypass-res2/*.html # Linux
+$ bat /tmp/bypass-res2/*.html    # macOS
 ───────┬───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
        │ File: /tmp/bypass-res2/bypass-2469eecf6c38b5817d2248e911ad4382.html
 ───────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
