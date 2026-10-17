@@ -113,7 +113,7 @@ jobs:
           RELEASE_VERSION: ${{ inputs.tag }}
         run: |
           if ! git rev-parse --verify --quiet "refs/tags/v${RELEASE_VERSION}"; then
-            git tag -m "v${RELEASE_VERSION}" "v${RELEASE_VERSION}"
+            git tag "v${RELEASE_VERSION}"
           fi
 
       - uses: actions/setup-python@v6
