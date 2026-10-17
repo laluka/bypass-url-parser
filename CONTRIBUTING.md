@@ -1,52 +1,90 @@
 # Contributing and testing
 
-Note: This file is a work in progress.
-
-## Non-Regression tests & Code Cleanup
+## Non-regression tests and code cleanup
 
 ```bash
-# Code Cleanup
+# Code cleanup
 pre-commit run --all-files
-# Run tox tests
-
-export PATH="$HOME/.local/share/mise/shims:$PATH"
+# Run the test matrix and linter
 pdm run tox run-parallel
+pdm run lint-ruff
 # Ensure no regression is pushed
 bypass-url-parser -S 0 -v -u http://127.0.0.1:8000/foo/bar --dump-payloads > "tests-history/bup-payloads-$(date +'%Y-%m-%d').lst"
-# If bup installed globally, use
+# Or run directly from source
 python src/bypass_url_parser/__init__.py -S 0 -v -u http://127.0.0.1:8000/foo/bar --dump-payloads > "tests-history/bup-payloads-$(date +'%Y-%m-%d').lst"
-# Compare /tmp/bup-payloads-YYYY-MM-DD.lst and the latest tests-history/bup-payloads-YYYY-MM-DD.lst
-git diff --no-index $(find tests-history -type f | sort -n | tail -n 2)
+# Compare the two latest payload snapshots
+git diff --no-index $(find tests-history -type f | sort | tail -n 2)
 # Push your changes
 git add .
 git commit -m "My cool feature or bugfix"
-git tag -a vX.Y.Z "$COMMIT_HASH" -m "New release: vX.Y.Z"
-git push --tags
-# If X or Y is bumped, create new release on github
 ```
 
-## Github Action Release
+## GitHub Actions release
 
-- Visit https://github.com/laluka/bypass-url-parser/actions/workflows/release.yml
-- Run Workflow with a version such as `0.4.3` or `0.4.3.a` for alpha tests
-- Test the alpha version with the below script, once done, repeat without `.a`
+The release workflow builds the wheel and source distribution, creates and pushes the Git tag, publishes to PyPI,
+publishes the container to GHCR, and creates a draft GitHub release with generated notes. Do not create the tag
+manually.
+
+Use a [PEP 440](https://peps.python.org/pep-0440/) version without a leading `v`, such as `0.4.5` for a stable release
+or `0.4.5a1` for an alpha.
+
+### 1. Confirm the release commit
 
 ```bash
-cd /tmp && virtualenv -p python3 .py3 && source .py3/bin/activate
-export TESTED_VERSION=0.4.3a
+git switch main
+git pull --ff-only
+git status --short
+git log -1 --oneline
+RELEASE_SHA="$(git rev-parse HEAD)"
+```
+
+The worktree should be clean, and the latest `main` CI run should be green.
+
+### 2. Run a safe build-only dry run
+
+Leave the `tag` input empty. The workflow validates the commit and builds the distributions without creating a tag or
+publishing anything.
+
+```bash
+gh workflow run release.yml --ref main -f sha="$RELEASE_SHA"
+```
+
+You can also use **Actions → Release PyPI, Docker and GitHub → Run workflow** in the GitHub UI.
+
+### 3. Publish the release
+
+Publishing is immediate and uploads immutable artifacts to PyPI. Verify the version and commit before running:
+
+```bash
+RELEASE_VERSION="0.4.5"
+gh workflow run release.yml --ref main -f tag="$RELEASE_VERSION" -f sha="$RELEASE_SHA"
+```
+
+Monitor the run in GitHub Actions. Once it succeeds, review the generated draft on the GitHub Releases page and publish
+the draft.
+
+### 4. Smoke-test the published artifacts
+
+```bash
+TESTED_VERSION="0.4.5"
+python -m venv /tmp/bup-release-test
+source /tmp/bup-release-test/bin/activate
 pip install "bypass-url-parser==$TESTED_VERSION"
 bup --version && bup -u https://thinkloveshare.com/ -t 50 -m http_headers_scheme
 pip uninstall bypass-url-parser
-bup --version # Should fail
+bup --version # This should fail
 
 pipx install -f "bypass-url-parser==$TESTED_VERSION"
 bup --version && bup -u https://thinkloveshare.com/ -t 50 -m http_headers_scheme
 pipx uninstall bypass-url-parser
-bup --version # Should fail
+bup --version # This should fail
 
 for version in {8..13}; do
-  docker run --net=host --rm -it "python:3.$version" bash -c "pip install bypass-url-parser==$TESTED_VERSION && bup --version && bup -u https://thinkloveshare.com/ -t 50 -m http_headers_scheme"
+  docker run --rm -it "python:3.$version" bash -c \
+    "pip install bypass-url-parser==$TESTED_VERSION && bup --version"
 done
+
+docker run --rm "ghcr.io/laluka/bypass-url-parser:$TESTED_VERSION" --version
 ```
 
 ## To test that all supported versions can build and boot

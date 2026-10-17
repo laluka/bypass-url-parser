@@ -1,7 +1,7 @@
 [project]
 name = "bypass-url-parser"
 dynamic = ["version"]
-description = "Default template for PDM package"
+description = "Generate and test URL bypass payloads against protected endpoints"
 authors = [
     { name = "Laluka", email = "loukajc@gmail.com" },
     { name = "jtof_fap", email = "jtof_fap@insecurity.fr" },
