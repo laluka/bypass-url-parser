@@ -64,6 +64,7 @@ from shlex import join as shlex_join
 from shutil import which
 from typing import Any, overload
 from urllib.parse import ParseResult, urlparse
+
 import coloredlogs
 from colorama import Fore, Style, just_fix_windows_console
 from docopt import docopt
@@ -92,7 +93,7 @@ class Bypasser:
     REGEX_REQ_TARGET = re.compile(r"^\w+\s(.*)\sHTTP/\d\.?\d?$", re.IGNORECASE | re.MULTILINE)
     REGEX_REQ_HTTP_VERSION = re.compile(r"^\w+\s.*\sHTTP/(\d|\d\.\d)$", re.IGNORECASE | re.MULTILINE)
     REGEX_REQ_HOST = re.compile(r"^Host:\s(.*)$", re.IGNORECASE | re.MULTILINE)
-    REGEX_REQ_CONTENT_TYPE = re.compile(r"^Content-Type:\s(\w+/\w+);?.*$", re.IGNORECASE | re.MULTILINE)
+    REGEX_REQ_CONTENT_TYPE = re.compile(r"^Content-Type:\s*([^\r\n]+?)\s*$", re.IGNORECASE | re.MULTILINE)
     BYPASS_MODES = {"all", "mid_paths", "end_paths", "http_host", "http_methods", "http_versions", "case_substitution",
                     "unicode", "char_encode", "http_headers_method", "http_headers_scheme", "http_headers_ip",
                     "http_headers_port", "http_headers_url", "user_agent", "misc"}  # Not yet all implemented
@@ -263,7 +264,10 @@ class Bypasser:
 
         # Get information from url
         base_url = f"{url_obj.scheme}://{url_obj.netloc}"
-        base_path = f"{url_obj.path}{url_obj.query}"
+        base_path = url_obj.path
+        request_target = base_path
+        if url_obj.query:
+            request_target = f"{request_target}?{url_obj.query}"
         target_url = url_obj.geturl()
         if not self.dump_payloads:
             self.logger.debug(f"URL {target_url} parsing: base_url={base_url}, base_path={base_path}")
@@ -392,7 +396,7 @@ class Bypasser:
             current_path = Path(base_path)
             for header_url in self.header_urls:
                 # First variant: Targets the base_url and moves original path to the headers
-                commands.add(tuple([*self.base_curl, "-H", f"{header_url}: {base_path}", f"{base_url}/"]))
+                commands.add(tuple([*self.base_curl, "-H", f"{header_url}: {request_target}", f"{base_url}/"]))
                 # Second variant: Targets the base_url and moves target_url to the headers (only for some headers)
                 if any(part in header_url.lower() for part in {"url", "request", "file"}):
                     commands.add(tuple([*self.base_curl, "-H", f"{header_url}: {target_url}", f"{base_url}/"]))
@@ -416,13 +420,15 @@ class Bypasser:
             for idx_slash in range(base_path.count("/")):
                 for internal_midpath in self.internal_midpaths:
                     path_post = Tools.replacenth(base_path, "/", f"/{internal_midpath}", idx_slash)
-                    commands.add(tuple([*self.base_curl, f"{base_url}{path_post}"]))  # First variant
-                    commands.add(tuple([*self.base_curl, f"{base_url}/{path_post}"]))  # Second variant
+                    commands.add(tuple([*self.base_curl, url_obj._replace(path=path_post).geturl()]))  # First variant
+                    commands.add(tuple(
+                        [*self.base_curl, url_obj._replace(path=f"/{path_post}").geturl()]))  # Second variant
                     if idx_slash <= 1:
                         continue
                     path_pre = Tools.replacenth(base_path, "/", f"{internal_midpath}/", idx_slash)
-                    commands.add(tuple([*self.base_curl, f"{base_url}{path_pre}"]))  # Fist variant
-                    commands.add(tuple([*self.base_curl, f"{base_url}/{path_pre}"]))  # Second variant
+                    commands.add(tuple([*self.base_curl, url_obj._replace(path=path_pre).geturl()]))  # First variant
+                    commands.add(tuple(
+                        [*self.base_curl, url_obj._replace(path=f"/{path_pre}").geturl()]))  # Second variant
             # Add items
             for command in commands:
                 item = CurlItem(url_obj, self.base_curl, [*command], bypass_mode="mid_paths", debug=self.debug,
@@ -435,16 +441,18 @@ class Bypasser:
             separator = "" if (base_path == "/" or base_path.endswith("/")) else "/"
             for internal_endpath in self.internal_endpaths:
                 # First variant - 'url/suffix'
-                commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{separator}{internal_endpath}"]))
+                path_with_suffix = f"{base_path}{separator}{internal_endpath}"
+                commands.add(tuple([*self.base_curl, url_obj._replace(path=path_with_suffix).geturl()]))
                 # Second variant - 'url/suffix/'
-                commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{separator}{internal_endpath}/"]))
+                commands.add(tuple([*self.base_curl, url_obj._replace(path=f"{path_with_suffix}/").geturl()]))
                 # Only if base_path otherwise the subdomain will be modified and for any non ^[a-zA-Z] endpath
                 if base_path != "/":
                     if not re.search(r"^[a-zA-Z]$", internal_endpath[0]):
                         # Third variant - Add 'suffix'
-                        commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{internal_endpath}"]))
+                        path_with_suffix = f"{base_path}{internal_endpath}"
+                        commands.add(tuple([*self.base_curl, url_obj._replace(path=path_with_suffix).geturl()]))
                         # Fourth variant variant - Add 'suffix/'
-                        commands.add(tuple([*self.base_curl, f"{url_obj.geturl()}{internal_endpath}/"]))
+                        commands.add(tuple([*self.base_curl, url_obj._replace(path=f"{path_with_suffix}/").geturl()]))
                 # Add items
                 for command in commands:
                     item = CurlItem(url_obj, self.base_curl, [*command], bypass_mode="end_paths", debug=self.debug,
@@ -458,7 +466,8 @@ class Bypasser:
             if any(mode in {"all", "case_substitution"} for mode in self.current_bypass_modes):
                 char_case = base_path[abc_index]
                 char_case = char_case.upper() if char_case.islower() else char_case.lower()
-                cmd = [*self.base_curl, f"{base_url}{base_path[:abc_index]}{char_case}{base_path[abc_index + 1:]}"]
+                modified_path = f"{base_path[:abc_index]}{char_case}{base_path[abc_index + 1:]}"
+                cmd = [*self.base_curl, url_obj._replace(path=modified_path).geturl()]
                 item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="case_substitution", encoding=self.encoding,
                                 target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 self.curl_items.add(item)
@@ -466,22 +475,22 @@ class Bypasser:
             # [char_encode] - Url-Encoding
             if any(mode in {"all", "char_encode"} for mode in self.current_bypass_modes):
                 char_urlencoded = format(ord(base_path[abc_index]), "02x")
-                single_encoded_path = f"{base_url}{base_path[:abc_index]}%{char_urlencoded}{base_path[abc_index + 1:]}"
-                cmd = [*self.base_curl, single_encoded_path]
+                single_encoded_path = f"{base_path[:abc_index]}%{char_urlencoded}{base_path[abc_index + 1:]}"
+                cmd = [*self.base_curl, url_obj._replace(path=single_encoded_path).geturl()]
                 item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="char_encode", encoding=self.encoding,
                                 target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 self.curl_items.add(item)
 
                 # New [char_encode] - Double URL-Encoding by encoding once more
                 double_encoded_path = single_encoded_path.replace(f"%{char_urlencoded}", f"%25{char_urlencoded}")
-                cmd = [*self.base_curl, double_encoded_path]
+                cmd = [*self.base_curl, url_obj._replace(path=double_encoded_path).geturl()]
                 item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="char_encode_double", encoding=self.encoding,
                                 target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 self.curl_items.add(item)
 
                 # New [char_encode] - Triple URL-Encoding by encoding once more
                 triple_encoded_path = single_encoded_path.replace(f"%{char_urlencoded}", f"%2525{char_urlencoded}")
-                cmd = [*self.base_curl, triple_encoded_path]
+                cmd = [*self.base_curl, url_obj._replace(path=triple_encoded_path).geturl()]
                 item = CurlItem(url_obj, self.base_curl, cmd, bypass_mode="char_encode_triple", encoding=self.encoding,
                                 target_ip=self.url_resolved_ip, debug=self.debug, ext_logger=self.logger)
                 self.curl_items.add(item)
@@ -1505,7 +1514,7 @@ class CurlItem:
     DEFAULT_FILE_ENCODING = "UTF-8"
     REGEX_STATUS_CODE = re.compile(r"HTTP.*\s+(\d+)\s+", re.IGNORECASE)
     REGEX_CONTENT_LENGTH = re.compile(r"Content-Length:\s+(\d+)", re.IGNORECASE)
-    REGEX_CONTENT_TYPE = re.compile(r"Content-Type:\s+(\w+/\w+)", re.IGNORECASE)
+    REGEX_CONTENT_TYPE = re.compile(r"^Content-Type:\s*([^\r\n]+?)\s*$", re.IGNORECASE | re.MULTILINE)
     REGEX_HTTP_VERSION = re.compile(r"(?!--)http[\w.-]*(?<! )", re.IGNORECASE)
     REGEX_REDIRECT_URL = re.compile(r"Location:\s+(.*)", re.IGNORECASE)
     REGEX_SERVER_TYPE = re.compile(r"Server:\s+(.*)", re.IGNORECASE)

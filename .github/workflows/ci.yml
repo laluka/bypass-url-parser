@@ -24,13 +24,22 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: pdm-project/setup-pdm@v4
-        name: Setup PDM
+      - uses: actions/setup-python@v6
+        name: Setup Python
         with:
-          cache: true
-          python-version: ${{ matrix.python-version }}             # Version range or exact version of a Python version to use, the same as actions/setup-python
-          architecture: x64                # The target architecture (x86, x64) of the Python interpreter. the same as actions/setup-python
-          allow-python-prereleases: true  # Allow prerelease versions of Python to be installed. For example if only 3.12-dev is available, 3.12 will fall back to 3.12-dev
+          python-version: ${{ matrix.python-version }}
+          architecture: x64
+          allow-prereleases: true
+
+      - name: Install PDM
+        run: |
+          if [[ "${{ matrix.python-version }}" == "3.8" ]]; then
+            python -m pip install "pdm==2.20.1"
+          elif [[ "${{ matrix.python-version }}" == "3.9" ]]; then
+            python -m pip install "pdm==2.26.9"
+          else
+            python -m pip install "pdm==2.29.2"
+          fi
 
       - name: Install dependencies
         run: pdm install

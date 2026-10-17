@@ -16,7 +16,7 @@ def test_bypass_url_parser_help():
         ["bypass-url-parser", "--help"], capture_output=True, text=True
     )
     assert result.returncode == 0
-    assert "Usage: bypass-url-parser"
+    assert "Usage:\n    bypass-url-parser" in result.stdout
 
 
 def test_sample_usage():
@@ -24,7 +24,7 @@ def test_sample_usage():
         ["python", "lib_sample_usage.py"], capture_output=True, text=True
     )
     assert result.returncode == 0
-    assert "Bypass results for"
+    assert "Bypass results for" in result.stdout
 
 
 def test_sample_cli_usage():
