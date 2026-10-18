@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.5.1"
-content_hash = "sha256:ead3c3904bf611251bbeb9be9f7f103943b3bafe7ce498d3492b1f3235fbbe3d"
+content_hash = "sha256:0dc59464c0cd7f5437978b0558c56f1fe094422ea1bd7ff0f51e0b3d88fdcc61"
 
 [[metadata.targets]]
 requires_python = ">=3.8"
@@ -138,12 +138,14 @@ files = [
 ]
 
 [[package]]
-name = "docopt"
-version = "0.6.2"
-summary = "Pythonic argument parser, that will make you smile"
+name = "docopt-ng"
+version = "0.9.0"
+requires_python = ">=3.7"
+summary = "Jazzband-maintained fork of docopt, the humane command line arguments parser."
 groups = ["default", "dev"]
 files = [
-    {file = "docopt-0.6.2.tar.gz", hash = "sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"},
+    {file = "docopt_ng-0.9.0-py3-none-any.whl", hash = "sha256:bfe4c8b03f9fca424c24ee0b4ffa84bf7391cb18c29ce0f6a8227a3b01b81ff9"},
+    {file = "docopt_ng-0.9.0.tar.gz", hash = "sha256:91c6da10b5bb6f2e9e25345829fb8278c78af019f6fc40887ad49b060483b1d7"},
 ]
 
 [[package]]
@@ -892,17 +894,6 @@ groups = ["dev"]
 files = [
     {file = "traitlets-5.14.3-py3-none-any.whl", hash = "sha256:b74e89e397b1ed28cc831db7aea759ba6640cb3de13090ca145426688ff1ac4f"},
     {file = "traitlets-5.14.3.tar.gz", hash = "sha256:9ed0579d3502c94b4b3732ac120375cda96f923114522847de4b3bb98b96b6b7"},
-]
-
-[[package]]
-name = "types-docopt"
-version = "0.6.11.20241107"
-requires_python = ">=3.8"
-summary = "Typing stubs for docopt"
-groups = ["dev"]
-files = [
-    {file = "types-docopt-0.6.11.20241107.tar.gz", hash = "sha256:61c44d03ac4895b5be8d40ba5cc80ce52a63d3d76777ad14669e94b5e9edf7a7"},
-    {file = "types_docopt-0.6.11.20241107-py3-none-any.whl", hash = "sha256:4aaaa43ef4c16eaff2a5af44c0018a28981e608a5f9293500f750818edb2d97b"},
 ]
 
 [[package]]
