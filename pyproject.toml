@@ -7,7 +7,7 @@ authors = [
     { name = "jtof_fap", email = "jtof_fap@insecurity.fr" },
     { name = "Gabriel Dugny", email = "pypi@dugny.me" },
 ]
-dependencies = ["colorama>=0.4.6", "coloredlogs==15.0.1", "docopt==0.6.2"]
+dependencies = ["colorama>=0.4.6", "coloredlogs==15.0.1", "docopt-ng==0.9.0"]
 requires-python = ">=3.8"
 keywords = ["security"]
 readme = "README.md"
@@ -58,14 +58,13 @@ write_template = "__version__ = \"{}\"\n"
 [tool.pdm.dev-dependencies]
 dev = [
     "coloredlogs==15.0.1",
-    "docopt==0.6.2",
+    "docopt-ng==0.9.0",
     "ipdb==0.13.9",
     "ipython>=8.10.0",
     "pre-commit==3.2.2",
     "rich==13.3.4",
     "isort>=5.13.2",
     "mypy>=1.8.0",
-    "types-docopt>=0.6.11.4",
     "autopep8>=2.0.4",
     "ruff>=0.3.0",
     "tox-pdm>=0.7.2",
