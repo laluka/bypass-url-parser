@@ -116,7 +116,7 @@ jobs:
             git tag "v${RELEASE_VERSION}"
           fi
 
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         name: Setup Python
         with:
           python-version: ${{ env.PYTHON_VERSION }}
@@ -192,7 +192,7 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: dist
           path: dist
@@ -221,7 +221,7 @@ jobs:
         with:
           ref: ${{ needs.validate_release.outputs.target_sha }}
 
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         name: Download Python artifacts
         with:
           name: dist
@@ -237,7 +237,7 @@ jobs:
 
       - name: Extract Docker metadata
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
@@ -265,13 +265,13 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: dist
           path: dist
 
       - name: Create draft GitHub release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           draft: true
           generate_release_notes: true
