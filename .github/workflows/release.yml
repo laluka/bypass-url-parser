@@ -140,7 +140,7 @@ jobs:
           test -f "dist/bypass_url_parser-${RELEASE_VERSION}.tar.gz"
 
       - name: Upload wheel and sdist
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist
